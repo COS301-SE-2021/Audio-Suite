@@ -7,7 +7,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/COS301-SE-2021/Audio-Suite">
-    <img src="https://i.ibb.co/G0qhsLL/pegasus-logo-v2.png" alt="Logo" width="140" height="120">
+    <img src="https://i.ibb.co/yV2Z4Qy/pegasus-logo-white.png" alt="Logo" width="140" height="120">
   </a>
 
   <h3 align="center">Audio Suite</h3>
@@ -54,7 +54,7 @@ This floorplan will allow for spatial sound effects to simulate people having co
 
 Each room and area will have their own sound properties, is it soundproof, or can other people hear you? Is it a private room or a public space for social conversation? The bosses can have their corner offices back and the average employee can have their cubicle. People can move around the office with the click of a button, that is the vision, that is Audio Suite.
 
-#### Built With
+### Built With
 
 The web application is being developed with the following technologies.
    * [NodeJS](https://nodejs.org/en/)
@@ -77,7 +77,7 @@ Project Pegasus is a software engineering team, a diverse group of students. We 
 </ul>
 <br/>
 
-<img align="left" style="border-radius: 100px;" src="https://i.ibb.co/G0qhsLL/pegasus-logo-v2.png" alt="Logo" width="60" height="60">
+<img align="left" style="border-radius: 100px;" src="https://i.ibb.co/yV2Z4Qy/pegasus-logo-white.png" alt="Logo" width="60" height="60">
 <h2 style="font-size: 125%;margin-top:30px;margin-left: 75px">Christian Still</h2>
 <br>
 <ul style="font-size: 100%;margin-top:-15px;margin-left: 50px">
@@ -87,7 +87,7 @@ Project Pegasus is a software engineering team, a diverse group of students. We 
 </ul>
 <br/>
 
-<img align="left" style="border-radius: 100px;" src="https://i.ibb.co/G0qhsLL/pegasus-logo-v2.png" alt="Logo" width="60" height="60">
+<img align="left" style="border-radius: 100px;" src="https://i.ibb.co/yV2Z4Qy/pegasus-logo-white.png" alt="Logo" width="60" height="60">
 <h2 style="font-size: 125%;margin-top:30px;margin-left: 75px">Johan de Clercq</h2>
 <br>
 <ul style="font-size: 100%;margin-top:-15px;margin-left: 50px">
@@ -97,7 +97,7 @@ Project Pegasus is a software engineering team, a diverse group of students. We 
 </ul>
 <br/>
 
-<img align="left" style="border-radius: 100px;" src="https://i.ibb.co/G0qhsLL/pegasus-logo-v2.png" alt="Logo" width="60" height="60">
+<img align="left" style="border-radius: 100px;" src="https://i.ibb.co/yV2Z4Qy/pegasus-logo-white.png" alt="Logo" width="60" height="60">
 <h2 style="font-size: 125%;margin-top:30px;margin-left: 75px">Keanu Swart</h2>
 <br>
 <ul style="font-size: 100%;margin-top:-15px;margin-left: 50px">
@@ -107,7 +107,7 @@ Project Pegasus is a software engineering team, a diverse group of students. We 
 </ul>
 <br/>
 
-<img align="left" style="border-radius: 100px;" src="https://i.ibb.co/G0qhsLL/pegasus-logo-v2.png" alt="Logo" width="60" height="60">
+<img align="left" style="border-radius: 100px;" src="https://i.ibb.co/yV2Z4Qy/pegasus-logo-white.png" alt="Logo" width="60" height="60">
 <h2 style="font-size: 125%;margin-top:30px;margin-left: 75px">Kyra Coetzee</h2>
 <br>
 <ul style="font-size: 100%;margin-top:-15px;margin-left: 50px">
