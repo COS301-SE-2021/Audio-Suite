@@ -78,7 +78,7 @@ As a team we have the skills to implement nearly any software solution. Audio Su
   <li>Cybersecurity specialist.</li>
 </ul>
 
-<img align="left" src="https://i.ibb.co/yV2Z4Qy/pegasus-logo-white.png" alt="Logo" width="60" height="60">
+<img align="left" src="https://media-exp1.licdn.com/dms/image/C4D03AQFxSO0PLw9yEQ/profile-displayphoto-shrink_800_800/0/1622310781937?e=1627516800&v=beta&t=sHMtehsY8iMJ3scFdJ0Azdfualx3nybSv_MFUV5-3AI" alt="Logo" width="60" height="60">
 <h2 style="font-size: 115%">Christian Still</h2>
 <br>
 <ul style="font-size: 100%">
