@@ -93,7 +93,7 @@ As a team we have the skills to implement nearly any software solution. Audio Su
 <ul style="font-size: 100%">
   <li>Front-end Developer</li>
   <li>UI/UX Designer</li>
-  <li>Experience in JavaScript and API integration </li>
+  <li>Experience in JavaScript and API integration</li>
 </ul>
 
 <img align="left" src="https://i.ibb.co/yV2Z4Qy/pegasus-logo-white.png" alt="Logo" width="60" height="60">
@@ -105,7 +105,7 @@ As a team we have the skills to implement nearly any software solution. Audio Su
   <li>Front-end and Back-end development</li>
 </ul>
 
-<img align="left" src="https://i.ibb.co/yV2Z4Qy/pegasus-logo-white.png" alt="Logo" width="60" height="60">
+<img align="left" src="https://media-exp1.licdn.com/dms/image/C4D03AQF5szMKDcprfA/profile-displayphoto-shrink_800_800/0/1621957896518?e=1627516800&v=beta&t=6RFsHTx-l4cp-PIj6bO3LRuQwXTQjrYVQCK_Tzww_CY" alt="Logo" width="60" height="60">
 <h2 style="font-size: 115%">Kyra Coetzee</h2>
 <br>
 <ul style="font-size: 100%">
