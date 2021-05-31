@@ -96,7 +96,7 @@ As a team we have the skills to implement nearly any software solution. Audio Su
   <li>Experience in JavaScript and API integration</li>
 </ul>
 
-<img align="left" src="https://i.ibb.co/yV2Z4Qy/pegasus-logo-white.png" alt="Logo" width="60" height="60">
+<img align="left" src="https://i.ibb.co/7tYK8yk/CC56870-A-DFEE-4171-9-E6-A-5-AACAB3-AB31-F.jpg" alt="CC56870-A-DFEE-4171-9-E6-A-5-AACAB3-AB31-F" alt="Logo" width="60" height="60">
 <h2 style="font-size: 115%">Keanu Swart</h2>
 <br>
 <ul style="font-size: 100%">
