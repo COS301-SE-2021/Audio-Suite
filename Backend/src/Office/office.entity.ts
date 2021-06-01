@@ -8,7 +8,4 @@ export class Office{
 
     @Column()
     name: string;
-    
-    @ManyToMany(type => User, user => user.ofices)
-    users: User[] = [];
 }
