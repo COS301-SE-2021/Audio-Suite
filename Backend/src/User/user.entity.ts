@@ -14,7 +14,4 @@ export class User{
 
     @Column()
     userName: string;
-
-    @ManyToMany(type => Office, office => office.users)
-    ofices: Office[];
 }
