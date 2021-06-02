@@ -7,8 +7,16 @@ import { OfficeUsers } from './officeusers.entity';
 export class OfficeusersService {
     constructor(
         @InjectRepository(OfficeUsers)
-        private officeUsersRepository: Repository<OfficeUsers>,
+        private officeUsersRepository: Repository<OfficeUsers>
         ) {}
 
+    async addUserToOffice(userID: number, officeName: string){
+        //try add the user to an office
+        try{
+            const officeUser = await this.officeUsersRepository.create({userID,officeName});
+        }catch(err){
+
+        }
+    }
     // TODO add services to add office and user
 }

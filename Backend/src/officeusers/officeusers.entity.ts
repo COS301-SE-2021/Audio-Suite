@@ -11,5 +11,5 @@ export class OfficeUsers{
     userID: number;
 
     @Column()
-    officeID: number;
+    officeName: string;
 }
