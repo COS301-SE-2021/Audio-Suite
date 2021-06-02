@@ -13,7 +13,7 @@ export class OfficeusersService {
     async addUserToOffice(userID: number, officeName: string){
         //try add the user to an office
         try{
-            const officeUser = await this.officeUsersRepository.create({userID,officeName});
+            const officeUser = await this.officeUsersRepository.create({userID,officeName,role:"unassigned"});
             const saveOfficeUser = await this.officeUsersRepository.save(officeUser);
             return saveOfficeUser;
         }catch(err){
