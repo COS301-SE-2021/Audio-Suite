@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { OfficeService } from './office.service';
 
 @Controller('api')
@@ -8,6 +8,14 @@ export class OfficeController {
     @Get()
     getOffice(): String{
         return this.officeService.getOffice();
+    }
+
+    @Get('office/invite?')
+    async addUserByInvite(
+        @Query('id') id: string,
+        @Query('token') jwt: string
+    ){
+        return await this.officeService.joinUserToOffice(id,jwt)
     }
 
     @Post('office/register')
