@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OfficeUsers } from './officeusers.entity';
@@ -14,8 +14,10 @@ export class OfficeusersService {
         //try add the user to an office
         try{
             const officeUser = await this.officeUsersRepository.create({userID,officeName});
+            const saveOfficeUser = await this.officeUsersRepository.save(officeUser);
+            return saveOfficeUser;
         }catch(err){
-
+            throw new BadRequestException();
         }
     }
     // TODO add services to add office and user

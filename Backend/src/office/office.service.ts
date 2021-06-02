@@ -5,13 +5,16 @@ import { Repository } from 'typeorm';
 import { Office } from './office.entity';
 import { UserService } from 'src/user/user.service';
 import { User } from 'src/user/user.entity';
+import { OfficeUsers } from 'src/officeusers/officeusers.entity';
+import { OfficeusersService } from 'src/officeusers/officeusers.service';
 
 @Injectable()
 export class OfficeService {
     constructor(
         @InjectRepository(Office)
         private officesRepository: Repository<Office>,
-        private userService: UserService
+        private userService: UserService,
+        private officeUserService: OfficeusersService
         ) {}
 
     getOffice(): string {
@@ -26,12 +29,14 @@ export class OfficeService {
             throw new UnauthorizedException();
         }
         try{
+            const user = await this.userService.validateUser(jwt);
             const office = await this.officesRepository.create({name, invite});
             const savedOffice = await this.officesRepository.save(office);
+            const addUserToOffice = await this.officeUserService.addUserToOffice(user.id,name);
             return savedOffice;
         }
-        catch(err) {{
+        catch(err) {
             throw new HttpException("Office with this name already exists.", 400);
-        }}
+        }
     }
 }
