@@ -11,5 +11,5 @@ export class Office{
     name: string;
 
     @Column({unique: true})
-    invite: String;
+    invite: string;
 }
