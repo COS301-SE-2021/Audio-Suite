@@ -18,4 +18,13 @@ export class OfficeController {
     {
         return await this.officeService.registerOffice(name, jwt);
     }
+
+    @Post('office/joinInvite')
+    async joinUserToOffice(
+        @Body('invite') invite: string,
+        @Body('jwt') jwt: string
+    )
+    {
+        return await this.officeService.joinUserToOffice(invite, jwt);
+    }
 }
