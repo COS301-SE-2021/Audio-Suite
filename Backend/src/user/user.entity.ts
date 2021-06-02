@@ -1,4 +1,4 @@
-import { Office } from "src/Office/office.entity";
+import { Office } from "src/office/office.entity";
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
