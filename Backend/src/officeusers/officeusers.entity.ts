@@ -1,5 +1,5 @@
 import { User } from "src/user/user.entity";
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { Office } from "../office/office.entity";
 
 @Entity()
@@ -8,10 +8,8 @@ export class OfficeUsers{
     id: number;
 
     @Column()
-    @OneToOne(type => User, user => user.id)
-    user: User;
+    userID: number;
 
     @Column()
-    @OneToOne(type => Office, office => office.id)
-    office: Office;
+    officeID: number;
 }
