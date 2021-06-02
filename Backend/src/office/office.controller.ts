@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { OfficeService } from './office.service';
 
-@Controller('office')
+@Controller('api')
 export class OfficeController {
     constructor(private readonly officeService: OfficeService){}
 
@@ -10,7 +10,7 @@ export class OfficeController {
         return this.officeService.getOffice();
     }
 
-    @Post('register')
+    @Post('office/register')
     async registerOffice(
         @Body('name') name: string
     )
