@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { OfficeController } from './office.controller';
 import { Office } from './office.entity';
 import { OfficeService } from './office.service';
+import { OfficeUsers } from '../officeusers/officeusers.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Office])],

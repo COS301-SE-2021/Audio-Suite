@@ -6,6 +6,8 @@ import { OfficeModule } from './office/office.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
 import { Office } from './office/office.entity';
+import { OfficeusersModule } from './officeusers/officeusers.module';
+import { OfficeUsers } from './officeusers/officeusers.entity';
 
 @Module({
   imports: [
@@ -16,10 +18,11 @@ import { Office } from './office/office.entity';
       username: 'System', // TODO change to env var
       password: 'audiosuitetest', // TODO change to env var
       database: 'AUDIO_SUITE', // TODO change to env var
-      entities: [Office, User],
+      entities: [User, Office, OfficeUsers],
       synchronize: true,}), // TODO change to false for production
     UserModule, 
-    OfficeModule],
+    OfficeModule, 
+    OfficeusersModule],
   controllers: [AppController],
   providers: [AppService],
 })
