@@ -16,6 +16,14 @@ describe('UserController', () => {
         lastName: lastName,
       };
     }),
+    loginUser: jest.fn((email, password) => {
+      return {
+        email: email,
+        password: password,
+        response: "Success",
+        jwt: Math.random(),
+      };
+    })
 
   }
 
@@ -53,4 +61,19 @@ describe('UserController', () => {
       id: expect.any(Number),
     });
   });
+
+  it('should make use of loginUser for a user', async () =>{
+    const user = {
+      email: 'jfoo@gmail.com',
+      password: 'pas123'
+    }
+
+    expect(await controller.loginUser(user.email, user.password)).toStrictEqual({
+      email: user.email,
+      password: expect.anything(),
+      response: "Success",
+      jwt: expect.anything()
+    })
+  })
+
 });
