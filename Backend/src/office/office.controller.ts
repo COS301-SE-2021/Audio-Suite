@@ -25,6 +25,6 @@ export class OfficeController {
         @Body('jwt') jwt: string
     )
     {
-        return await this.officeService.registerOffice(invite, jwt);
+        return await this.officeService.joinUserToOffice(invite, jwt);
     }
 }
