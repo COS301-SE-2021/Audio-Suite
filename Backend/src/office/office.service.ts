@@ -39,4 +39,26 @@ export class OfficeService {
             throw new HttpException("Office with this name already exists.", 400);
         }
     }
+
+    async joinUserToOffice(officeInviteLink: string, jwt: string): Promise<any>{
+        //verify the user
+        try{
+            const user = await this.userService.validateUser(jwt);
+        }catch(err){
+            throw new UnauthorizedException();
+        }
+        //verifify the office
+        try{
+            const office = await this.officesRepository.findOne({invite: officeInviteLink});
+        }catch(err){
+            throw new UnauthorizedException();
+        }
+        try{
+            const user = await this.userService.validateUser(jwt);
+            const office = await this.officesRepository.findOne({invite: officeInviteLink});
+            const addUserToOffice = await this.officeUserService.addUserToOffice(user.id,office.name);
+        }catch(err){
+            throw new HttpException("Office with this name already exists.", 400);
+        }
+    }
 }
