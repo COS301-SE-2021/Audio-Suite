@@ -12,4 +12,7 @@ export class OfficeUsers{
 
     @Column()
     officeName: string;
+
+    @Column()
+    role: string;
 }
