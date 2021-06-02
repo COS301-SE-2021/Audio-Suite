@@ -12,9 +12,10 @@ export class OfficeController {
 
     @Post('office/register')
     async registerOffice(
-        @Body('name') name: string
+        @Body('name') name: string,
+        @Body('jwt') jwt: string
     )
     {
-        return await this.officeService.registerOffice(name);
+        return await this.officeService.registerOffice(name, jwt);
     }
 }
