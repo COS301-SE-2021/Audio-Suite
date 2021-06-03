@@ -19,6 +19,13 @@ describe('OfficeController', () => {
         jwt: jwt,
         response: "Success"
       }
+    }),
+    addUserByInvite: jest.fn((id, jwt) => {
+      return{
+        id: id, 
+        jwt: jwt,
+        response: "Success"
+      }
     })
 
   }
@@ -40,7 +47,7 @@ describe('OfficeController', () => {
   });
 
   it('should retireve getOffice', () => {
-    expect(controller.getOffice()).toStrictEqual("'Hello World, Office!'");
+    expect(controller.getOffice()).toStrictEqual("Hello World, Office!");
   })
 
   it('should make use of registerOffice for an office', async () => {
@@ -68,5 +75,18 @@ describe('OfficeController', () => {
       response: "Success"
     });
   });  
+
+  it('should make use of addUserByInvite for an office', async () => {
+    const office = {
+      id: 'u19123456',
+      jwt: 'abcdefghijklmnopqrstuvwxyz12345678910'
+    }
+
+    expect(await controller.addUserByInvite(office.id, office.jwt)).toStrictEqual({
+      officeInviteLink: office.id,
+      jwt: office.jwt,
+      response: "Success"
+    });
+  }); 
 
 });
