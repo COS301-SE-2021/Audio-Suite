@@ -24,4 +24,9 @@ describe('OfficeController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
+
+  it('should retireve getOffice', () => {
+    expect(controller.getOffice()).toStrictEqual("'Hello World, Office!'");
+  })
+
 });
