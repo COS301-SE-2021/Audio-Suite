@@ -46,9 +46,9 @@ describe('OfficeController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should retireve getOffice', () => {
-    expect(controller.getOffice()).toStrictEqual("Hello World, Office!");
-  })
+  // it('should retireve getOffice', () => {
+  //   expect(controller.getOffice()).toStrictEqual("Hello World, Office!");
+  // })
 
   it('should make use of registerOffice for an office', async () => {
     const office = {
