@@ -54,6 +54,8 @@ This floorplan will allow for spatial sound effects to simulate people having co
 
 Each room and area will have their own sound properties, is it soundproof, or can other people hear you? Is it a private room or a public space for social conversation? The bosses can have their corner offices back and the average employee can have their cubicle. People can move around the office with the click of a button, that is the vision, that is Audio Suite.
 
+The System Requirements Specification: https://drive.google.com/file/d/1cW_0c0eD5QwpPcy8b3myqKoKeTvbzBNS/view?usp=sharing
+
 ### Built With
 
 The web application is being developed with the following technologies.
