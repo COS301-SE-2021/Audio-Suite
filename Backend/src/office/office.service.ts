@@ -57,6 +57,10 @@ export class OfficeService {
             const user = await this.userService.validateUser(jwt);
             const office = await this.officesRepository.findOne({invite: officeInviteLink});
             const addUserToOffice = await this.officeUserService.addUserToOffice(user.id,office.name);
+            return {
+                status: "Success",
+                response: "User added to office"
+            }
         }catch(err){
             throw new HttpException("Office with this name already exists.", 400);
         }
