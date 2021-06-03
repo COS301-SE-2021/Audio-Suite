@@ -6,6 +6,13 @@ describe('OfficeController', () => {
   let controller: OfficeController;
 
   const mockOfficeService = {
+    registerOffice: jest.fn((name, jwt) =>{
+      return{
+        name: name,
+        jwt: jwt,
+        response: "Success"
+      }
+    })
 
   }
 
@@ -28,5 +35,18 @@ describe('OfficeController', () => {
   it('should retireve getOffice', () => {
     expect(controller.getOffice()).toStrictEqual("'Hello World, Office!'");
   })
+
+  it('should make use of registerOffice for an office', async () => {
+    const office = {
+      name: 'Joe',
+      jwt: 'abcdefghijklmnopqrstuvwxyz12345678910'
+    }
+
+    expect(await controller.registerOffice(office.name, office.jwt)).toStrictEqual({
+      name: office.name,
+      jwt: office.jwt,
+      response: "Success"
+    });
+  });
 
 });
