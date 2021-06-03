@@ -12,6 +12,13 @@ describe('OfficeController', () => {
         jwt: jwt,
         response: "Success"
       }
+    }),
+    joinUserToOffice: jest.fn((officeInviteLink, jwt) => {
+      return{
+        officeInviteLink: officeInviteLink,
+        jwt: jwt,
+        response: "Success"
+      }
     })
 
   }
@@ -48,5 +55,18 @@ describe('OfficeController', () => {
       response: "Success"
     });
   });
+
+  it('should make use of joinUserToOffice for an office', async () => {
+    const office = {
+      officeInviteLink: 'initeLink/forYourOffice',
+      jwt: 'abcdefghijklmnopqrstuvwxyz12345678910'
+    }
+
+    expect(await controller.joinUserToOffice(office.officeInviteLink, office.jwt)).toStrictEqual({
+      officeInviteLink: office.officeInviteLink,
+      jwt: office.jwt,
+      response: "Success"
+    });
+  });  
 
 });
