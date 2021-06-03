@@ -3,10 +3,10 @@ import { randomBytes } from "crypto";
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Office } from './office.entity';
-import { UserService } from 'src/user/user.service';
-import { User } from 'src/user/user.entity';
-import { OfficeUsers } from 'src/officeusers/officeusers.entity';
-import { OfficeusersService } from 'src/officeusers/officeusers.service';
+import { UserService } from '../user/user.service';
+import { User } from '../user/user.entity';
+import { OfficeUsers } from '../officeusers/officeusers.entity';
+import { OfficeusersService } from '../officeusers/officeusers.service';
 
 @Injectable()
 export class OfficeService {
