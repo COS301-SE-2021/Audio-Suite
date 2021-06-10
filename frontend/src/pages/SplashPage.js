@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import Login from '../components/Login'
 import Signup from '../components/Signup'
+import HomeNavbar from '../components/HomeNavbar'
 
 import './SplashPage.css'
 import Jumbotron from 'react-bootstrap/Jumbotron'
@@ -28,6 +29,7 @@ const SplashPage = ({changePage}) =>
                     </p>
                 </Container>
             </Jumbotron>
+            <HomeNavbar changePage={changePage} onChangePageType={changePageType}/>
             {pageType === 'loginPage' ? <Login onLogin={changePage} onChangePageType={changePageType}/> : <Signup onChangePageType={changePageType}/>}
         </>
     )
