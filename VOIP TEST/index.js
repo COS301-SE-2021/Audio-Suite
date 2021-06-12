@@ -62,12 +62,12 @@ async function join() {
   // join a channel and create local tracks, we can use Promise.all to run them concurrently
   [ options.uid, audioTrack] = await Promise.all([
     // join the channel
-    client.join(options.appid, options.channel, options.token || null, "username"),
+    client.join(options.appid, options.channel, options.token || null, 11111),
     // create local track using microphone
     AgoraRTC.createMicrophoneAudioTrack()
   ]);
   // publish local tracks to channel
-  audioTrack.setVolume(100);
+  // audioTrack.setVolume(100);
   await client.publish(audioTrack);
   console.log("publish success");
 }
@@ -101,8 +101,14 @@ async function subscribe(user, mediaType) {
   await client.subscribe(user, mediaType);
   console.log("subscribe success");
   if (mediaType === 'audio') {
-  	console.log("SUBSCRIBED!!!!!"+user.uid);
-  	user.audioTrack.setVolume(10);
+  	console.log("IDIDIDIDIDIDIIDIDIDIDIDIDIDI: "+uid+" : "+typeof 'uid');
+  	if (uid == '22222'){
+  		console.log("SETTING VOLUME for LAPTOP!");
+  		user.audioTrack.setVolume(10);
+  	}else if(uid == '33333'){
+		console.log("SETTING VOLUME for KEANU!");
+  		user.audioTrack.setVolume(1000);
+  	}
     user.audioTrack.play();
   }
 }
