@@ -62,7 +62,7 @@ async function join() {
   // join a channel and create local tracks, we can use Promise.all to run them concurrently
   [ options.uid, audioTrack] = await Promise.all([
     // join the channel
-    client.join(options.appid, options.channel, options.token || null, 11111),
+    client.join(options.appid, options.channel, options.token || null, 11111), // The 11111 is your ID. It will be changed accordingly
     // create local track using microphone
     AgoraRTC.createMicrophoneAudioTrack()
   ]);
@@ -102,6 +102,7 @@ async function subscribe(user, mediaType) {
   console.log("subscribe success");
   if (mediaType === 'audio') {
   	console.log("IDIDIDIDIDIDIIDIDIDIDIDIDIDI: "+uid+" : "+typeof 'uid');
+    // Below is the test for setting the volume of INDIVIDUAL office users.
   	if (uid == '22222'){
   		console.log("SETTING VOLUME for LAPTOP!");
   		user.audioTrack.setVolume(10);
@@ -109,6 +110,7 @@ async function subscribe(user, mediaType) {
 		console.log("SETTING VOLUME for KEANU!");
   		user.audioTrack.setVolume(1000);
   	}
+    user.audioTrack.setVolume(1000); //This will set the volume of the ENTIRE office to 1000 - 100x louder than original volume.
     user.audioTrack.play();
   }
 }
