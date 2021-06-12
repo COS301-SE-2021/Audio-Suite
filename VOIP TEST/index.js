@@ -62,7 +62,7 @@ async function join() {
   // join a channel and create local tracks, we can use Promise.all to run them concurrently
   [ options.uid, audioTrack] = await Promise.all([
     // join the channel
-    client.join(options.appid, options.channel, options.token || null, 11111), // The 11111 is your ID. It will be changed accordingly
+    client.join(options.appid, options.channel, options.token || null, 33333), // The 11111 is your ID. It will be changed accordingly
     // create local track using microphone
     AgoraRTC.createMicrophoneAudioTrack()
   ]);
