@@ -29,7 +29,7 @@ const SplashPage = ({changePage}) =>
                     </p>
                 </Container>
             </Jumbotron>
-            <HomeNavbar changePage={changePage} onChangePageType={changePageType}/>
+            <HomeNavbar changePage={changePage} pageType={pageType}/>
             {pageType === 'loginPage' ? <Login onLogin={changePage} onChangePageType={changePageType}/> : <Signup onChangePageType={changePageType}/>}
         </>
     )

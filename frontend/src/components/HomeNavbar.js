@@ -6,10 +6,9 @@ import Navbar from 'react-bootstrap/Navbar'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 
-const HomeNavbar = ({onChangePageType, changePage}) => {
+const HomeNavbar = ({changePage, pageType}) => {
     const navigateToLoginPage = () => 
     {
-        //onChangePageType('loginPage')
         changePage('splashPage')
     }
 
@@ -19,9 +18,13 @@ const HomeNavbar = ({onChangePageType, changePage}) => {
                 <Navbar.Brand><button id="Home-btn" onClick={() => changePage('homePage')}>Audio Suite</button></Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
-                    <Form inline >
-                        <Button variant="outline-success" onClick={() => navigateToLoginPage()}>Log In</Button>
-                    </Form>
+                    {
+                        pageType !== 'signupPage'
+                        &&
+                        <Form inline >
+                            <Button variant="outline-success" onClick={() => navigateToLoginPage()}>Log In</Button>
+                        </Form>
+                    }
                 </Navbar.Collapse>
             </Navbar>
         </>
