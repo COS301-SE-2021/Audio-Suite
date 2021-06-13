@@ -112,9 +112,34 @@ export class NotificationService {
         //get all the notifications for returning
         try{
             //get all the users notifications 
-            const allUserNotifications = this.notificationRepository.find({userID: userID})
+            const allUserNotifications = this.notificationRepository.find({userID: userID});
+
+            //check if all read or unread notifications
+            if(unread){
+                //create new array for storing notnificatiosn
+                const notificationWithoutRead = [];
+
+                //run through each of the notifications and check if its read or not
+                for (let i = 0; i < (await allUserNotifications).length; i++){
+
+                    //check if its been read or not
+                    if(allUserNotifications[i].readDateTime == null){
+                        notificationWithoutRead.push(allUserNotifications[i])
+                    }
+                    
+                }
+
+                //return the new array
+                return notificationWithoutRead;
+
+            } else{
+                return allUserNotifications;
+
+            }
+
         }catch(err){
-            
+            throw new HttpException("Could not find notifications", 404)
+
         }
 
     }
