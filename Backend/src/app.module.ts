@@ -8,6 +8,7 @@ import { User } from './user/user.entity';
 import { Office } from './office/office.entity';
 import { OfficeusersModule } from './officeusers/officeusers.module';
 import { OfficeUsers } from './officeusers/officeusers.entity';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { OfficeUsers } from './officeusers/officeusers.entity';
       synchronize: true,}), // TODO change to false for production
     UserModule, 
     OfficeModule, 
-    OfficeusersModule],
+    OfficeusersModule, NotificationModule],
   controllers: [AppController],
   providers: [AppService],
 })
