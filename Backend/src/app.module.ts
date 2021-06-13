@@ -9,6 +9,7 @@ import { Office } from './office/office.entity';
 import { OfficeusersModule } from './officeusers/officeusers.module';
 import { OfficeUsers } from './officeusers/officeusers.entity';
 import { NotificationModule } from './notification/notification.module';
+import { Notifications } from './notification/notification.entity';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { NotificationModule } from './notification/notification.module';
       username: 'System', // TODO change to env var
       password: 'audiosuitetest', // TODO change to env var
       database: 'AUDIO_SUITE', // TODO change to env var
-      entities: [User, Office, OfficeUsers],
+      entities: [User, Office, OfficeUsers, Notifications],
       synchronize: true,}), // TODO change to false for production
     UserModule, 
     OfficeModule, 

@@ -49,9 +49,9 @@ export class NotificationService {
     protected getNotificationType(type: string){
         return null;
     }
-    protected addNotification(payload: string, userID: string, date: Date, notificationType: string){
-        const nullValue = null;
-        const notification = this.notificationRepository.create({payload, userID, nullValue, date, notificationType});
+    protected addNotification(payload: string, userID: string, createdDateTime: Date, notificationType: string){
+        const readDateTime = null;
+        const notification = this.notificationRepository.create({payload, userID, readDateTime, createdDateTime, notificationType});
         const addNotification = this.notificationRepository.save(notification);
         return addNotification;
     }
@@ -78,13 +78,20 @@ export class NotificationService {
         //get the notification and change it 
         try{
             //get the notification
-            const getNotification = await this.notificationRepository.find({createdDate: createdDate, userID: userID});
+            const getNotification = await this.notificationRepository.find({createdDateTime: createdDate, userID: userID});
 
             //check how many notifications to send 
             if(read){
                 getNotification[0].createdDateTime = new Date();
             } else{
                 getNotification[0].createdDateTime = null;
+            }
+
+            //return the response object
+            return {
+                status: "Success",
+                response: "Notification has been changed",
+                notification: getNotification
             }
 
         }catch(err){
@@ -104,7 +111,8 @@ export class NotificationService {
 
         //get all the notifications for returning
         try{
-
+            //get all the users notifications 
+            const allUserNotifications = this.notificationRepository.find({userID: userID})
         }catch(err){
             
         }
