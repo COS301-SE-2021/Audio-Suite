@@ -3,13 +3,22 @@ import { User } from "src/user/user.entity";
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Office{
+export class Notifications{
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({unique: true})
-    name: string;
+    @Column()
+    payload: string;
 
-    @Column({unique: true})
-    invite: string;
+    @Column()
+    userID: string;
+
+    @Column()
+    readDateTime: Date; 
+
+    @Column()
+    createdDateTime: Date;
+
+    @Column()
+    notificationType: string;
 }
