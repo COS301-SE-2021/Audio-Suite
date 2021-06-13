@@ -8,7 +8,7 @@ export class Notifications{
     id: number;
 
     @Column()
-    payload: string;
+    payload: string
 
     @Column()
     userID: string;

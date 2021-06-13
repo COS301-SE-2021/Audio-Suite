@@ -16,7 +16,7 @@ import { Notifications } from './notification.entity';
       signOptions: {expiresIn: '1d'}
     })
   ],
-  providers: [NotificationService, UserService],
+  providers: [NotificationService, UserService, Notifications],
   controllers: [NotificationController]
 })
 export class NotificationModule {}
