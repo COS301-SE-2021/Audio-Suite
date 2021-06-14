@@ -11,9 +11,13 @@ import { OfficeUsers } from './officeusers/officeusers.entity';
 import { NotificationModule } from './notification/notification.module';
 import { Notifications } from './notification/notification.entity';
 import { MailModule } from './mail/mail.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: '176.58.102.89', // TODO change to env var

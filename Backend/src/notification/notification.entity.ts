@@ -21,4 +21,5 @@ export class Notifications{
 
     @Column()
     notificationType: string;
+    length: number;
 }
