@@ -10,15 +10,15 @@ import { join } from 'path';
       // transport: 'smtps://user@example.com:topsecret@smtp.example.com',
       // or
       transport: {
-        host: 'smtp.office365.com',
+        host: '<REDACTED>',
         secure: false,
         auth: {
-          user: 'user@example.com',
-          pass: 'topsecret',
+          user: '<REDACTED>',
+          pass: '<REDACTED>',
         },
       },
       defaults: {
-        from: '"No Reply" <noreply@example.com>',
+        from: '"Project Pegasus" <projectpegasusdevs@outlook.com>',
       },
       template: {
         dir: join(__dirname, 'templates'),

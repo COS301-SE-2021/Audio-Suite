@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
 import { Notifications } from './notification.entity';
+import { MailModule } from 'src/mail/mail.module';
+import { MailService } from 'src/mail/mail.service';
 
 @Module({
   imports: [
@@ -14,9 +16,10 @@ import { Notifications } from './notification.entity';
     JwtModule.register({
       secret: 'secret', // TODO change to env var
       signOptions: {expiresIn: '1d'}
-    })
+    }),
+    MailModule
   ],
-  providers: [NotificationService, UserService, Notifications],
+  providers: [NotificationService, UserService, Notifications, MailModule],
   controllers: [NotificationController]
 })
 export class NotificationModule {}

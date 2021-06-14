@@ -7,13 +7,15 @@ import { Connection, Repository, RepositoryNotFoundError } from 'typeorm';
 import { Notifications } from './notification.entity';
 import nodemailer from "nodemailer";
 import Mail from "nodemailer/lib/mailer";
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class NotificationService {
     constructor(
         @InjectRepository(Notifications)
         private notificationRepository : Repository<Notifications>,
-        private userService: UserService
+        private userService: UserService,
+        private mailerService: MailService
     ) {}
 
     async getNotification() : Promise<Notifications[]>{
@@ -70,45 +72,8 @@ export class NotificationService {
             //check that email is valied
             if(this.validateEmail(emailAddress)){
 
-                //check to make sure the email has body and such
-                if(true){
-
-                    //send email
-                    const hostname = "smtp.office365.com";
-                    const username = "projectpegasusdevs@outlook.com";
-                    const password = "PrOjEcTpEgAsUs";
-            
-                    const transporter = nodemailer.createTransport({
-                        host: hostname,
-                        port: 587,
-                        secure: false,
-                        requireTLS: true,
-                        auth: {
-                            user: username,
-                            pass: password,
-                        },
-                        logger: true
-            
-                    });
-                    const sendEmail = await transporter.sendMail({
-                        from: '"Project Pegasus" <projectpegasusdevs@outlook.com>',
-                        to: emailAddress,
-                        subject: type,
-                        text: payload,
-
-                    });
-
-                    //return the response
-                    return {
-                        status: "Success",
-                        response: "Email Sent",
-                    }
-                    
-
-                } else{
-                    throw ("Missing required information")
-
-                }
+                const otp = "100";
+                
 
             } else{
                 throw ("The email failed to send")
@@ -125,24 +90,18 @@ export class NotificationService {
         const regexp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
         return true;
     }
-    protected createTransport(){
-        const hostname = "smtp.office365.com";
-        const username = "projectpegasusdevs@outlook.com";
-        const password = "PrOjEcTpEgAsUs";
 
-        const transporter = nodemailer.createTransport({
-            host: hostname,
-            port: 587,
-            secure: false,
-            requireTLS: true,
-            auth: {
-                user: username,
-                pass: password,
-            },
-            logger: true
+    //create OTP and email it 
+    async createOTP(emailAddress: string, userName: string): Promise<any>{
+        
+        //create the OTP
+        const OTP = Math.floor(100000 + Math.random() * 900000);
 
-        });
-        return transporter;
+        //send email
+        this.mailerService.sendVarificationEmail(emailAddress, userName, OTP);
+
+        //return OTP for validation
+        return OTP;
     }
 
     //change notification type

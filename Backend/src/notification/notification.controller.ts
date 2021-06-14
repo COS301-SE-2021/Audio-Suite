@@ -23,11 +23,19 @@ export class NotificationController {
 
     @Post('notifications/sendEmail')
     async sendEmail(
-        @Body('emailAdress') emailAddress: string,
+        @Body('emailAddress') emailAddress: string,
         @Body('type') type: string,
         @Body('payload') payload: string
     ){
         return await this.notificationService.sendEmail(emailAddress, type, payload);
+    }
+
+    @Post('notifications/sendEmail')
+    async sendVarification(
+        @Body('emailAddress') emailAddress: string,
+        @Body('userName') userName: string,
+    ){
+        return await this.notificationService.createOTP(emailAddress, userName);
     }
 
     @Post('notifications/changeNotification')
