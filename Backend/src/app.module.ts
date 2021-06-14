@@ -10,6 +10,7 @@ import { OfficeusersModule } from './officeusers/officeusers.module';
 import { OfficeUsers } from './officeusers/officeusers.entity';
 import { NotificationModule } from './notification/notification.module';
 import { Notifications } from './notification/notification.entity';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { Notifications } from './notification/notification.entity';
       synchronize: true,}), // TODO change to false for production
     UserModule, 
     OfficeModule, 
-    OfficeusersModule, NotificationModule],
+    OfficeusersModule, NotificationModule, MailModule],
   controllers: [AppController],
   providers: [AppService],
 })

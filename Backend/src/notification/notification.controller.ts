@@ -15,9 +15,10 @@ export class NotificationController {
         @Body('userID') userID: string,
         @Body('type') type: string,
         @Body('link') link: string,
-        @Body('jwt') jwt: string
+        @Body('email') email: string,
+        @Body('password') password: string
     ){
-        return await this.notificationService.createNotification(userID, type, link, jwt);
+        return await this.notificationService.createNotification(userID, type, link, email, password);
     }
 
     @Post('notifications/sendEmail')
@@ -29,22 +30,22 @@ export class NotificationController {
         return await this.notificationService.sendEmail(emailAddress, type, payload);
     }
 
-    @Post('notifications/changeEmail')
-    async changeEmail(
+    @Post('notifications/changeNotification')
+    async changeNotification(
         @Body('read') read: boolean,
         @Body('createdDate') createdDate: Date,
         @Body('userID') userID: string,
-        @Body('jwt') jwt: string
+        @Body('password') password: string
     ){
-        return await this.notificationService.changeNotification(read, createdDate, userID, jwt);
+        return await this.notificationService.changeNotification(read, createdDate, userID, password);
     }
 
     @Post('notifications/retrieveNotification')
     async retrieveNotification(
         @Body('userID') userID: string,
         @Body('unread') unread: boolean,
-        @Body('jwt') jwt: string
+        @Body('password') password: string
     ){
-        return await this.notificationService.retrieveEmail(userID, unread, jwt);
+        return await this.notificationService.retrieveEmail(userID, unread, password);
     }
 }
