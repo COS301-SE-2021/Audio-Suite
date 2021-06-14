@@ -30,7 +30,7 @@ export class NotificationController {
         return await this.notificationService.sendEmail(emailAddress, type, payload);
     }
 
-    @Post('notifications/sendEmail')
+    @Post('notifications/sendVerification')
     async sendVarification(
         @Body('emailAddress') emailAddress: string,
         @Body('userName') userName: string,

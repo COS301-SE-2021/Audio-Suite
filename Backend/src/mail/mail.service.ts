@@ -7,7 +7,6 @@ export class MailService {
     constructor(private mailerService: MailerService) {};
 
     async sendVarificationEmail(emailAddress: string, userName: string, otp: number){
-        console.log(emailAddress);
         //send email
         await this.mailerService.sendMail({
             to: emailAddress,
