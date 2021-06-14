@@ -33,6 +33,7 @@
     "bcrypt": "^5.0.1",
     "handlebars": "^4.7.7",
     "mysql2": "^2.2.5",
+    "nestjs-config": "^1.4.8",
     "nodemailer": "^6.6.1",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
