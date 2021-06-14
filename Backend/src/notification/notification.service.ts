@@ -38,6 +38,10 @@ export class NotificationService {
             
             //add notification
             const addNotification = this.addNotification(payload, userID, new Date(), notificationType)
+
+            //send emails
+
+
             return addNotification;
         }catch(err){
             throw new HttpException("Could not add notification to database", 500);
