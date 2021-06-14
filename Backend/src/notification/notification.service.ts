@@ -37,7 +37,7 @@ export class NotificationService {
             const notificationType = await this.getNotificationType(type);
             
             //add notification
-            const addNotification = await this.addNotification(payload, userID, new Date(), notificationType)
+            const addNotification = this.addNotification(payload, userID, new Date(), notificationType)
             return addNotification;
         }catch(err){
             throw new HttpException("Could not add notification to database", 500);
@@ -52,23 +52,14 @@ export class NotificationService {
         return type;
     }
     protected addNotification(payload: string, userID: string, createdDateTime: Date, notificationType: string){
-        const readDateTime = null;
+        const readDateTime = false ;
         const notification = this.notificationRepository.create({payload, userID, readDateTime, createdDateTime, notificationType});
         const addNotification = this.notificationRepository.save(notification);
         return addNotification;
     }
 
     //sending an email
-    async sendEmail(emailAddress: string, type: string, payload: string, jwt: string) : Promise<any>{
-        //check for valid user
-        try{
-            const user = await this.userService.validateUser(jwt);
-
-        }catch(err){
-            throw new UnauthorizedException;
-
-        }
-
+    async sendEmail(emailAddress: string, type: string, payload: string) : Promise<any>{
         //send email
         try{
             //check that email is valied

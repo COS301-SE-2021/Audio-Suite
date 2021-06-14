@@ -24,10 +24,9 @@ export class NotificationController {
     async sendEmail(
         @Body('emailAdress') emailAddress: string,
         @Body('type') type: string,
-        @Body('payload') payload: string,
-        @Body('jwt') jwt: string
+        @Body('payload') payload: string
     ){
-        return await this.notificationService.sendEmail(emailAddress, type, payload, jwt);
+        return await this.notificationService.sendEmail(emailAddress, type, payload);
     }
 
     @Post('notifications/changeEmail')

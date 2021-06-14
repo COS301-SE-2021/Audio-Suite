@@ -14,7 +14,7 @@ export class Notifications{
     userID: string;
 
     @Column()
-    readDateTime: Date; 
+    readDateTime: boolean; 
 
     @Column()
     createdDateTime: Date;
