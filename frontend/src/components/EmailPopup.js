@@ -1,25 +1,9 @@
-import React, { Component } from 'react';
-import { useState } from 'react'
+import React from 'react';
 
 import "../CSS/Profile.css";
-import Navbar from 'react-bootstrap/Navbar'
-import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import Container from 'react-bootstrap/Container'
-import Modal from 'react-bootstrap/Modal'
-import ModalHeader from 'react-bootstrap/ModalHeader'
-import ModalTitle from 'react-bootstrap/ModalTitle'
-import ModalBody from 'react-bootstrap/ModalBody'
-import ModalFooter from 'react-bootstrap/ModalFooter'
 
-const EmailPopup = ({onChangePageType, changePage}) => {
-    // const navigateToLoginPage = () => 
-    // {
-    //     //onChangePageType('loginPage')
-    //     changePage('splashPage')
-    // }
+const EmailPopup = () => {
 
     return (
         <>
@@ -30,14 +14,14 @@ const EmailPopup = ({onChangePageType, changePage}) => {
                 <div class="form-group">
                     <label ><h6 class="fieldset-title">Email</h6></label>
                     <div class="col-md-10 col-sm-9 col-xs-12">
-                        <input type="text" class="form-control" value=""></input>
+                    <input type="text" class="form-control" id="account-fn" required=""></input>
                     </div>
                 </div>
             
                 <div class="form-group">
                     <label ><h6 class="fieldset-title">Current Password</h6></label>
                     <div class="col-md-10 col-sm-9 col-xs-12">
-                        <input type="text" class="form-control" value=""></input>
+                        <input class="form-control" type="password" id="account-pass"></input>
                     </div>
                 </div>
             </Container>

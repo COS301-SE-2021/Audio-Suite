@@ -1,26 +1,10 @@
-import React, { Component } from 'react';
-import { useState } from 'react'
+import React from 'react';
 
 import "../CSS/Profile.css";
-import Navbar from 'react-bootstrap/Navbar'
-import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import Container from 'react-bootstrap/Container'
-import Modal from 'react-bootstrap/Modal'
-import ModalHeader from 'react-bootstrap/ModalHeader'
-import ModalTitle from 'react-bootstrap/ModalTitle'
-import ModalBody from 'react-bootstrap/ModalBody'
-import ModalFooter from 'react-bootstrap/ModalFooter'
 
-const PasswordPopup = ({onChangePageType, changePage}) => {
-    // const navigateToLoginPage = () => 
-    // {
-    //     //onChangePageType('loginPage')
-    //     changePage('splashPage')
-    // }
-
+const PasswordPopup = () => {
+   
     return (
         <>
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"></link>
