@@ -30,14 +30,14 @@ const PasswordPopup = ({onChangePageType, changePage}) => {
                 <div class="form-group">
                     <label ><h6 class="fieldset-title">Current Password</h6></label>
                     <div class="col-md-10 col-sm-9 col-xs-12">
-                        <input type="text" class="form-control" value=""></input>
+                    <input class="form-control" type="password" id="account-pass-old"></input>
                     </div>
                 </div>
             
                 <div class="form-group">
                     <label ><h6 class="fieldset-title">New Password</h6></label>
                     <div class="col-md-10 col-sm-9 col-xs-12">
-                        <input type="text" class="form-control" value=""></input>
+                        <input class="form-control" type="password" id="account-pass-new"></input>
                     </div>
                 </div>
             </Container>
