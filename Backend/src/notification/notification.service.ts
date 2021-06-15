@@ -72,7 +72,7 @@ export class NotificationService {
             //check that email is valied
             if(this.validateEmail(emailAddress)){
 
-                const otp = "100";
+                //send the emailAddress
                 
 
             } else{
@@ -95,13 +95,18 @@ export class NotificationService {
     async createOTP(emailAddress: string, userName: string): Promise<any>{
         
         //create the OTP
-        const OTP = Math.floor(100000 + Math.random() * 900000);
+        const crypto = require("crypto");
+        const n = crypto.randomInt(0, 1000000);
+        const OTP = n.toString().padStart(6, "0");
 
         //send email
         this.mailerService.sendVarificationEmail(emailAddress, userName, OTP);
 
         //return OTP for validation
-        return OTP;
+        return {
+            success: "success",
+            otp: OTP
+        };
     }
 
     //change notification type
