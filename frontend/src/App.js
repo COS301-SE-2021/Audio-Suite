@@ -6,6 +6,7 @@ import { useState } from 'react'
 
 function App() {
   const [page, setPage] = useState('homePage')
+  const [userJWT, setUserJWT] = useState('')
 
   const changePage = (pageName) =>
   {
@@ -24,7 +25,7 @@ function App() {
   {
     return (
       <div>
-        <SplashPage changePage={changePage}/>
+        <SplashPage changePage={changePage} setJWT={setUserJWT}/>
       </div>
     );
   }
