@@ -8,6 +8,8 @@ export class Settings{
     @Column()
     darkMode: boolean;
 
+    @Column()
+    userName: string;
 
 
     //slider for user volume.
