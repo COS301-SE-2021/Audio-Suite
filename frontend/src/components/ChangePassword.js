@@ -4,10 +4,6 @@ import { useState } from 'react'
 import "../CSS/ChangeEmail.css";
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
-import ModalHeader from 'react-bootstrap/ModalHeader'
-import ModalTitle from 'react-bootstrap/ModalTitle'
-import ModalBody from 'react-bootstrap/ModalBody'
-import ModalFooter from 'react-bootstrap/ModalFooter'
 
 import PasswordPopup from './PasswordPopup.js'
 
