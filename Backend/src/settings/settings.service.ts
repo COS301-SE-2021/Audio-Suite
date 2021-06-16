@@ -24,10 +24,25 @@ export class SettingsService {
     }
 
     // Called when a user wants to change their Audio Suite appearance.
-    public async changeMode(jwt: string, mode: boolean){
+    public async setMode(jwt: string, mode: boolean){
         try {
             const user = await this.userService.validateUser(jwt);
-            const setting = await this.settingsRepository.save({userID: user.id, darkMode: mode});
+            const setting = await this.settingsRepository.save({userID: user.id, darkMode: mode, userName:user.userName});
+
+            return setting;
+        } catch (error) {
+            throw new UnauthorizedException();
+        }
+    }
+
+    //Called when a user wants to update their Username.
+    public async setUsername(jwt: string, userName: string){
+        try {
+            const user = await this.userService.validateUser(jwt);
+            await this.userService.setUsername(jwt, userName);
+            const setting = await this.settingsRepository.createQueryBuilder().update(user).set({
+                userName: userName
+            }).where("id = :id", { id:user.id }).execute();
             
             return setting;
         } catch (error) {
