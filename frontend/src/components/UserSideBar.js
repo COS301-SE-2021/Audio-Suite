@@ -10,11 +10,12 @@ import Col from 'react-bootstrap/Col'
 
 const UserSideBar = ({officeSelected, onClick}) => {
     // Create Client
-    var client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+    var client = null;
 
     // Setup audio stream and join channel
     var audioTrack = null;
     var remoteUsers = {};
+    var leaveRoom = false;
 
     // Agora client options
     var options = {
@@ -23,6 +24,20 @@ const UserSideBar = ({officeSelected, onClick}) => {
         uid: null,
         token: '0067afb53157f754f6f8023f31fb343404aIADuH+JewR05QHH+wDLUvXhiJjh+FMNb9RJL4xv49n86lRF9s/sAAAAAEAARnS3HRy7LYAEAAQBGLstg'
     };
+
+    async function SetupAudio(officeName){
+        try {
+            client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+            leaveRoom = false;
+            await join(officeName);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            if(leaveRoom){
+                await leave();
+            }
+        }
+    }
 
     async function join(officeName) {
         // Join office frontend state
@@ -48,6 +63,7 @@ const UserSideBar = ({officeSelected, onClick}) => {
     async function leave() {
         // Join office frontend state
         onClick("");
+        leaveRoom = true;
 
         if(audioTrack) {
             audioTrack.stop();
@@ -104,19 +120,19 @@ const UserSideBar = ({officeSelected, onClick}) => {
                 </Row>
                 <Row>
                     <Col>
-                        <Button variant="outline-light" block onClick={() => join('Epi-Use')}>Epi-Use</Button>
+                        <Button variant="outline-light" block onClick={() => SetupAudio('Epi-Use')}>Epi-Use</Button>
                     </Col>
                 </Row>
                 <br></br>
                 <Row>
                     <Col>
-                        <Button variant="outline-light" block onClick={() => join('Pegasus')}>Pegasus</Button>
+                        <Button variant="outline-light" block onClick={() => SetupAudio('Pegasus')}>Pegasus</Button>
                     </Col>
                 </Row>
                 <br></br>
                 <Row>
                     <Col>
-                        <Button variant="outline-light" block onClick={() => join('Tuks CS')}>Tuks CS</Button>
+                        <Button variant="outline-light" block onClick={() => SetupAudio('Tuks CS')}>Tuks CS</Button>
                     </Col>
                 </Row>
                 <br></br>
