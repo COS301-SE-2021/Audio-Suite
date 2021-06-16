@@ -10,6 +10,7 @@ import { OfficeusersModule } from './officeusers/officeusers.module';
 import { OfficeUsers } from './officeusers/officeusers.entity';
 import { NotificationModule } from './notification/notification.module';
 import { Notifications } from './notification/notification.entity';
+import { Settings } from './settings/settings.entity';
 import { MailModule } from './mail/mail.module';
 import { ConfigModule } from '@nestjs/config';
 import { SettingsModule } from './settings/settings.module';
@@ -26,7 +27,7 @@ import { SettingsModule } from './settings/settings.module';
       username: 'System', // TODO change to env var
       password: 'audiosuitetest', // TODO change to env var
       database: 'AUDIO_SUITE', // TODO change to env var
-      entities: [User, Office, OfficeUsers, Notifications],
+      entities: [User, Office, OfficeUsers, Notifications, Settings],
       synchronize: true,}), // TODO change to false for production
     UserModule, 
     OfficeModule, 
