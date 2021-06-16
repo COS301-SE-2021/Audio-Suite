@@ -8,9 +8,16 @@ import { User } from './user/user.entity';
 import { Office } from './office/office.entity';
 import { OfficeusersModule } from './officeusers/officeusers.module';
 import { OfficeUsers } from './officeusers/officeusers.entity';
+import { NotificationModule } from './notification/notification.module';
+import { Notifications } from './notification/notification.entity';
+import { MailModule } from './mail/mail.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: '176.58.102.89', // TODO change to env var
@@ -18,11 +25,11 @@ import { OfficeUsers } from './officeusers/officeusers.entity';
       username: 'System', // TODO change to env var
       password: 'audiosuitetest', // TODO change to env var
       database: 'AUDIO_SUITE', // TODO change to env var
-      entities: [User, Office, OfficeUsers],
+      entities: [User, Office, OfficeUsers, Notifications],
       synchronize: true,}), // TODO change to false for production
     UserModule, 
     OfficeModule, 
-    OfficeusersModule],
+    OfficeusersModule, NotificationModule, MailModule],
   controllers: [AppController],
   providers: [AppService],
 })
