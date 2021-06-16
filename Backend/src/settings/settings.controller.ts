@@ -10,13 +10,13 @@ export class SettingsController {
         private userService: UserService){}
 
     // This function is to change your visual appearnce of AudioSuite.
-    @Post('changeMode')
-    async changeMode(
+    @Post('setMode')
+    async setMode(
         @Body('jwt') jwt: string,
         @Body('mode') mode: boolean
     ){
         try {
-            const setting = await this.settingsService.changeMode(jwt, mode);
+            const setting = await this.settingsService.setMode(jwt, mode);
             if(setting!=null){
                 return {Response: "Success", userSettings: setting};
             }else{
@@ -25,5 +25,23 @@ export class SettingsController {
         } catch (error) {
             throw new UnauthorizedException();
         }
+    }
+
+
+    @Post('setUsername')
+    async setUsername(
+        @Body('jwt') jwt: string,
+        @Body('userName') userName: string
+    ){
+        try {
+            const setting = await this.settingsService.setUsername(jwt, userName);
+            if(setting!=null){
+                return {Response: "Success", userSettings: setting};
+            }else{
+                return {Response: "Unsuccessful"};
+            }
+        } catch (error) {
+            throw new UnauthorizedException();
+        }        
     }
 }
