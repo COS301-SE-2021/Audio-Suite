@@ -7,7 +7,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
-const Login = ({onLogin, onChangePageType}) => {
+const Login = ({setJWT, onLogin, onChangePageType}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -21,7 +21,29 @@ const Login = ({onLogin, onChangePageType}) => {
         {
             console.log("Log user in!")
             console.log({email: email, password: password})
-            onLogin('UserPage')
+
+            const Login_requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email, password: password })
+            };
+
+            fetch("http://localhost:3001/api/login", Login_requestOptions)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    console.log(result);
+                    if(result.response === 'Success')
+                    {
+                        setJWT(result.jwt);
+                        onLogin('userPage');
+                    }
+                    else
+                    {
+                        alert('Invalid User credentials.')
+                    }
+                }
+            )
         }
         else
         {
