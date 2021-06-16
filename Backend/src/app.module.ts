@@ -12,6 +12,7 @@ import { NotificationModule } from './notification/notification.module';
 import { Notifications } from './notification/notification.entity';
 import { MailModule } from './mail/mail.module';
 import { ConfigModule } from '@nestjs/config';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { ConfigModule } from '@nestjs/config';
       synchronize: true,}), // TODO change to false for production
     UserModule, 
     OfficeModule, 
-    OfficeusersModule, NotificationModule, MailModule],
+    OfficeusersModule, NotificationModule, MailModule, SettingsModule],
   controllers: [AppController],
   providers: [AppService],
 })
