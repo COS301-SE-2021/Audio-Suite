@@ -74,4 +74,18 @@ export class UserService {
             throw new UnauthorizedException();
         }
     }
+
+    async setUsername(jwt: string, userName: string){
+        try {
+            const user = await this.validateUser(jwt);
+            // const setting = await this.usersRepository.save({firstName: user.firstName, lastName: user.lastName, userName: userName, email: user.email, password: user.password});
+            const setting = await this.usersRepository.createQueryBuilder().update(user).set({
+                userName: userName
+            }).where("id = :id", { id:user.id }).execute();
+
+            return setting;
+        } catch (error) {
+            throw new UnauthorizedException();
+        }
+    }
 }
