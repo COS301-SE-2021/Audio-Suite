@@ -1,7 +1,7 @@
 import SplashPage from './pages/SplashPage'
 import HomePage from './pages/HomePage'
 import UserPage from './pages/UserPage'
-
+import UserSettingsPage from './pages/UserSettingsPage'
 import { useState } from 'react'
 
 function App() {
@@ -33,6 +33,14 @@ function App() {
     return (
       <div>
         <UserPage changePage={changePage}/>
+      </div>
+    );
+  }   
+  else if(page === 'userSettingsPage') 
+  {
+    return (
+      <div>
+        <UserSettingsPage/>
       </div>
     );
   }
