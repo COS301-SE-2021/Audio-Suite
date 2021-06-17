@@ -28,7 +28,7 @@ const Login = ({setJWT, onLogin, onChangePageType}) => {
                 body: JSON.stringify({ email: email, password: password })
             };
 
-            fetch("http://localhost:3001/api/login", Login_requestOptions)
+            fetch("http://api.audiosuite.xyz/api/login", Login_requestOptions)
             .then(res => res.json())
             .then(
                 (result) => {
