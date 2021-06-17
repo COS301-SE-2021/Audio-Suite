@@ -10,38 +10,24 @@ import Col from 'react-bootstrap/Col'
 
 const UserSideBar = ({officeSelected, onClick}) => {
     // Create Client
-    var client = null;
+    var client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
 
     // Setup audio stream and join channel
     var audioTrack = null;
     var remoteUsers = {};
-    var leaveRoom = false;
 
     // Agora client options
     var options = {
         appid: '7afb53157f754f6f8023f31fb343404a',
-        channel: 'Audio-Test',
+        channel: 'Pegasus',
         uid: null,
-        token: '0067afb53157f754f6f8023f31fb343404aIADuH+JewR05QHH+wDLUvXhiJjh+FMNb9RJL4xv49n86lRF9s/sAAAAAEAARnS3HRy7LYAEAAQBGLstg'
+        token: '0067afb53157f754f6f8023f31fb343404aIABXR8MXm4ZVIy9Pu3xyiiAi/9rTJ4erKMgOgLe0/fflZifo+4MAAAAAEABFAsi6Q8PMYAEAAQBDw8xg'
     };
-
-    async function SetupAudio(officeName){
-        try {
-            client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-            leaveRoom = false;
-            await join(officeName);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            if(leaveRoom){
-                await leave();
-            }
-        }
-    }
 
     async function join(officeName) {
         // Join office frontend state
         onClick(officeName);
+        //options.channel = officeName;
 
         // add event listener to play remote tracks when remote user publishs.
         client.on("user-published", handleUserPublished);
@@ -63,7 +49,6 @@ const UserSideBar = ({officeSelected, onClick}) => {
     async function leave() {
         // Join office frontend state
         onClick("");
-        leaveRoom = true;
 
         if(audioTrack) {
             audioTrack.stop();
@@ -81,7 +66,7 @@ const UserSideBar = ({officeSelected, onClick}) => {
     }
 
     async function subscribe(user, mediaType) {
-        const uid = user.uid;
+        //const uid = user.uid;
         // subscribe to a remote user
         await client.subscribe(user, mediaType);
         console.log("subscribe success");
@@ -120,19 +105,19 @@ const UserSideBar = ({officeSelected, onClick}) => {
                 </Row>
                 <Row>
                     <Col>
-                        <Button variant="outline-light" block onClick={() => SetupAudio('Epi-Use')}>Epi-Use</Button>
+                        <Button variant="outline-light" block onClick={ async () => { await join('Epi-Use');} }>Epi-Use</Button>
                     </Col>
                 </Row>
                 <br></br>
                 <Row>
                     <Col>
-                        <Button variant="outline-light" block onClick={() => SetupAudio('Pegasus')}>Pegasus</Button>
+                        <Button variant="outline-light" block onClick={ async () => { await join('Pegasus');} }>Pegasus</Button>
                     </Col>
                 </Row>
                 <br></br>
                 <Row>
                     <Col>
-                        <Button variant="outline-light" block onClick={() => SetupAudio('Tuks CS')}>Tuks CS</Button>
+                        <Button variant="outline-light" block onClick={ async () => { await join('Tuks CS');} }>Tuks CS</Button>
                     </Col>
                 </Row>
                 <br></br>
@@ -147,7 +132,7 @@ const UserSideBar = ({officeSelected, onClick}) => {
                     &&
                     <Row>
                         <Col>
-                            <Button variant="outline-light" block onClick={() => leave()}>Leave Office</Button>
+                            <Button variant="outline-light" block onClick={ async () => { await leave();} }>Leave Office</Button>
                         </Col>
                     </Row>
                 }
