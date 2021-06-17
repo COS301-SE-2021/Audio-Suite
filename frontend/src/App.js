@@ -1,57 +1,35 @@
-import SplashPage from './pages/SplashPage'
-import HomePage from './pages/HomePage'
-import UserPage from './pages/UserPage'
-import UserSettingsPage from './pages/UserSettingsPage'
-import { useState } from 'react'
+import React from 'react';
+import { MDBBtn, MDBContainer } from 'mdb-react-ui-kit';
 
 function App() {
-  const [page, setPage] = useState('homePage')
-
-  const changePage = (pageName) =>
-  {
-    setPage(pageName)
-  }
-
-  if(page === 'homePage')
-  {
-    return (
-      <div>
-        <HomePage changePage={changePage}/>
+  return (
+    <MDBContainer fluid>
+      <div
+        className='d-flex justify-content-center align-items-center'
+        style={{ height: '100vh' }}
+      >
+        <div className='text-center'>
+          <img
+            className='mb-4'
+            src='https://mdbootstrap.com/img/logo/mdb-transparent-250px.png'
+            style={{ width: 250, height: 90 }}
+          />
+          <h5 className='mb-3'>
+            Thank you for using our product. We're glad you're with us.
+          </h5>
+          <p className='mb-3'>MDB Team</p>
+          <MDBBtn
+            tag='a'
+            href='https://mdbootstrap.com/docs/standard/getting-started/'
+            target='_blank'
+            role='button'
+          >
+            Start MDB tutorial
+          </MDBBtn>
+        </div>
       </div>
-    );
-  }
-  else if(page === 'splashPage') 
-  {
-    return (
-      <div>
-        <SplashPage changePage={changePage}/>
-      </div>
-    );
-  }
-  else if(page === 'userPage') 
-  {
-    return (
-      <div>
-        <UserPage changePage={changePage}/>
-      </div>
-    );
-  }   
-  else if(page === 'userSettingsPage') 
-  {
-    return (
-      <div>
-        <UserSettingsPage/>
-      </div>
-    );
-  }
-  else
-  {
-    return (
-      <div>
-        Not splashPage
-      </div>
-    );
-  }
+    </MDBContainer>
+  );
 }
 
 export default App;
