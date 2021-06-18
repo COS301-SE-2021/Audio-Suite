@@ -2,12 +2,12 @@ import { HttpException, Injectable, UnauthorizedException } from '@nestjs/common
 import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
 import { InjectRepository } from '@nestjs/typeorm';
 import { create } from 'domain';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 import { Connection, Repository, RepositoryNotFoundError } from 'typeorm';
 import { Notifications } from './notification.entity';
 import nodemailer from "nodemailer";
 import Mail from "nodemailer/lib/mailer";
-import { MailService } from 'src/mail/mail.service';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class NotificationService {
