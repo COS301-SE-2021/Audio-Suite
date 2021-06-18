@@ -25,6 +25,9 @@ export class OfficeService {
         const invite = randomBytes(16).toString("hex");
         try{
             const user = await this.userService.validateUser(jwt);
+            if(user == null){
+                throw new UnauthorizedException();
+            }
         }catch(err){
             throw new UnauthorizedException();
         }
