@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { type } from 'os';
 import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.service';
-
 
 describe('NotificationController', () => {
   let controller: NotificationController;
@@ -19,6 +19,17 @@ describe('NotificationController', () => {
         };
       }
     }),
+
+    createOTP: jest.fn((emailAddress, userName) => {
+      const crypto = require("crypto");
+      const n = crypto.randomInt(0, 1000000);
+      const OTP = n.toString().padStart(6, "0");
+      return{
+        success: "success",
+        otp: OTP
+      };
+    })
+    
   }
 
   beforeEach(async () => {
@@ -37,24 +48,37 @@ describe('NotificationController', () => {
     expect(controller).toBeDefined();
   });
 
-  //createNotificationTest
+  //createNotification Test
 
-  it('should make use of createNotification for notification', () => {
+  it('should make use of createNotification for notification', async () => {
     const user = {
-      userID: "ID123",
-      type: "verification",
-      link: "audiosuite.xyz/verification",
-      email: "test@audiosuite.com",
-      password: "test",
+      userID: 'ID123',
+      type: 'verification',
+      link: 'audiosuite.xyz/verification',
+      email: 'test@audiosuite.com',
+      password: 'test',
     }
     
-    expect(controller.createNotification(user.userID,user.type, user.link, user.email, user.password)).toStrictEqual({
+    expect(await controller.createNotification(user.userID,user.type, user.link, user.email, user.password)).toStrictEqual({
+      payload: user.type,
       userID: user.userID,
-      type: user.type,
-      link: user.link,
-      email: user.email,
-      password: "test"
-    })
-  })
+      readDateTime: false,
+      createdDateTime: expect.anything(),
+      notificationType: user.type,
+      id: expect.any(Number),
+    });
+  });
 
+  // createOTP Test
+  it('should make use of createOTP through sendVerification in Controller for notification', async () => {
+    const user = {
+      emailAddress: 'test@audiosuite.com',
+      userName: 'Test123',
+    }
+
+    expect(await controller.sendVarification(user.emailAddress, user.userName)).toStrictEqual({
+      success: "success",
+      otp: expect.any(String),
+    });
+  });
 });
