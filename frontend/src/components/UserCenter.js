@@ -20,15 +20,41 @@ const clientConfig = {
 const useClient = createClient(clientConfig);
 const useMicrophoneTrack = createMicrophoneAudioTrack();
 const appId = "7afb53157f754f6f8023f31fb343404a";
-const token = '0067afb53157f754f6f8023f31fb343404aIABXR8MXm4ZVIy9Pu3xyiiAi/9rTJ4erKMgOgLe0/fflZifo+4MAAAAAEABFAsi6Q8PMYAEAAQBDw8xg';
-const channel = 'Pegasus';
+const token = '0067afb53157f754f6f8023f31fb343404aIAAbdyOcdM0CXfVwAV3xSf3GsQ1QXg5D16OoEMH5usYLGvFz67sAAAAAEABFAsi6yxbOYAEAAQDKFs5g';
+const channel = 'AUDIO-SUITE';
 var usersList = [];
 
-// GET USER OBJECT FROM DB -> Fetch (user/details {JWT})
-const uid = null; // Set to User ID once DB is connected
+var uid = null; 
+var username = null;
+var usernameList = [];
+//var usernames = [];
 
 function UserCenter({userJWT}){
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jwt: userJWT })
+    };
+    
+    fetch("http://127.0.0.1:3001/api/user/details", requestOptions)
+    .then(res => res.json())
+    .then(
+        (result) => {
+            if(result != null && result.id != null)
+            {
+                /* SET VALUES FROM RESPONSE */
+                uid = result.id;
+                username = result.userName;
+            }
+            else
+            {
+                alert('Invalid JWT.')
+            }
+        }
+    )
+
     const [currentOffice, setCurrentOffice] = useState('')
+    const [usernames, setUsernames] = useState([])
     const [currentRoom, setCurrentRoom] = useState('')
     const [selectedTab, setSelectedTab] = useState('floorPlan')
 
@@ -40,22 +66,45 @@ function UserCenter({userJWT}){
         setCurrentRoom(Room);
     }
 
+    const updateUsers = (usernames) => {
+        setUsernames(usernames);
+    }
+
 
     // Create Client and Mic Track
     const [remoteUsers, setRemoteUsers] = useState([]);
     const client = useClient();
     const track = useMicrophoneTrack()['track'];
-    console.log(track);
 
     // Function to initialise the SDK
     let init = async () => {
         setRemoteUsers([]);
         client.on("user-published", async (user, mediaType) => {
             await client.subscribe(user, mediaType);
+
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: user.uid+"" })
+            };
+            
+            fetch("http://127.0.0.1:3001/api/user/getUsernameById", requestOptions)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    if(result != null && result.userName != null){
+                        /* SET VALUES FROM RESPONSE */
+                        usernameList.push([result.id+"" ,""+result.userName+"\n"]);
+                        updateUsers([]);
+                    }else{
+                        alert('Invalid User ID.')
+                    }
+                }
+            )
+
             console.log("subscribe success");
             if (mediaType === "audio") {
                 usersList.push(""+user.uid);
-                console.log(usersList);
                 setRemoteUsers(usersList);
                 user.audioTrack?.play();
                 getRemoteUsers();
@@ -96,13 +145,14 @@ function UserCenter({userJWT}){
     };
     let join = async (room) => {
         if(currentRoom !== room){
-            if(currentRoom !== ''){
+            /*if(currentRoom !== ''){
                 await leave();
-            }
+            }*/
             changeCurrentRoomTo(room);
             if (track !== undefined) {
                 console.log("init ready");
                 setRemoteUsers([]);
+                usernameList = [];
                 init(channel);
             }
             /* ADD USER TO ROOM IN DB */
@@ -110,7 +160,6 @@ function UserCenter({userJWT}){
     }
 
     let leave = async () => {
-        console.log("---------------------------- LEAVING ----------------------------");
         client.on("user-published", async (user, mediaType) => {
             await client.unsubscribe(user, mediaType);
             console.log("unsubscribe success");
@@ -130,12 +179,11 @@ function UserCenter({userJWT}){
         client.on("user-left", (user) => {
             console.log("leaving", user);
         });
-        
+        changeCurrentRoomTo('');
         changeCurrentOfficeTo('');
         var tmp = [];
         usersList = tmp;
         setRemoteUsers([]);
-        console.log("REMOTE USERS LENGTH ================== "+remoteUsers.length);
 
         await client.unpublish();
         await client.leave();
@@ -144,22 +192,39 @@ function UserCenter({userJWT}){
     };
 
     function getRemoteUsers(){
+        var users = [];
+        usersList = [];
+        var userNames = [];
+        if(username != null){
+            userNames.push(""+username+"\n");
+        }
+        
         if(remoteUsers.length !== 0){
-            var users = [];
-            usersList = [];
             for(var i=0;i<remoteUsers.length;i++){
                 if(!users.includes("\n"+remoteUsers[i])){
                     users.push("\n"+remoteUsers[i]);
                     usersList.push(""+remoteUsers[i]);
                 }
             }
-            for( var x=0;x<users.length;x++){
-                if(users[x] !== undefined && users[x] !== null){
-                }
-            }
-            console.log(usersList);
         }
-        return users;
+
+        if(!users.includes("\n"+uid)){
+            users.push("\n"+uid);
+            usersList.push(""+uid);
+        }
+
+        for(var x=0;x<usernameList.length;x++){
+            if(usersList.includes(usernameList[x][0]) && !userNames.includes(""+usernameList[x][1]+"\n")){
+                userNames.push(""+usernameList[x][1]+"\n");
+                console.log(usernameList[x][1]);
+            }
+        }
+
+        console.log("----------------------START---------------------");
+        console.log(""+userNames);
+        console.log("----------------------FINSIH--------------------");
+
+        return userNames;
     }
 
     return (
