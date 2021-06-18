@@ -33,7 +33,7 @@ function App() {
   {
     return (
       <div>
-        <UserPage changePage={changePage}/>
+        <UserPage changePage={changePage} userJWT={userJWT} />
       </div>
     );
   }   
