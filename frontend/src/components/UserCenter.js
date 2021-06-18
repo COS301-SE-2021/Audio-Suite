@@ -27,7 +27,6 @@ var usersList = [];
 var uid = null; 
 var username = null;
 var usernameList = [];
-//var usernames = [];
 
 function UserCenter({userJWT}){
     const requestOptions = {
@@ -94,7 +93,7 @@ function UserCenter({userJWT}){
                 (result) => {
                     if(result != null && result.userName != null){
                         /* SET VALUES FROM RESPONSE */
-                        usernameList.push([result.id+"" ,""+result.userName+"\n"]);
+                        usernameList.push([result.id+"" ,""+result.userName]);
                         updateUsers([]);
                     }else{
                         alert('Invalid User ID.')
@@ -107,23 +106,14 @@ function UserCenter({userJWT}){
                 usersList.push(""+user.uid);
                 setRemoteUsers(usersList);
                 user.audioTrack?.play();
-                getRemoteUsers();
+                updateUsers([]);
             }
         });
 
         client.on("user-unpublished", (user, type) => {
             console.log("unpublished", user, type);
             if (type === "audio") {
-                var tmp = [];
-                for(var x = 0; x < usersList.length; x++){
-                    if(usersList[x] !== ""+user.uid ){
-                        tmp.push(usersList[x]);
-                    }
-                }
-                usersList = tmp;
-                setRemoteUsers(tmp);
                 user.audioTrack?.stop();
-                getRemoteUsers();
             }
         });
 
@@ -137,7 +127,7 @@ function UserCenter({userJWT}){
             usersList = tmp;
             setRemoteUsers(tmp);
             console.log("leaving", user);
-            getRemoteUsers();
+            updateUsers([]);
         });
 
         await client.join(appId, channel, token, uid);
@@ -181,8 +171,7 @@ function UserCenter({userJWT}){
         });
         changeCurrentRoomTo('');
         changeCurrentOfficeTo('');
-        var tmp = [];
-        usersList = tmp;
+        usersList = [];
         setRemoteUsers([]);
 
         await client.unpublish();
@@ -195,7 +184,7 @@ function UserCenter({userJWT}){
         var users = [];
         usersList = [];
         var userNames = [];
-        if(username != null){
+        if(username !== null && currentRoom !== ''){
             userNames.push(""+username+"\n");
         }
         
@@ -214,7 +203,7 @@ function UserCenter({userJWT}){
         }
 
         for(var x=0;x<usernameList.length;x++){
-            if(usersList.includes(usernameList[x][0]) && !userNames.includes(""+usernameList[x][1]+"\n")){
+            if(usersList.includes(""+usernameList[x][0]) && !userNames.includes(""+usernameList[x][1]+"\n")){
                 userNames.push(""+usernameList[x][1]+"\n");
                 console.log(usernameList[x][1]);
             }
