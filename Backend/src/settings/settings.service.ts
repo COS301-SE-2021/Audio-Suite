@@ -27,8 +27,9 @@ export class SettingsService {
     public async setMode(jwt: string, mode: boolean){
         try {
             const user = await this.userService.validateUser(jwt);
-            const setting = await this.settingsRepository.save({userID: user.id, darkMode: mode, userName:user.userName});
-
+            const setting = await this.settingsRepository.createQueryBuilder().update(user).set({
+                darkMode: mode
+            }).where("id = :id", { id:user.id }).execute();
             return setting;
         } catch (error) {
             throw new UnauthorizedException();
