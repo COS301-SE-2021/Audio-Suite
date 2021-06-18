@@ -35,9 +35,7 @@ function UserCenter({userJWT}){
         body: JSON.stringify({ jwt: userJWT })
     };
     
-    fetch("http://127.0.0.1:3001/api/user/details", requestOptions)
-    .then(res => res.json())
-    .then(
+    fetch("http://127.0.0.1:3001/api/user/details", requestOptions).then(res => res.json()).then(
         (result) => {
             if(result != null && result.id != null)
             {
@@ -47,7 +45,7 @@ function UserCenter({userJWT}){
             }
             else
             {
-                alert('Invalid JWT.')
+                alert('Invalid JWT.');
             }
         }
     )
@@ -87,9 +85,7 @@ function UserCenter({userJWT}){
                 body: JSON.stringify({ id: user.uid+"" })
             };
             
-            fetch("http://127.0.0.1:3001/api/user/getUsernameById", requestOptions)
-            .then(res => res.json())
-            .then(
+            fetch("http://127.0.0.1:3001/api/user/getUsernameById", requestOptions).then(res => res.json()).then(
                 (result) => {
                     if(result != null && result.userName != null){
                         /* SET VALUES FROM RESPONSE */
@@ -102,12 +98,14 @@ function UserCenter({userJWT}){
             )
 
             console.log("subscribe success");
+
             if (mediaType === "audio") {
                 usersList.push(""+user.uid);
                 setRemoteUsers(usersList);
                 user.audioTrack?.play();
                 updateUsers([]);
             }
+
         });
 
         client.on("user-unpublished", (user, type) => {
@@ -135,9 +133,9 @@ function UserCenter({userJWT}){
     };
     let join = async (room) => {
         if(currentRoom !== room){
-            /*if(currentRoom !== ''){
-                await leave();
-            }*/
+            if(currentRoom !== ''){
+                await leave("room");
+            }
             changeCurrentRoomTo(room);
             if (track !== undefined) {
                 console.log("init ready");
@@ -149,7 +147,7 @@ function UserCenter({userJWT}){
         }
     }
 
-    let leave = async () => {
+    let leave = async (type) => {
         client.on("user-published", async (user, mediaType) => {
             await client.unsubscribe(user, mediaType);
             console.log("unsubscribe success");
@@ -169,11 +167,14 @@ function UserCenter({userJWT}){
         client.on("user-left", (user) => {
             console.log("leaving", user);
         });
+
+        if(type == "office"){
+            changeCurrentOfficeTo('');
+        }
+
         changeCurrentRoomTo('');
-        changeCurrentOfficeTo('');
         usersList = [];
         setRemoteUsers([]);
-
         await client.unpublish();
         await client.leave();
 
@@ -205,7 +206,6 @@ function UserCenter({userJWT}){
         for(var x=0;x<usernameList.length;x++){
             if(usersList.includes(""+usernameList[x][0]) && !userNames.includes(""+usernameList[x][1]+"\n")){
                 userNames.push(""+usernameList[x][1]+"\n");
-                console.log(usernameList[x][1]);
             }
         }
 
