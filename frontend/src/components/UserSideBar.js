@@ -44,7 +44,7 @@ function UserSideBar({officeSelected, setCurrentOffice, leaveOffice}) {
                 &&
                 <Row>
                     <Col>
-                        <Button variant="outline-light" block onClick={ async () => {await leaveOffice()} }>Leave Office</Button>
+                        <Button variant="outline-light" block onClick={ async () => {await leaveOffice("office")} }>Leave Office</Button>
                     </Col>
                 </Row>
             }
