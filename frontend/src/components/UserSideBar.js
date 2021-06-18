@@ -21,7 +21,7 @@ const token = '0067afb53157f754f6f8023f31fb343404aIABXR8MXm4ZVIy9Pu3xyiiAi/9rTJ4
 const uid = null; // Set to User ID once DB is connected
 const channel = 'Pegasus';
 
-const UserSideBar = ({officeName, onClick}) => {
+const UserSideBar = ({officeSelected, setCurrentOffice}) => {
     // Create Client and Mic Track
     const [remoteUsers, setRemoteUsers] = useState([]);
     const client = useClient();
@@ -64,8 +64,8 @@ const UserSideBar = ({officeName, onClick}) => {
         await client.join(appId, channel, token, uid);
         if (track) await client.publish(track);
     };
-    function join(){
-        onClick('');
+    function join(office){
+        setCurrentOffice(office);
         if (track !== undefined) {
             console.log("init ready");
             init(channel);
@@ -73,7 +73,7 @@ const UserSideBar = ({officeName, onClick}) => {
     }
 
     let leave = async (name) => {
-        onClick('');
+        setCurrentOffice('');
         client.on("user-published", async (user, mediaType) => {
             await client.unsubscribe(user, mediaType);
             console.log("unsubscribe success");
@@ -107,19 +107,19 @@ const UserSideBar = ({officeName, onClick}) => {
             </Row>
             <Row>
                 <Col>
-                    <Button variant="outline-light" block onClick={ async () => {join()} }>Epi-Use</Button>
+                    <Button variant="outline-light" block onClick={ async () => {join('Epi-Use')} }>Epi-Use</Button>
                 </Col>
             </Row>
             <br></br>
             <Row>
                 <Col>
-                    <Button variant="outline-light" block onClick={ async () => {join()} }>Pegasus</Button>
+                    <Button variant="outline-light" block onClick={ async () => {join('Pegasus')} }>Pegasus</Button>
                 </Col>
             </Row>
             <br></br>
             <Row>
                 <Col>
-                    <Button variant="outline-light" block onClick={ async () => {join()} }>Tuks CS</Button>
+                    <Button variant="outline-light" block onClick={ async () => {join('Tuks CS')} }>Tuks CS</Button>
                 </Col>
             </Row>
             <br></br>
@@ -147,11 +147,15 @@ const UserSideBar = ({officeName, onClick}) => {
                     <h4>Quick Settings:</h4>
                 </Col>
             </Row>
-            <Row>
-                <Col>
-                    <Button variant="outline-light" block onClick={ async () => {leave()} }>Leave Office</Button>
-                </Col>
-            </Row>
+            {
+                officeSelected !== ''
+                &&
+                <Row>
+                    <Col>
+                        <Button variant="outline-light" block onClick={ async () => {leave()} }>Leave Office</Button>
+                    </Col>
+                </Row>
+            }
         </Container>
     )
 }

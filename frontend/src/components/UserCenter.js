@@ -21,7 +21,7 @@ const UserCenter = () => {
     return (
         <>
             <Col md={3} lg={2}>
-                <UserSideBar officeSelected={currentOffice} onClick={changeCurrentOfficeTo}/>
+                <UserSideBar officeSelected={currentOffice} setCurrentOffice={changeCurrentOfficeTo}/>
             </Col>
             <Col md={9} lg={10}>
                 <div id="TabbedPane">
