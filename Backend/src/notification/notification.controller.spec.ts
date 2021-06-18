@@ -7,16 +7,17 @@ describe('NotificationController', () => {
   let controller: NotificationController;
 
   const mockNotificationService = {
-    createType: jest.fn((type) => {
-      return{
-        type: type,
-      };
-    }),
-
-    getNotification: jest.fn((type) => {
-      return{
-        type: type,
-      };
+    createNotification: jest.fn((userID, type, link, email, password) => {
+      if(password == "test"){
+        return{
+          payload: type,
+          userID: userID,
+          readDateTime: false,
+          createdDateTime: Date.now(),
+          notificationType: type,
+          id: 1,
+        };
+      }
     }),
   }
 
@@ -24,7 +25,8 @@ describe('NotificationController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [NotificationController],
       providers: [NotificationService],
-    }).overrideProvider(NotificationService)
+    })
+      .overrideProvider(NotificationService)
       .useValue(mockNotificationService)
       .compile();
 
@@ -34,5 +36,25 @@ describe('NotificationController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
+
+  //createNotificationTest
+
+  it('should make use of createNotification for notification', () => {
+    const user = {
+      userID: "ID123",
+      type: "verification",
+      link: "audiosuite.xyz/verification",
+      email: "test@audiosuite.com",
+      password: "test",
+    }
+    
+    expect(controller.createNotification(user.userID,user.type, user.link, user.email, user.password)).toStrictEqual({
+      userID: user.userID,
+      type: user.type,
+      link: user.link,
+      email: user.email,
+      password: "test"
+    })
+  })
 
 });
