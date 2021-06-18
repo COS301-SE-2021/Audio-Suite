@@ -1,4 +1,4 @@
-import { HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { randomBytes } from "crypto";
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -40,6 +40,36 @@ export class OfficeService {
         }
         catch(err) {
             throw new HttpException("Office with this name already exists.", 400);
+        }
+    }
+
+    async getOfficeIdFromUserId(jwt: string): Promise<any> {
+        //verify the user
+        try{
+            const user = await this.userService.validateUser(jwt);
+        }catch(err){
+            throw new UnauthorizedException();
+        }
+
+        try{
+            const user = await this.userService.validateUser(jwt);
+            const officeUsers: OfficeUsers[] = await this.officeUserService.getOfficeIdFromUserId(user.id);
+
+            const offices: Office[] = [];
+            for(let i = 0; i < officeUsers.length; i++){
+                const tempOffice = await this.officesRepository.findOne({name: officeUsers[i].officeName});
+                offices.push(tempOffice);
+
+                if(i == officeUsers.length-1){
+                    return{
+                        Response: "Success",
+                        Offices: offices
+                    }
+                }
+            }
+        }
+        catch(err) {
+            throw new BadRequestException();
         }
     }
 
