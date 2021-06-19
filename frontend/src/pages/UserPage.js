@@ -11,7 +11,7 @@ import Col from 'react-bootstrap/Col'
 
 const UserPage = ({userJWT}) => {
     return (
-        <Container fluid className="UserPage">
+        <Container fluid className="UserPage" style={{ userSelect: "none" }}>
             <Row>
                 <Col>
                     <Banner />

@@ -24,11 +24,11 @@ const useMicrophoneTrack = createMicrophoneAudioTrack();
 const appId = "7afb53157f754f6f8023f31fb343404a";
 const token = '0067afb53157f754f6f8023f31fb343404aIAAbdyOcdM0CXfVwAV3xSf3GsQ1QXg5D16OoEMH5usYLGvFz67sAAAAAEABFAsi6yxbOYAEAAQDKFs5g';
 const channel = 'AUDIO-SUITE';
-var usersList = [];
 const apiURL = "http://127.0.0.1:3001";
 
 var uid = null; 
 var username = null;
+var usersList = [];
 var usernameList = [];
 var officesList = [];
 var officeIDs = [];
@@ -270,6 +270,12 @@ function UserCenter({userJWT}){
     }
 
     async function joinOffice(name){
+
+        if(currentRoom !== ''){
+            leave("office");
+            changeCurrentOfficeTo('');
+        }
+
         changeCurrentOfficeTo(name);
 
         roomsList = [];
@@ -296,7 +302,7 @@ function UserCenter({userJWT}){
                 for(var x=0;x<result.Rooms.length;x++){
                     const room = ""+result.Rooms[x].roomName;
                     const id = ""+result.Rooms[x].id;
-                    const newRoomButton = <Button variant="secondary" key={id} block onClick={ async () => {join(room)} }>{room}</Button>;
+                    const newRoomButton = <Button style={{width: "50%"}} variant="secondary" key={id} block onClick={ async () => {join(room)} }>{room}</Button>;
                     if(roomsList.length < result.Rooms.length){
                         roomsList.push(newRoomButton)
                         roomIDs.push([id,room]);
@@ -358,10 +364,10 @@ function UserCenter({userJWT}){
                             activeKey={selectedTab}
                             onSelect={(k) => setSelectedTab(k)} 
                         >
-                            <Tab eventKey="floorPlan" title="floorPlan">
+                            <Tab eventKey="floorPlan" title="Floor Plan">
                                 <FloorPlan officeSelected={currentOffice} join={join} getRemoteUsers={getRemoteUsers} getOfficeRooms={getOfficeRooms} />
                             </Tab>
-                            <Tab eventKey="textChannel" title="textChannel">
+                            <Tab eventKey="textChannel" title="Text Channel">
                                 <TextChannel />
                             </Tab>
                         </Tabs>

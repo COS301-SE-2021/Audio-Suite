@@ -8,6 +8,9 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
 const Login = ({setJWT, onLogin, onChangePageType}) => {
+
+    const apiURL = "http://127.0.0.1:3001";
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -28,7 +31,7 @@ const Login = ({setJWT, onLogin, onChangePageType}) => {
                 body: JSON.stringify({ email: email, password: password })
             };
 
-            fetch("http://127.0.0.1:3001/api/login", Login_requestOptions)
+            fetch(apiURL+"/api/login", Login_requestOptions)
             .then(res => res.json())
             .then(
                 (result) => {
