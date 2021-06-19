@@ -39,12 +39,13 @@ var roomIDs = [];
 
 function UserCenter({userJWT}){
     // -------------------------- REACT STATES --------------------------
-    const [currentOffice, setCurrentOffice] = useState('')
-    const [usernames, setUsernames] = useState([])
-    const [offices, setOffices] = useState([])
-    const [rooms, setRooms] = useState([])
-    const [currentRoom, setCurrentRoom] = useState('')
-    const [selectedTab, setSelectedTab] = useState('floorPlan')
+    const [pageChanges, setPageChanges] = useState(false);
+    const [currentOffice, setCurrentOffice] = useState('');
+    const [usernames, setUsernames] = useState([]);
+    const [offices, setOffices] = useState([]);
+    const [rooms, setRooms] = useState([]);
+    const [currentRoom, setCurrentRoom] = useState('');
+    const [selectedTab, setSelectedTab] = useState('floorPlan');
 
     const changeCurrentOfficeTo = (Office) => {
         setCurrentOffice(Office);
@@ -424,7 +425,7 @@ function UserCenter({userJWT}){
     return (
         <>
             <Col md={3} lg={2}>
-                <UserSideBar officeSelected={currentOffice} leaveOffice={leave} getOffices={getUserOffices} joinOffice={joinOffice}/>
+                <UserSideBar jwt={userJWT} officeSelected={currentOffice} leaveOffice={leave} getOffices={getUserOffices} joinOffice={joinOffice}/>
             </Col>
             <Col md={9} lg={10}>
                 <div id="TabbedPane">

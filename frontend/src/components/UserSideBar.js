@@ -5,7 +5,17 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
-function UserSideBar({officeSelected, leaveOffice, getOffices, joinOffice}) {
+import FormModal from './FormModal'
+import SingleMessageModal from './SingleMessageModal'
+
+function UserSideBar({jwt, officeSelected, leaveOffice, getOffices, joinOffice}) {
+    const [modalShow, setModalShow] = useState(false);
+    const [modalType, setModalType] = useState('');
+
+    const [responseModalShow, setResponseModalShow] = useState(false);
+    const [responseModalTitle, setResponseModalTitle] = useState('');
+    const [responseModalMessage, setResponseModalMessage] = useState('');
+
     return(
         <Container fluid style={{color: "white"}}>
             <Row>
@@ -28,7 +38,7 @@ function UserSideBar({officeSelected, leaveOffice, getOffices, joinOffice}) {
                 </Row>
                 <Row>
                     <Col>
-                        <Button variant="success" block onClick={ async () => {} }>Send Invite</Button>
+                        <Button variant="success" block onClick={ async () => {setModalShow(true); setModalType('sendInvite') } }>Send Invite</Button>
                     </Col>
                 </Row>
                 <br></br>
@@ -48,17 +58,32 @@ function UserSideBar({officeSelected, leaveOffice, getOffices, joinOffice}) {
             </Row>
             <Row>
                 <Col>
-                    <Button variant="info" block onClick={ async () => {} }>Create Office</Button>
+                    <Button variant="info" block onClick={ async () => {setModalShow(true); setModalType('createOffice') } }>Create Office</Button>
                 </Col>
             </Row>
             <br></br>
             <Row>
                 <Col>
-                    <Button variant="info" block onClick={ async () => {} }>Join Office</Button>
+                    <Button variant="info" block onClick={ async () => {setModalShow(true); setModalType('joinOffice') } }>Join Office</Button>
                 </Col>
             </Row>
             
-            
+            <FormModal 
+                jwt={jwt} 
+                show={modalShow} 
+                onHide={() => setModalShow(false)} 
+                type={modalType} 
+                setResponseModalShow={setResponseModalShow} 
+                setResponseModalTitle={setResponseModalTitle} 
+                setResponseModalMessage={setResponseModalMessage}
+            />
+
+            <SingleMessageModal 
+                show={responseModalShow} 
+                onHide={() => setResponseModalShow(false)} 
+                title={responseModalTitle} 
+                message={responseModalMessage}
+            />
         </Container>
     )
 }
