@@ -16,10 +16,11 @@ const FloorPlan = ({ officeSelected, getRemoteUsers, getOfficeRooms}) => {
                 <Row>
                     <Col>
                         <center>
-                            <Card className="text-center" style={{height: "50vh" ,width: "30vw"}}>
+                            <Card className="text-center" style={{height: "50vh" ,width: "30vw", "background-color": "#363636"}}>
                                 <Card.Body>
                                     <br></br>
-                                    <h3>Rooms</h3>
+                                    <h2>Rooms</h2>
+                                    <hr style={{ width:"80%", "background-color": "white" }}></hr>
                                     <br></br>
                                     <br></br>
                                     <center>
@@ -33,14 +34,14 @@ const FloorPlan = ({ officeSelected, getRemoteUsers, getOfficeRooms}) => {
                     </Col>
                     <Col>
                         <center>
-                            <Card className="text-center" style={{height: "50vh" ,width: "30vw"}}>
+                            <Card className="text-center" style={{height: "50vh" ,width: "30vw", "background-color": "#363636"}}>
                                 <Card.Body>
                                     <br></br>
-                                    <h3>Users</h3>
-                                    <br></br>
+                                    <h2>Users</h2>
+                                    <hr style={{ width:"80%", "background-color": "white"}}></hr>
                                     <br></br>
                                     <center>
-                                        <pre>
+                                        <pre style={{"font-size": "25px", "font-family": "Helvetica", "color": "white"}}>
                                         {
                                             getRemoteUsers()
                                         }

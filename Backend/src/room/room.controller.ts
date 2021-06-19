@@ -36,7 +36,7 @@ export class RoomController {
         return await this.roomService.joinRoom(jwt, officeID, roomID)
     }
 
-    //join room
+    //leave room
     @Post('room/leave')
     async leaveRoom(
         @Body('jwt') jwt: string,

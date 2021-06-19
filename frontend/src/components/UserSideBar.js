@@ -1,5 +1,3 @@
-import React, { useState } from 'react'
-
 import '../CSS/UserSideBar.css'
 
 import Button from 'react-bootstrap/Button'
@@ -9,7 +7,7 @@ import Col from 'react-bootstrap/Col'
 
 function UserSideBar({officeSelected, leaveOffice, getOffices, joinOffice}) {
     return(
-        <Container fluid>
+        <Container fluid style={{color: "white"}}>
             <Row>
                 <Col>
                     <h3>Offices:</h3>
