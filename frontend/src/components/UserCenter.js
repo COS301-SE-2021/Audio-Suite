@@ -31,13 +31,17 @@ var uid = null;
 var username = null;
 var usernameList = [];
 var officesList = [];
+var officeIDs = [];
 var officesCollected = false;
+var roomsList = [];
+var roomIDs = [];
 
 function UserCenter({userJWT}){
     // -------------------------- REACT STATES --------------------------
     const [currentOffice, setCurrentOffice] = useState('')
     const [usernames, setUsernames] = useState([])
     const [offices, setOffices] = useState([])
+    const [rooms, setRooms] = useState([])
     const [currentRoom, setCurrentRoom] = useState('')
     const [selectedTab, setSelectedTab] = useState('floorPlan')
 
@@ -55,6 +59,10 @@ function UserCenter({userJWT}){
 
     const updateOffices = (offices) => {
         setOffices(offices);
+    }
+
+    const updateRooms = (rooms) => {
+        setRooms(rooms);
     }
     // ------------------------------------------------------------------
 
@@ -98,9 +106,11 @@ function UserCenter({userJWT}){
                 /* SET VALUES FROM RESPONSE */
                 for(var x=0;x<result.Offices.length;x++){
                     const office = ""+result.Offices[x].name;
-                    const newOfficeButton = <><Row><Col><Button variant="outline-light" block onClick={ () => {setCurrentOffice(office)} }>{office}</Button></Col></Row><br></br></>;
+                    const id = ""+result.Offices[x].id;
+                    const newOfficeButton = <Row key={id}><Col><Button variant="primary" block onClick={ async () => {joinOffice(office)} }>{office}</Button></Col></Row>;
                     if(officesList.length < result.Offices.length){
                         officesList.push(newOfficeButton)
+                        officeIDs.push([id,office]);
                     }
                 }
                 officesCollected = true;
@@ -126,7 +136,7 @@ function UserCenter({userJWT}){
         client.on("user-published", async (user, mediaType) => {
             await client.subscribe(user, mediaType);
 
-            const requestOptions = {
+            requestOptions = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: user.uid+"" })
@@ -252,18 +262,74 @@ function UserCenter({userJWT}){
 
         for(var x=0;x<usernameList.length;x++){
             if(usersList.includes(""+usernameList[x][0]) && !userNames.includes(""+usernameList[x][1]+"\n")){
-                userNames.push(""+usernameList[x][1]+"\n");
+                userNames.push([""+usernameList[x][1]+"\n"]);
             }
         }
 
         return userNames;
     }
 
+    async function joinOffice(name){
+        changeCurrentOfficeTo(name);
+
+        roomsList = [];
+        roomIDs = [];
+        // ------------------ GET ROOMS IN CURRENT OFFICE ------------------
+        var currentOfficeID = null;
+        for(var i=0;i<officeIDs.length;i++){
+            if(officeIDs[i][1] === name){
+                currentOfficeID = officeIDs[i][0];
+            }
+        }
+
+        requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ jwt: userJWT, officeID: currentOfficeID })
+        };
+
+        fetch(apiURL+"/api/room/getOfficeRooms", requestOptions).then(res => res.json()).then(
+        (result) => {
+            
+            if(result != null && result.Rooms != null)
+            {
+                for(var x=0;x<result.Rooms.length;x++){
+                    const room = ""+result.Rooms[x].roomName;
+                    const id = ""+result.Rooms[x].id;
+                    const newRoomButton = <Button variant="secondary" key={id} block onClick={ async () => {join(room)} }>{room}</Button>;
+                    if(roomsList.length < result.Rooms.length){
+                        roomsList.push(newRoomButton)
+                        roomIDs.push([id,room]);
+                    }
+                }
+                updateRooms([]);
+            }
+            else
+            {
+                alert('Invalid JWT.');
+            } 
+        }
+        )
+        // ------------------------------------------------------------------
+    }
+
     function getUserOffices(){
         var tmp = [];
         for (var i=0;i<officesList.length;i++){
             if(!tmp.includes(officesList[i])){
-                tmp.push(officesList[i]);
+                tmp.push([officesList[i]]);
+                tmp.push(<br key={i}></br>)
+            }
+        }
+        return tmp;
+    }
+
+    function getOfficeRooms(){
+        var tmp = [];
+        for (var i=0;i<roomsList.length;i++){
+            if(!tmp.includes(roomsList[i])){
+                tmp.push([roomsList[i]]);
+                tmp.push(<br key={i}></br>)
             }
         }
         return tmp;
@@ -272,7 +338,7 @@ function UserCenter({userJWT}){
     return (
         <>
             <Col md={3} lg={2}>
-                <UserSideBar officeSelected={currentOffice} setCurrentOffice={changeCurrentOfficeTo} leaveOffice={leave} getOffices={getUserOffices}/>
+                <UserSideBar officeSelected={currentOffice} leaveOffice={leave} getOffices={getUserOffices} joinOffice={joinOffice}/>
             </Col>
             <Col md={9} lg={10}>
                 <div id="TabbedPane">
@@ -293,7 +359,7 @@ function UserCenter({userJWT}){
                             onSelect={(k) => setSelectedTab(k)} 
                         >
                             <Tab eventKey="floorPlan" title="floorPlan">
-                                <FloorPlan joinRoom={join} officeSelected={currentOffice} getRemoteUsers={getRemoteUsers} />
+                                <FloorPlan officeSelected={currentOffice} join={join} getRemoteUsers={getRemoteUsers} getOfficeRooms={getOfficeRooms} />
                             </Tab>
                             <Tab eventKey="textChannel" title="textChannel">
                                 <TextChannel />
