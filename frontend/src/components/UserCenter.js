@@ -12,6 +12,8 @@ import TextChannel from './TextChannel'
 import Col from 'react-bootstrap/Col'
 import Tabs from 'react-bootstrap/Tabs'
 import Tab from 'react-bootstrap/Tab'
+import Button from 'react-bootstrap/Button'
+import Row from 'react-bootstrap/Row'
 
 // Agora Config
 const clientConfig = { 
@@ -23,35 +25,19 @@ const appId = "7afb53157f754f6f8023f31fb343404a";
 const token = '0067afb53157f754f6f8023f31fb343404aIAAbdyOcdM0CXfVwAV3xSf3GsQ1QXg5D16OoEMH5usYLGvFz67sAAAAAEABFAsi6yxbOYAEAAQDKFs5g';
 const channel = 'AUDIO-SUITE';
 var usersList = [];
+const apiURL = "http://127.0.0.1:3001";
 
 var uid = null; 
 var username = null;
 var usernameList = [];
+var officesList = [];
+var officesCollected = false;
 
 function UserCenter({userJWT}){
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ jwt: userJWT })
-    };
-    
-    fetch("http://127.0.0.1:3001/api/user/details", requestOptions).then(res => res.json()).then(
-        (result) => {
-            if(result != null && result.id != null)
-            {
-                /* SET VALUES FROM RESPONSE */
-                uid = result.id;
-                username = result.userName;
-            }
-            else
-            {
-                alert('Invalid JWT.');
-            }
-        }
-    )
-
+    // -------------------------- REACT STATES --------------------------
     const [currentOffice, setCurrentOffice] = useState('')
     const [usernames, setUsernames] = useState([])
+    const [offices, setOffices] = useState([])
     const [currentRoom, setCurrentRoom] = useState('')
     const [selectedTab, setSelectedTab] = useState('floorPlan')
 
@@ -67,7 +53,68 @@ function UserCenter({userJWT}){
         setUsernames(usernames);
     }
 
+    const updateOffices = (offices) => {
+        setOffices(offices);
+    }
+    // ------------------------------------------------------------------
 
+    // ------------------ GET USERNAME OF CURRENT USER ------------------
+    
+        var requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ jwt: userJWT })
+        };
+        
+        fetch(apiURL+"/api/user/details", requestOptions).then(res => res.json()).then(
+            (result) => {
+                if(result != null && result.id != null)
+                {
+                    /* SET VALUES FROM RESPONSE */
+                    uid = result.id;
+                    username = result.userName;
+                }
+                else
+                {
+                    alert('Invalid JWT.');
+                }
+            }
+        )
+        
+    // ------------------------------------------------------------------
+
+    // --------------- GET OFFICES THAT USER IS A PART OF ---------------
+    if(!officesCollected){
+        requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ jwt: userJWT })
+        };
+        
+        fetch(apiURL+"/api/office/getUserOffices", requestOptions).then(res => res.json()).then(
+        (result) => {
+            if(result != null && result.Offices != null)
+            {
+                /* SET VALUES FROM RESPONSE */
+                for(var x=0;x<result.Offices.length;x++){
+                    const office = ""+result.Offices[x].name;
+                    const newOfficeButton = <><Row><Col><Button variant="outline-light" block onClick={ () => {setCurrentOffice(office)} }>{office}</Button></Col></Row><br></br></>;
+                    if(officesList.length < result.Offices.length){
+                        officesList.push(newOfficeButton)
+                    }
+                }
+                officesCollected = true;
+                updateOffices([]);
+            }
+            else
+            {
+                alert('Invalid JWT.');
+            } 
+        }
+        )
+    }
+    // ------------------------------------------------------------------
+        
     // Create Client and Mic Track
     const [remoteUsers, setRemoteUsers] = useState([]);
     const client = useClient();
@@ -85,7 +132,7 @@ function UserCenter({userJWT}){
                 body: JSON.stringify({ id: user.uid+"" })
             };
             
-            fetch("http://127.0.0.1:3001/api/user/getUsernameById", requestOptions).then(res => res.json()).then(
+            fetch(apiURL+"/api/user/getUsernameById", requestOptions).then(res => res.json()).then(
                 (result) => {
                     if(result != null && result.userName != null){
                         /* SET VALUES FROM RESPONSE */
@@ -168,7 +215,7 @@ function UserCenter({userJWT}){
             console.log("leaving", user);
         });
 
-        if(type == "office"){
+        if(type === "office"){
             changeCurrentOfficeTo('');
         }
 
@@ -209,17 +256,23 @@ function UserCenter({userJWT}){
             }
         }
 
-        console.log("----------------------START---------------------");
-        console.log(""+userNames);
-        console.log("----------------------FINSIH--------------------");
-
         return userNames;
+    }
+
+    function getUserOffices(){
+        var tmp = [];
+        for (var i=0;i<officesList.length;i++){
+            if(!tmp.includes(officesList[i])){
+                tmp.push(officesList[i]);
+            }
+        }
+        return tmp;
     }
 
     return (
         <>
             <Col md={3} lg={2}>
-                <UserSideBar officeSelected={currentOffice} setCurrentOffice={changeCurrentOfficeTo} leaveOffice={leave}/>
+                <UserSideBar officeSelected={currentOffice} setCurrentOffice={changeCurrentOfficeTo} leaveOffice={leave} getOffices={getUserOffices}/>
             </Col>
             <Col md={9} lg={10}>
                 <div id="TabbedPane">
