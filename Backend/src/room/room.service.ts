@@ -100,5 +100,20 @@ export class RoomService {
         return await this.roomUserService.removeUserFromRoom(officeID, roomId, user.id);
     }
 
+    //Find what room a user is in
+    async findWhatRoomAUserIsIn(jwt: string, userID: number): Promise<any>{
+        try{
+            const user = await this.userService.validateUser(jwt);
+            if(user == null){
+                throw new UnauthorizedException();
+            }
+        }
+        catch(err){
+            throw new UnauthorizedException();
+        }
+        
+        return await this.roomUserService.findWhatRoomAUserIsIn(userID);
+    }
+
     //TODO delete a room
 }

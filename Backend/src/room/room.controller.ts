@@ -46,4 +46,14 @@ export class RoomController {
     {
         return await this.roomService.leaveRoom(jwt, officeID, roomID)
     }
+
+    //find what room a user is in
+    @Post('room/findUser')
+    async findWhatRoomAUserIsIn(
+        @Body('jwt') jwt: string,
+        @Body('userID') userID: number,
+    )
+    {
+        return await this.roomService.findWhatRoomAUserIsIn(jwt, userID);
+    }
 }
