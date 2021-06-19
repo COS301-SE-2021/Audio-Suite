@@ -16,12 +16,13 @@ describe('ROOT', () => {
 });
 
 describe('USER', () => {
+  // Registering a user that doesn't exist.
   it('should register a user', () => {
     const user = {
-      firstName: 'John',
-      lastName: 'Moore',
-      userName: 'JohnMoore',
-      email: 'johnmoore@gmail.com',
+      firstName: 'Bob',
+      lastName: 'White',
+      userName: 'BobWhite',
+      email: 'bobwhite@gmail.com',
       password: 'Password!123'
     };
 
@@ -30,5 +31,50 @@ describe('USER', () => {
       .set('Accept', 'application/json')
       .send(user)
       .expect(HttpStatus.CREATED);
+  });
+
+  // Registering a user that alreay exists.
+  it('should return a 500 "Internal Server Error" since user has already been registered', () => {
+    const user = {
+      firstName: 'Bob',
+      lastName: 'White',
+      userName: 'BobWhite',
+      email: 'bobwhite@gmail.com',
+      password: 'Password!123'
+    };
+
+    return request(app)
+      .post('/api/register')
+      .set('Accept', 'application/json')
+      .send(user)
+      .expect(HttpStatus.INTERNAL_SERVER_ERROR);
+  });
+
+  // Loging in a user that exists
+  it('should successfully login user', () => {
+    const user ={
+      email: 'bobwhite@gmail.com',
+      password: 'Password!123'
+    };
+
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(HttpStatus.CREATED);
+  });
+
+  // Loging in a user that doesn't exist
+  it('should return 403 "Forbidden" since user has not been registered', () => {
+    const user = {
+      email: 'userdoesntexist@gmail.com',
+      password: 'ISE!500'
+    };
+
+    return request(app)
+    .post('api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(HttpStatus.FORBIDDEN);
   });
 });
