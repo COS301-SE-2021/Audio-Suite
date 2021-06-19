@@ -213,3 +213,60 @@ describe('NOTIFICATION', () => {
   });
 
 });
+
+describe('NOTIFICATION', () => {
+  var idFromResponse: string = "";
+
+  // registering a new office
+  it('should make use of registerOffice from Office to register a new office.', () => {
+    const user ={
+      email: 'johnwhite@gmail.com',
+      password: 'Password!123'
+    };
+
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+      expect(body.response).toStrictEqual('Success');
+      jwtFromResponse=body.jwt;
+      const createOffice = request(app)
+                          .post('/office/register')
+                          .set('Accept', 'application/json')
+                          .send({
+                            name: "newOffice",
+                            jwt: jwtFromResponse
+                          })
+                          .expect(HttpStatus.CREATED);
+    })
+    .expect(HttpStatus.CREATED);
+  });
+
+  // attempt to regist an office that already exists
+  it('should make use of registerOffice from Office to register a new office and return a 400 "Bad Request" since newOffice has already been registered.', () => {
+    const user ={
+      email: 'johnwhite@gmail.com',
+      password: 'Password!123'
+    };
+
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+      expect(body.response).toStrictEqual('Success');
+      jwtFromResponse=body.jwt;
+      const createOffice = request(app)
+                          .post('/office/register')
+                          .set('Accept', 'application/json')
+                          .send({
+                            name: "newOffice",
+                            jwt: jwtFromResponse
+                          })
+                          .expect(HttpStatus.BAD_REQUEST);
+    })
+    .expect(HttpStatus.CREATED);
+  });
+
+});
