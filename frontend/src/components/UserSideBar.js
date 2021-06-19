@@ -7,7 +7,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
-function UserSideBar({officeSelected, setCurrentOffice, leaveOffice}) {
+function UserSideBar({officeSelected, setCurrentOffice, leaveOffice, getOffices}) {
     console.log(officeSelected);
     return(
         <Container fluid>
@@ -16,23 +16,9 @@ function UserSideBar({officeSelected, setCurrentOffice, leaveOffice}) {
                     <h3>Offices:</h3>
                 </Col>
             </Row>
-            <Row>
-                <Col>
-                    <Button variant="outline-light" block onClick={ () => {setCurrentOffice("Epi-Use")} }>Epi-Use</Button>
-                </Col>
-            </Row>
-            <br></br>
-            <Row>
-                <Col>
-                    <Button variant="outline-light" block onClick={ () => {setCurrentOffice("Pegasus")} }>Pegasus</Button>
-                </Col>
-            </Row>
-            <br></br>
-            <Row>
-                <Col>
-                    <Button variant="outline-light" block onClick={ () => {setCurrentOffice("Tuks CS")} }>Tuks CS</Button>
-                </Col>
-            </Row>
+            {
+                getOffices()
+            }
             <br></br>
             <Row>
                 <Col>
