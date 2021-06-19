@@ -28,7 +28,7 @@ export class UserService {
             return savedUser;
         }
         catch(err) {{
-            throw err;
+            throw new BadRequestException("User Already Exists");
         }}
     }
 
