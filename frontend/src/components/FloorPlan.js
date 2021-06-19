@@ -5,7 +5,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
-const FloorPlan = ({joinRoom, officeSelected, getRemoteUsers}) => {
+const FloorPlan = ({ officeSelected, getRemoteUsers, getOfficeRooms}) => {
     return (
         <div>
             <h1>{officeSelected}</h1>
@@ -14,10 +14,9 @@ const FloorPlan = ({joinRoom, officeSelected, getRemoteUsers}) => {
                 <Row>
                     <Col>
                         <h3>Rooms</h3>
-                        <Button variant="outline-light" block onClick={ async () => {joinRoom("Open Office Space")} }>Open Office Space</Button>
-                        <Button variant="outline-light" block onClick={ async () => {joinRoom("Coffee Station")} }>Coffee Station</Button>
-                        <Button variant="outline-light" block onClick={ async () => {joinRoom("Reception")} }>Reception</Button>
-                        <Button variant="outline-light" block onClick={ async () => {joinRoom("Meeting Room")} }>Meeting Room</Button>
+                        {
+                            getOfficeRooms()
+                        }
                     </Col>
                     <Col>
                         <h3>Users</h3>
