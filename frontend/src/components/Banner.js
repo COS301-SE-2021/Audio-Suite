@@ -6,7 +6,7 @@ const Banner = () => {
             <center>
                 <h1 className="Banner-Header">
                     Audio Suite
-                </h1>    
+                </h1>  
             </center> 
         </div>
     )

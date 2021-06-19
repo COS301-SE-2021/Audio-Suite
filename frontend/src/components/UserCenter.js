@@ -359,16 +359,12 @@ function UserCenter({userJWT}){
                             </h3>
                         </center>
                         :
-                        <Tabs
-                            id="UserContent-tab"
-                            activeKey={selectedTab}
-                            onSelect={(k) => setSelectedTab(k)} 
-                        >
+                        <Tabs id="UserContent-tab" activeKey={selectedTab} onSelect={(k) => setSelectedTab(k)}>
                             <Tab eventKey="floorPlan" title="Floor Plan">
                                 <FloorPlan officeSelected={currentOffice} join={join} getRemoteUsers={getRemoteUsers} getOfficeRooms={getOfficeRooms} />
                             </Tab>
                             <Tab eventKey="textChannel" title="Text Channel">
-                                <TextChannel />
+                                <TextChannel officeSelected={currentOffice}/>
                             </Tab>
                         </Tabs>
                     }
