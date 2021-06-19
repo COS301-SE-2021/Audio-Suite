@@ -36,7 +36,10 @@ export class OfficeService {
             const office = await this.officesRepository.create({name, invite});
             const savedOffice = await this.officesRepository.save(office);
             const addUserToOffice = await this.officeUserService.addUserToOffice(user.id,name);
-            return savedOffice;
+            return{
+                Response: "Success",
+                Office: savedOffice
+            };
         }
         catch(err) {
             throw new HttpException("Office with this name already exists.", 400);
