@@ -23,8 +23,8 @@ describe('USER', () => {
   //   const user = {
   //     firstName: 'John',
   //     lastName: 'White',
-  //     userName: 'JohnWhite',
-  //     email: 'johnwhite@gmail.com',
+  //     userName: 'JohnWhite3',
+  //     email: 'johnwhite3@gmail.com',
   //     password: 'Password!123'
   //   };
 
@@ -49,7 +49,7 @@ describe('USER', () => {
       .post('/api/register')
       .set('Accept', 'application/json')
       .send(user)
-      .expect(HttpStatus.INTERNAL_SERVER_ERROR);
+      .expect(HttpStatus.BAD_REQUEST);
   });
 
   // Loging in a user that exists
@@ -65,8 +65,6 @@ describe('USER', () => {
     .send(user)
     .expect(({body}) => {
       expect(body.response).toStrictEqual('Success');
-      jwtFromResponse=body.jwt;
-      const login = request(app).post('')
     })
     .expect(HttpStatus.CREATED);
   });
@@ -89,7 +87,7 @@ describe('USER', () => {
   // Logging in and returning user details (by use of JWT)
   it('should login user John White and make use of userDetails from User.', () => {
     const user ={
-      email: 'johnwhite@gmail.com',
+      email: 'johnwhite3@gmail.com',
       password: 'Password!123'
     };
 
@@ -112,10 +110,11 @@ describe('USER', () => {
 
 describe('NOTIFICATION', () => {
   var idFromResponse: string = "";
+
   // Makes use of createNotification
   it('should make use of createNotification from Notifications for John White.', () => {
     const user ={
-      email: 'johnwhite@gmail.com',
+      email: 'johnwhite2@gmail.com',
       password: 'Password!123'
     };
 
@@ -138,7 +137,7 @@ describe('NOTIFICATION', () => {
                                                 .send({
                                                   userID: idFromResponse,
                                                   type: "newNotification",
-                                                  link: "audiosuit.xyz/newNotification",
+                                                  link: "audiosuite.xyz/newNotification",
                                                   email: user.email,
                                                   password: user.password
                                                 })
@@ -163,4 +162,54 @@ describe('NOTIFICATION', () => {
       .send(body)
       .expect(HttpStatus.CREATED);
   });
+
+  //makes use of sendVerification
+  // it('should make use of sendVerification from Notifications for John White.', () => {
+  //   const user = {
+  //     emailAddress: 'johnwhite2@gmail.com',
+  //     userName: 'JohnWhite2'
+  //   }
+
+  //   return request(app)
+  //   .post('/api/notifications/sendVerification')
+  //   .set('Accept', 'application/json')
+  //   .send(user)
+  //   .expect(HttpStatus.CREATED);
+  // });
+
+  //makes use of retrieveNotification
+  it('should make use of retrieveNotification from Notifications for John White', () => {
+    const user ={
+      email: 'johnwhite@gmail.com',
+      password: 'Password!123'
+    };
+
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+      expect(body.response).toStrictEqual('Success');
+      jwtFromResponse=body.jwt;
+      const userDetails = request(app)
+                          .post('/api/user/details')
+                          .set('Accept', 'application/json')
+                          .send(jwtFromResponse)
+                          .expect(({body}) => {
+                            idFromResponse=body.userID;
+                            const retrieveNotif = request(app)
+                                                .post('/api/notifications/retrieveNotification')
+                                                .set('Accept', 'application/json')
+                                                .send({
+                                                  userID: idFromResponse,
+                                                  unread: true,
+                                                  password: "test"
+                                                })
+                                                .expect(HttpStatus.CREATED)
+                          })
+                          .expect(HttpStatus.CREATED);
+    })
+    .expect(HttpStatus.CREATED);    
+  });
+
 });
