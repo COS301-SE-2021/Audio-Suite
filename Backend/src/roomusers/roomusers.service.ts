@@ -48,6 +48,7 @@ export class RoomUsersService {
             {
                 return{
                     Response: "Success",
+                    UserID: userID,
                     RoomID: roomUser.roomID
                 }
             }

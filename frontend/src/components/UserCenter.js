@@ -36,6 +36,7 @@ var officesCollected = false;
 var roomsList = [];
 var roomIDs = [];
 var currRoom = '';
+var userIDsAndRooms = [];
 var track = null;
 
 function UserCenter({userJWT}){
@@ -134,11 +135,24 @@ function UserCenter({userJWT}){
                         /* SET VALUES FROM RESPONSE */
                         usernameList.push([result.id+"" ,""+result.userName]);
                         updateUsers([]);
+
+                        // ----------------- GET ROOM OF REMOTE USER -----------------
+                        fetchRemoteUserRoom(result.id).then(res => {
+                            console.log(res.UserID+":"+res.RoomID);
+                            if(!userIDsAndRooms.includes([res.UserID, res.RoomID])){
+                                userIDsAndRooms.push([res.UserID, res.RoomID]);
+                                console.log("========++++++======= PEGASUS ========++++++=======");
+                            }
+                            console.log("xxxxxxxxxxxxxxxx HERE xxxxxxxxxxxxxxxx");
+                            updateOffices({});
+                        })
+                        // -------------------------------------------------------------
                     }else{
                         console.log('Invalid User ID.')
                     }
                 }
             )
+            
 
             console.log("subscribe success");
 
@@ -282,6 +296,7 @@ function UserCenter({userJWT}){
         }
 
         usersList = [];
+        userIDsAndRooms = [];
         setRemoteUsers([]);
         await client.unpublish();
         await client.leave();
@@ -379,32 +394,38 @@ function UserCenter({userJWT}){
             users.push("\n"+uid);
             usersList.push(""+uid);  
         }
-        console.log("USERNAME LIST: "+usersList);
-        // ----------------- GET ROOMS OF REMOTE USERS -----------------
-        if(usersList.length > 1){
-            var userIDRooms = [];
-            var fetchUIDs = usersList;
-            for(var k=0;k<fetchUIDs.length;k++){
-                fetchRemoteUserRoom(fetchUIDs[k]).then(result => {
-                    console.log(fetchUIDs[k]+":"+result.RoomID);
-                    /*if(result != null && result.Room != null)
-                    {
-                        
+        
+        // SEPARATING USERS INTO ROOMS (BUGGY...)
+        /*var userRooms = [];
+        for(var a=0;a<usersList.length;a++){
+            console.log("---- 1 ----");
+            for(var k=0;k<userIDsAndRooms;k++){
+                console.log("---- 2 ----");
+                if(usersList[a] == userIDsAndRooms[k][0]){
+                    console.log("---- 3 ----");
+                    for(var p=0;p<roomIDs.length;p++){
+                        console.log("---- 5 ----");
+                        if(userIDsAndRooms[k][1] == roomIDs[p][0]){
+                            console.log("---- 6 ----");
+                            if(!userRooms.includes([""+usersList[a], ""+roomIDs[p][1]])){
+                                console.log("---- 7 ----");
+                                userRooms.push([""+usersList[a], ""+roomIDs[p][1]]);
+                            }
+                        }
                     }
-                    else
-                    {
-                        console.log('Invalid JWT.');
-                    }
-                    updateOffices([]);*/
-                })
+                }
             }
-        }
-        // -------------------------------------------------------------
+        }*/
         
         for(var x=0;x<usernameList.length;x++){
             if(usersList.includes(""+usernameList[x][0]) && !userNames.includes(""+usernameList[x][1]+"\n")){
-                userNames.push(""+usernameList[x][1]+"\n");
-                console.log(userNames);
+                //for(var z=0;z<userRooms.length;i++){
+                    //if(userRooms[z][0] == usernameList[x][0]){
+                        //userNames.push(""+usernameList[x][1]+"("+userRooms[z][1]+")\n");
+                        userNames.push(""+usernameList[x][1]+"\n");
+                        console.log(userNames);
+                    //}
+                //}
             }
         }
 
