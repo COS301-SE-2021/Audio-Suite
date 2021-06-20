@@ -20,7 +20,6 @@ const clientConfig = {
     mode: "rtc", codec: "vp8",
 };
 const useClient = createClient(clientConfig);
-const useMicrophoneTrack = createMicrophoneAudioTrack();
 const appId = "7afb53157f754f6f8023f31fb343404a";
 const token = "0067afb53157f754f6f8023f31fb343404aIACGoCNjvOJJ54fH6kkdnC1VPZlHa50LQvTt1uF+9v2QSRRkBDcAAAAAEABFAsi6k7/PYAEAAQCTv89g";
 const channel = "AUDIO CHANNEL";
@@ -36,6 +35,8 @@ var officeIDs = [];
 var officesCollected = false;
 var roomsList = [];
 var roomIDs = [];
+var currRoom = '';
+var track = null;
 
 function UserCenter({userJWT}){
     // -------------------------- REACT STATES --------------------------
@@ -69,59 +70,44 @@ function UserCenter({userJWT}){
     // ------------------------------------------------------------------
 
     // ------------------ GET USERNAME OF CURRENT USER ------------------
-    
-        var requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ jwt: userJWT })
-        };
-        
-        fetch(apiURL+"/api/user/details", requestOptions).then(res => res.json()).then(
-            (result) => {
-                if(result != null && result.id != null)
-                {
-                    /* SET VALUES FROM RESPONSE */
-                    uid = result.id;
-                    username = result.userName;
-                }
-                else
-                {
-                    console.log('Invalid JWT.');
-                }
+    fetchUserDetails().then(result => {
+            if(result != null && result.id != null)
+            {
+                /* SET VALUES FROM RESPONSE */
+                uid = result.id;
+                username = result.userName;
             }
-        )
-        
+            else
+            {
+                console.log('Invalid JWT.');
+            }
+        }
+    )
     // ------------------------------------------------------------------
 
     // --------------- GET OFFICES THAT USER IS A PART OF ---------------
     if(!officesCollected){
-        requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ jwt: userJWT })
-        };
-        
-        fetch(apiURL+"/api/office/getUserOffices", requestOptions).then(res => res.json()).then(
-        (result) => {
+        fetchUserOffices().then(result => {
             if(result != null && result.Offices != null)
             {
                 /* SET VALUES FROM RESPONSE */
                 for(var x=0;x<result.Offices.length;x++){
                     const office = ""+result.Offices[x].name;
                     const id = ""+result.Offices[x].id;
-                    const newOfficeButton = <Row key={id}><Col><Button variant="primary" block onClick={ async () => {await joinOffice(office)} }>{office}</Button></Col></Row>;
+                    const newOfficeButton = <Row key={id}><Col><Button variant="primary" block onClick={ async () => {await joinOffice(office); updateOffices([]); updateRooms([]);} }>{office}</Button></Col></Row>;
                     if(officesList.length < result.Offices.length){
                         officesList.push(newOfficeButton)
                         officeIDs.push([id,office]);
                     }
                 }
                 officesCollected = true;
-                updateOffices([]);
+                console.log("OFFICES RETRIEVED.")
             }
             else
             {
                 console.log('Invalid JWT.');
             } 
+            updateOffices([]);
         }
         )
     }
@@ -130,23 +116,19 @@ function UserCenter({userJWT}){
     // Create Client and Mic Track
     const [remoteUsers, setRemoteUsers] = useState([]);
     const client = useClient();
-    const track = useMicrophoneTrack()['track'];
+    const useMicrophoneTrack = createMicrophoneAudioTrack();
+    track = useMicrophoneTrack()['track'];
 
     // Function to initialise the SDK
     let init = async () => {
         console.log("--------------------- INIT ---------------------");
+        console.log("TRACK: "+track);
         setRemoteUsers([]);
         client.on("user-published", async (user, mediaType) => {
             console.log("USER FOUND!");
             await client.subscribe(user, mediaType);
-
-            requestOptions = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: user.uid+"" })
-            };
             
-            fetch(apiURL+"/api/user/getUsernameById", requestOptions).then(res => res.json()).then(
+            fetchRemoteUsernames(user).then(
                 (result) => {
                     if(result != null && result.userName != null){
                         /* SET VALUES FROM RESPONSE */
@@ -191,23 +173,30 @@ function UserCenter({userJWT}){
         console.log("JOINING...");
         await client.join(appId, channel, token, uid);
         console.log("JOINED.");
-        if (track) await client.publish(track);
-        console.log("PUBLISHING.");
+        console.log("TRACK PRE PUB: "+track);
+        if (track){ 
+            console.log("PUBLISHING.");
+            await client.publish(track);
+        }
     };
 
     let join = async (room) => {
         console.log("--------------------- JOIN ---------------------");
         if(currentRoom !== room){
-            if(currentRoom !== ''){
+            if(currRoom !== ''){
+                console.log("LEAVE ROOM");
                 await leave("room");
             }
             changeCurrentRoomTo(room);
-            if (track !== undefined) {
+            currRoom = room;
+
+            setRemoteUsers([]);
+            usernameList = [];
+            if(client.connectionState !== 'CONNECTED'){
                 console.log("init ready");
-                setRemoteUsers([]);
-                usernameList = [];
                 await init(channel);
             }
+
             /* ADD USER TO ROOM IN DB */
             // Get ID of current office
             var currentOfficeID = null;
@@ -224,14 +213,8 @@ function UserCenter({userJWT}){
                     currentRoomID = roomIDs[i][0];
                 }
             }
-
-            requestOptions = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ jwt: userJWT, officeID: currentOfficeID, roomID: currentRoomID })
-            };
             
-            fetch(apiURL+"/api/room/join", requestOptions).then(res => {
+            fetchJoinRoom(currentRoomID, currentOfficeID).then(res => {
                     if(res.status === 400){
                         console.log('Invalid JWT or Office/Room ID.')
                     }else{
@@ -239,6 +222,8 @@ function UserCenter({userJWT}){
                     }
                 }
             )
+        }else{
+            await leave("room");
         }
     }
 
@@ -272,29 +257,24 @@ function UserCenter({userJWT}){
                 currentOfficeID = officeIDs[i][0];
             }
         }
-
+        console.log("Current Office: "+currentOfficeID);
         // Get ID of current Room
         var currentRoomID = null;
         for(i=0;i<roomIDs.length;i++){
-            if(roomIDs[i][1] === currentRoom){
+            if(roomIDs[i][1] === currRoom){
                 currentRoomID = roomIDs[i][0];
             }
         }
-        
-        requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ jwt: userJWT, officeID: currentOfficeID, roomID: currentRoomID })
-        };
-        
-        fetch(apiURL+"/api/room/leave", requestOptions).then(res => {
-                if(res.status === 400){
-                    console.log('Invalid JWT or Office/Room ID.')
-                }else{
-                    console.log("LEFT ROOM: "+currentRoom);
-                }
+        console.log("Current Room: "+currentRoomID);
+        fetchLeaveRoom(currentRoomID, currentOfficeID).then(res => {
+            if(res.status === 400){
+                console.log('Invalid JWT or Office/Room ID.')
+            }else{
+                console.log("LEFT ROOM: "+currentRoom);
+                currRoom = '';
             }
-        )
+            console.log("FETCH COMPLETE");
+        })
         
         if(type === "office"){
             changeCurrentOfficeTo('');
@@ -306,6 +286,7 @@ function UserCenter({userJWT}){
         await client.unpublish();
         await client.leave();
         changeCurrentRoomTo('');
+        currRoom = '';
     };
 
     let joinOffice = async (name) => {
@@ -327,15 +308,7 @@ function UserCenter({userJWT}){
             }
         }
 
-        requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ jwt: userJWT, officeID: currentOfficeID })
-        };
-
-        fetch(apiURL+"/api/room/getOfficeRooms", requestOptions).then(res => res.json()).then(
-        (result) => {
-            
+        fetchOfficeRooms(currentOfficeID).then(result => {
             if(result != null && result.Rooms != null)
             {
                 for(var x=0;x<result.Rooms.length;x++){
@@ -347,15 +320,16 @@ function UserCenter({userJWT}){
                         roomIDs.push([id,room]);
                     }
                 }
-                updateOffices();
+                updateOffices([]);
             }
             else
             {
                 console.log('Invalid JWT.');
-            } 
-        }
-        )
+            }
+            updateOffices([]);
+        })
         // ------------------------------------------------------------------
+        
     }
 
     function getUserOffices(){
@@ -363,7 +337,7 @@ function UserCenter({userJWT}){
         var tmp = [];
         for (var i=0;i<officesList.length;i++){
             if(!tmp.includes(officesList[i])){
-                tmp.push([officesList[i]]);
+                tmp.push(officesList[i]);
                 tmp.push(<br key={i}></br>)
             }
         }
@@ -407,20 +381,24 @@ function UserCenter({userJWT}){
         }
         console.log("USERNAME LIST: "+usersList);
         // ----------------- GET ROOMS OF REMOTE USERS -----------------
-        /*for(var x=0;x<)
-        requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ jwt: userJWT, officeID: currentOfficeID, roomID: currentRoomID })
-        };
-        
-        fetch(apiURL+"/api/room/join", requestOptions).then(res => {
-            if(res.status === 400){
-                console.log('Invalid JWT or Office/Room ID.')
-            }else{
-                console.log("JOINED ROOM: "+room);
+        if(usersList.length > 1){
+            var userIDRooms = [];
+            var fetchUIDs = usersList;
+            for(var k=0;k<fetchUIDs.length;k++){
+                fetchRemoteUserRoom(fetchUIDs[k]).then(result => {
+                    console.log(fetchUIDs[k]+":"+result.RoomID);
+                    /*if(result != null && result.Room != null)
+                    {
+                        
+                    }
+                    else
+                    {
+                        console.log('Invalid JWT.');
+                    }
+                    updateOffices([]);*/
+                })
             }
-        })*/
+        }
         // -------------------------------------------------------------
         
         for(var x=0;x<usernameList.length;x++){
@@ -433,15 +411,98 @@ function UserCenter({userJWT}){
         return userNames;
     }
 
+    // ------------------------ FETCH FUNCTIONS ------------------------
+    async function fetchRemoteUserRoom(userID) {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ jwt: userJWT, userID: userID })
+        };
+        
+        const res = await fetch(apiURL+"/api/room/findUser", requestOptions)
+        const results = await res.json();
+        return results;
+    }
+
+    async function fetchUserOffices() {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ jwt: userJWT })
+        };
+        
+        const res = await fetch(apiURL+"/api/office/getUserOffices", requestOptions)
+        const results = await res.json();
+        return results;
+    }
+    
+    async function fetchUserDetails() {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ jwt: userJWT })
+        };
+
+        const res = await fetch(apiURL+"/api/user/details", requestOptions)
+        const results = await res.json();
+        return results;
+    }
+
+    async function fetchRemoteUsernames(user) {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: user.uid+"" })
+        };
+
+        const res = await fetch(apiURL+"/api/user/getUsernameById", requestOptions)
+        const results = await res.json();
+        return results;
+    }
+
+    async function fetchJoinRoom(currentRoomID, currentOfficeID) {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ jwt: userJWT, officeID: currentOfficeID, roomID: currentRoomID })
+        };
+
+        const res = await fetch(apiURL+"/api/room/join", requestOptions)
+        return res;
+    }
+
+    async function fetchLeaveRoom(currentRoomID, currentOfficeID) {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ jwt: userJWT, officeID: currentOfficeID, roomID: currentRoomID })
+        };
+
+        const res = await fetch(apiURL+"/api/room/leave", requestOptions)
+        return res;
+    }
+
+    async function fetchOfficeRooms(currentOfficeID) {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ jwt: userJWT, officeID: currentOfficeID })
+        };
+
+        const res = await fetch(apiURL+"/api/room/getOfficeRooms", requestOptions)
+        const results = await res.json();
+        return results;
+    }
+    // -----------------------------------------------------------------
     return (
         <>
             <Col md={3} lg={2}>
-                <UserSideBar jwt={userJWT} officeSelected={currentOffice} leaveOffice={leave} getOffices={getUserOffices} joinOffice={joinOffice}/>
+                <UserSideBar jwt={userJWT} officeSelected={currentOffice} leaveOffice={leave} getOffices={getUserOffices} joinOffice={joinOffice} updateOffices={updateOffices} updateRooms={updateRooms}/>
             </Col>
             <Col md={9} lg={10}>
                 <div id="TabbedPane">
                     {
-                        currOffice == '' 
+                        currentOffice === '' 
                         ? 
                         <center>
                             <br></br>
