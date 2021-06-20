@@ -1,4 +1,4 @@
-import { HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
 import { InjectRepository } from '@nestjs/typeorm';
 import { create } from 'domain';
@@ -24,28 +24,52 @@ export class NotificationService {
     }
 
     //create the notification
-    async createNotification(userID: string, type: string, link: string, emailAddress: string, password: string) : Promise<any>{
-        //check for valid user
+    async createNotification(userID: string, type: string, invite: string, userName: string, emailAddress: string, password: string) : Promise<any>{
+
+        // check for valid user
         if(password === "test"){
-            //create the notification of no error was thrown
-            try{
-                //create the variables for the notification
-                const payload = await this.createType(type);
-                const notificationType = await this.getNotificationType(type);
+
+            // Check which type of notification to create
+            if(type === "OfficeInvite"){
                 
-                //add notification
-                const addNotification = this.addNotification(payload, userID, new Date(), notificationType)
+                // create the notification of no error was thrown
+                try{
+                    // create the variables for the notification
+                    const payload = await this.createType(type);
+                    const notificationType = await this.getNotificationType(type);
+                    
+                    // add notification
+                    const addNotification = this.addNotification(payload, userID, new Date(), notificationType)
 
-                //send emails
-                this.sendEmail(emailAddress, type, payload);
+                    //send emails
+                    return this.sendInviteCodeEmail(emailAddress, type, invite);
 
-                //return the created notification
-                return addNotification;
-
-            }catch(err){
-                throw new HttpException("Could not add notification to database", 500);
+                }
+                catch(err){
+                    throw new HttpException("Could not add notification to database", 500);
+                }
             }
-        } else{
+            else if(type === "OTP"){
+
+                // create the notification of no error was thrown
+                try{
+                    // create the variables for the notification
+                    const payload = await this.createType(type);
+                    const notificationType = await this.getNotificationType(type);
+                    
+                    // add notification (-1 is a system userId)
+                    const addNotification = this.addNotification(payload, "-1", new Date(), notificationType)
+
+                    //send emails
+                    return this.createOTP(emailAddress, userName);
+
+                }
+                catch(err){
+                    throw new HttpException("Could not add notification to database", 500);
+                }
+            }
+        }
+        else{
             throw new UnauthorizedException;
         }
 
@@ -65,23 +89,45 @@ export class NotificationService {
         return addNotification;
     }
 
-    //sending an email
-    async sendEmail(emailAddress: string, type: string, payload: string) : Promise<any>{
+    async sendEmail(emailAddress: string, type: string, payload: string): Promise<any>{
         //send email
         try{
             //check that email is valied
             if(this.validateEmail(emailAddress)){
 
                 //send the emailAddress
-                
 
-            } else{
-                throw ("The email failed to send")
-
+            } 
+            else{
+                throw new BadRequestException("Could not send invite code email");
             }
 
         } catch(err){
-            throw err;
+            throw new BadRequestException("Could not send invite code email");
+        }
+    }
+
+    //sending an email
+    async sendInviteCodeEmail(emailAddress: string, name: string, inviteCode: string) : Promise<any>{
+        //send email
+        try{
+            //check that email is valied
+            if(this.validateEmail(emailAddress)){
+
+                //send the emailAddress
+                this.mailerService.sendInviteEmail(emailAddress, name, inviteCode);
+                return{
+                    Response: "Success",
+                    Message: "Invite code sent successfully"
+                }
+
+            } 
+            else{
+                throw new BadRequestException("Could not send invite code email");
+            }
+
+        } catch(err){
+            throw new BadRequestException("Could not send invite code email");
         }
     }
 
