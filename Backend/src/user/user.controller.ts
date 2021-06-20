@@ -38,4 +38,12 @@ export class UserController {
     {
         return await this.userService.getUserDetails(jwt);
     }
+
+    @Post('user/getUsernameById')
+    async getUsernameById(
+        @Body('id') id: string
+    )
+    {
+        return await this.userService.getUsernameById(id);
+    }
 }

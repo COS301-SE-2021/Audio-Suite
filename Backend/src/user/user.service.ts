@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
@@ -74,4 +74,19 @@ export class UserService {
             throw new UnauthorizedException();
         }
     }
+
+    async getUsernameById(id: string): Promise<any>{
+        try{
+
+            const user = await this.usersRepository.findOne({id: Number(id)});
+
+            const {firstName, lastName, email, password, ...result} = user;
+
+            return result;
+        }
+        catch(err) {
+            throw new NotFoundException('User not found.');
+        }
+    }
+
 }

@@ -1,4 +1,4 @@
-import { HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
 import { InjectRepository } from '@nestjs/typeorm';
 import { create } from 'domain';
@@ -65,23 +65,45 @@ export class NotificationService {
         return addNotification;
     }
 
-    //sending an email
-    async sendEmail(emailAddress: string, type: string, payload: string) : Promise<any>{
+    async sendEmail(emailAddress: string, type: string, payload: string): Promise<any>{
         //send email
         try{
             //check that email is valied
             if(this.validateEmail(emailAddress)){
 
                 //send the emailAddress
-                
 
-            } else{
-                throw ("The email failed to send")
-
+            } 
+            else{
+                throw new BadRequestException("Could not send invite code email");
             }
 
         } catch(err){
-            throw err;
+            throw new BadRequestException("Could not send invite code email");
+        }
+    }
+
+    //sending an email
+    async sendInviteCodeEmail(emailAddress: string, name: string, inviteCode: string) : Promise<any>{
+        //send email
+        try{
+            //check that email is valied
+            if(this.validateEmail(emailAddress)){
+
+                //send the emailAddress
+                this.mailerService.sendInviteEmail(emailAddress, name, inviteCode);
+                return{
+                    Response: "Success",
+                    Message: "Invite code sent successfully"
+                }
+
+            } 
+            else{
+                throw new BadRequestException("Could not send invite code email");
+            }
+
+        } catch(err){
+            throw new BadRequestException("Could not send invite code email");
         }
     }
 

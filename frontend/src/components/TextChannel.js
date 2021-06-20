@@ -1,9 +1,15 @@
 import React from 'react'
 
-const TextChannel = () => {
+const TextChannel = ({officeSelected}) => {
     return (
         <div>
-            <h1>This is the text channel tab.</h1>
+            <center>
+                <br></br>
+                <h1>{officeSelected}</h1>
+                <br></br>
+                <br></br>
+                <h3>This is the text channel tab.</h3>
+            </center>
         </div>
     )
 }

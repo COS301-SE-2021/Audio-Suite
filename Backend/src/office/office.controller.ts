@@ -35,4 +35,12 @@ export class OfficeController {
     {
         return await this.officeService.joinUserToOffice(invite, jwt);
     }
+
+    @Post('office/getUserOffices')
+    async getUserOffices(
+        @Body('jwt') jwt: string
+    )
+    {
+        return await this.officeService.getOfficeIdFromUserId(jwt);
+    }
 }

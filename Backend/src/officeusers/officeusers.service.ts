@@ -20,5 +20,14 @@ export class OfficeusersService {
             throw new BadRequestException();
         }
     }
+
     // TODO add services to add office and user
+    async getOfficeIdFromUserId(userID: number): Promise<any>{
+        try{
+            return await this.officeUsersRepository.find({userID: userID});
+        }
+        catch(err) {
+            throw new BadRequestException();
+        }
+    }
 }

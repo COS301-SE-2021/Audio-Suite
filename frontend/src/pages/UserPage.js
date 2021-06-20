@@ -9,16 +9,16 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
-const UserPage = () => {
+const UserPage = ({userJWT}) => {
     return (
-        <Container fluid className="UserPage">
+        <Container fluid className="UserPage" style={{ userSelect: "none" }}>
             <Row>
                 <Col>
                     <Banner />
                 </Col>
             </Row>
             <Row>
-                <UserCenter />
+                <UserCenter userJWT={userJWT} />
             </Row>
         </Container>
     )

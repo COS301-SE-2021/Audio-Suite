@@ -8,6 +8,9 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
 const Login = ({setJWT, onLogin, onChangePageType}) => {
+
+    const apiURL = "http://127.0.0.1:3001";
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -20,7 +23,6 @@ const Login = ({setJWT, onLogin, onChangePageType}) => {
         if(validEmail && validPassword)
         {
             console.log("Log user in!")
-            console.log({email: email, password: password})
 
             const Login_requestOptions = {
                 method: 'POST',
@@ -28,11 +30,10 @@ const Login = ({setJWT, onLogin, onChangePageType}) => {
                 body: JSON.stringify({ email: email, password: password })
             };
 
-            fetch("http://localhost:3001/api/login", Login_requestOptions)
+            fetch(apiURL+"/api/login", Login_requestOptions)
             .then(res => res.json())
             .then(
                 (result) => {
-                    console.log(result);
                     if(result.response === 'Success')
                     {
                         setJWT(result.jwt);
@@ -57,7 +58,7 @@ const Login = ({setJWT, onLogin, onChangePageType}) => {
         if(validator.isEmail(event.target.value))
         {
             setValidEmail(true)
-            console.log(event.target.value, " Valid email")
+            console.log("Email valid.")
         }
         else
         {
@@ -80,7 +81,7 @@ const Login = ({setJWT, onLogin, onChangePageType}) => {
             }))
         {
             setValidPassword(true)
-            console.log(event.target.value, " Valid password")
+            console.log("Password Valid.")
         }
         else
         {

@@ -21,13 +21,13 @@ export class NotificationController {
         return await this.notificationService.createNotification(userID, type, link, email, password);
     }
 
-    @Post('notifications/sendEmail')
+    @Post('notifications/sendInviteCode')
     async sendEmail(
         @Body('emailAddress') emailAddress: string,
-        @Body('type') type: string,
-        @Body('payload') payload: string
+        @Body('name') name: string,
+        @Body('inviteCode') inviteCode: string
     ){
-        return await this.notificationService.sendEmail(emailAddress, type, payload);
+        return await this.notificationService.sendInviteCodeEmail(emailAddress, name, inviteCode);
     }
 
     @Post('notifications/sendVerification')
