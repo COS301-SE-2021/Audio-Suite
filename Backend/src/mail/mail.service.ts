@@ -10,11 +10,24 @@ export class MailService {
         //send email
         await this.mailerService.sendMail({
             to: emailAddress,
-            subject: "OTP Varification",
+            subject: "OTP Verification",
             template: './confirmation',
             context: {
                 name: userName,
                 otp,
+            },
+        });
+    }
+
+    async sendInviteEmail(emailAddress: string, name: string, inviteCode: string){
+        //send email
+        await this.mailerService.sendMail({
+            to: emailAddress,
+            subject: "Office invite link",
+            template: './sendInvite',
+            context: {
+                name: name,
+                inviteCode: inviteCode,
             },
         });
     }
