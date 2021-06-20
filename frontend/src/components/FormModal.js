@@ -5,10 +5,11 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 
-const FormModal = ({show, onHide, type, jwt, setResponseModalShow, setResponseModalTitle, setResponseModalMessage}) => {
+const FormModal = ({show, onHide, type, jwt, currentOfficeInviteCode, setResponseModalShow, setResponseModalTitle, setResponseModalMessage, updateUserOfficeList}) => {
     const [newOfficeName, setNewOfficeName] = useState('');
     const [newOfficeInvite, setNewOfficeInvite] = useState('');
     const [newSendOfficeInvite, setNewSendOfficeInvite] = useState('');
+    const [newSendOfficeInviteName, setNewSendOfficeInviteName] = useState('');
 
     const [ResponseError, setResponseError] = useState('');
 
@@ -27,6 +28,7 @@ const FormModal = ({show, onHide, type, jwt, setResponseModalShow, setResponseMo
                     if(result.Response === 'Success')
                     {
                         onHide();
+                        updateUserOfficeList();
                         setResponseModalShow(true);
                         setResponseModalTitle("Success");
                         setResponseModalMessage("New office " + newOfficeName + " sucessfully registered.");
@@ -41,14 +43,80 @@ const FormModal = ({show, onHide, type, jwt, setResponseModalShow, setResponseMo
                 }
             )
         }
+        else{
+            setResponseError("Office name is required, Please don't leave in blank.");
+        }
     }
 
     const joinOffice = async () => {
+        if(newOfficeInvite !== ''){
+            const joinOffice_requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({invite: newOfficeInvite, jwt: jwt})
+            };
 
+            fetch("http://localhost:3001/api/office/joinInvite", joinOffice_requestOptions)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    if(result.status === 'Success')
+                    {
+                        onHide();
+                        setResponseModalShow(true);
+                        setResponseModalTitle("Success");
+                        setResponseModalMessage("You have successfully joined the office.");
+                        setNewOfficeName('');
+                    }
+                    else
+                    {
+                        console.log(result);
+                        setResponseError("You are already in the office the invite link corresponds to.");
+                        setNewOfficeName('');
+                    }
+                    //console.log("User registered successfully.");
+                }
+            )
+        }
+        else{
+            setResponseError("Office invite code is required, Please don't leave it blank.");
+        }
     }
 
     const sendInvite = async () => {
+        if(newSendOfficeInvite !== '' && newSendOfficeInviteName !== ''){
+            const sendInvite_requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({emailAddress: newSendOfficeInvite, name: newSendOfficeInviteName, inviteCode: currentOfficeInviteCode})
+            };
 
+            fetch("http://localhost:3001/api/notifications/sendInviteCode", sendInvite_requestOptions)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    if(result.Response === 'Success')
+                    {
+                        onHide();
+                        setResponseModalShow(true);
+                        setResponseModalTitle("Success");
+                        setResponseModalMessage("You have successfully sent the invite code.");
+                        setNewSendOfficeInvite('');
+                        setNewSendOfficeInviteName('');
+                    }
+                    else
+                    {
+                        setResponseError("Invite code could not be sent, Please try again.");
+                        setNewSendOfficeInvite('');
+                        setNewSendOfficeInviteName('');
+                    }
+                    //console.log("User registered successfully.");
+                }
+            )
+        }
+        else{
+            setResponseError("The name and email of the person to send to is required, Please don't leave them blank.");
+        }
     }
 
     return (
@@ -115,8 +183,16 @@ const FormModal = ({show, onHide, type, jwt, setResponseModalShow, setResponseMo
                     &&
                     <>
                         {ResponseError !== '' && <p>{ResponseError}</p>}
+                        <Form.Group controlId="formBasicName">
+                                <Form.Label>Name of person the invite should be sent to</Form.Label>
+                                <Form.Control 
+                                type="text" 
+                                placeholder="Name" 
+                                value={newSendOfficeInviteName}
+                                onChange={(event) => setNewSendOfficeInviteName(event.target.value)}/>
+                        </Form.Group>
                         <Form.Group controlId="formBasicSendInvite">
-                                <Form.Label>Send Office Invite</Form.Label>
+                                <Form.Label>Email of person the invite should be sent to</Form.Label>
                                 <Form.Control 
                                 type="email" 
                                 placeholder="Email" 

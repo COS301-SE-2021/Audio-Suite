@@ -10,7 +10,7 @@ import Col from 'react-bootstrap/Col'
 import FormModal from './FormModal'
 import SingleMessageModal from './SingleMessageModal'
 
-function UserSideBar({jwt, officeSelected, leaveOffice, getOffices, joinOffice}) {
+function UserSideBar({jwt, officeSelected, leaveOffice, getOffices, joinOffice, currentOfficeInviteCode, updateUserOfficeList}) {
     const [modalShow, setModalShow] = useState(false);
     const [modalType, setModalType] = useState('');
 
@@ -75,9 +75,11 @@ function UserSideBar({jwt, officeSelected, leaveOffice, getOffices, joinOffice})
                 show={modalShow} 
                 onHide={() => setModalShow(false)} 
                 type={modalType} 
+                currentOfficeInviteCode={currentOfficeInviteCode}
                 setResponseModalShow={setResponseModalShow} 
                 setResponseModalTitle={setResponseModalTitle} 
                 setResponseModalMessage={setResponseModalMessage}
+                updateUserOfficeList={updateUserOfficeList}
             />
 
             <SingleMessageModal 

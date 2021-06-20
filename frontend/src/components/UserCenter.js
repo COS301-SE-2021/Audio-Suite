@@ -43,6 +43,7 @@ function UserCenter({userJWT}){
     // -------------------------- REACT STATES --------------------------
     const [pageChanges, setPageChanges] = useState(false);
     const [currentOffice, setCurrentOffice] = useState('');
+    const [currentOfficeInvite, setCurrentOfficeInvite] = useState('');
     const [usernames, setUsernames] = useState();
     const [offices, setOffices] = useState();
     const [rooms, setRooms] = useState();
@@ -95,7 +96,8 @@ function UserCenter({userJWT}){
                 for(var x=0;x<result.Offices.length;x++){
                     const office = ""+result.Offices[x].name;
                     const id = ""+result.Offices[x].id;
-                    const newOfficeButton = <Row key={id}><Col><Button variant="primary" block onClick={ async () => {await joinOffice(office); updateOffices([]); updateRooms([]);} }>{office}</Button></Col></Row>;
+                    const invite = "" + result.Offices[x].invite;
+                    const newOfficeButton = <Row key={id}><Col><Button variant="primary" block onClick={ async () => {await joinOffice(office); updateOffices([]); updateRooms([]); setCurrentOfficeInvite(invite); } }>{office}</Button></Col></Row>;
                     if(officesList.length < result.Offices.length){
                         officesList.push(newOfficeButton)
                         officeIDs.push([id,office]);
@@ -301,6 +303,7 @@ function UserCenter({userJWT}){
         await client.unpublish();
         await client.leave();
         changeCurrentRoomTo('');
+        setCurrentOfficeInvite('');
         currRoom = '';
     };
 
@@ -345,6 +348,32 @@ function UserCenter({userJWT}){
         })
         // ------------------------------------------------------------------
         
+    }
+
+    async function updateUserOfficeList(){
+        fetchUserOffices().then(result => {
+            if(result != null && result.Offices != null)
+            {
+                /* SET VALUES FROM RESPONSE */
+                for(var x=0;x<result.Offices.length;x++){
+                    const office = ""+result.Offices[x].name;
+                    const id = ""+result.Offices[x].id;
+                    const invite = "" + result.Offices[x].invite;
+                    const newOfficeButton = <Row key={id}><Col><Button variant="primary" block onClick={ async () => {await joinOffice(office); updateOffices([]); updateRooms([]); setCurrentOfficeInvite(invite); } }>{office}</Button></Col></Row>;
+                    if(officesList.length < result.Offices.length){
+                        officesList.push(newOfficeButton)
+                        officeIDs.push([id,office]);
+                    }
+                }
+                officesCollected = true;
+                console.log("OFFICES RETRIEVED.")
+            }
+            else
+            {
+                console.log('Invalid JWT.');
+            } 
+            updateOffices([]);
+        })
     }
 
     function getUserOffices(){
@@ -518,7 +547,17 @@ function UserCenter({userJWT}){
     return (
         <>
             <Col md={3} lg={2}>
-                <UserSideBar jwt={userJWT} officeSelected={currentOffice} leaveOffice={leave} getOffices={getUserOffices} joinOffice={joinOffice} updateOffices={updateOffices} updateRooms={updateRooms}/>
+                <UserSideBar 
+                    jwt={userJWT}
+                    officeSelected={currentOffice} 
+                    leaveOffice={leave} 
+                    getOffices={getUserOffices} 
+                    joinOffice={joinOffice} 
+                    updateOffices={updateOffices} 
+                    updateRooms={updateRooms}
+                    currentOfficeInviteCode={currentOfficeInvite}
+                    updateUserOfficeList={updateUserOfficeList}
+                />
             </Col>
             <Col md={9} lg={10}>
                 <div id="TabbedPane">

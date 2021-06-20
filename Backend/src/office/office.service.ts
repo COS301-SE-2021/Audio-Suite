@@ -98,7 +98,7 @@ export class OfficeService {
                 response: "User added to office"
             }
         }catch(err){
-            throw new HttpException("Office with this name already exists.", 400);
+            throw new BadRequestException("Unable to add user to office");
         }
     }
 }
