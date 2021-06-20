@@ -3,11 +3,15 @@ import { RoomService } from './room.service';
 
 describe('RoomService', () => {
   let service: RoomService;
+  
+  const mockRoomService = {};
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [RoomService],
-    }).compile();
+    }).overrideProvider(RoomService)
+    .useValue(mockRoomService)
+    .compile();
 
     service = module.get<RoomService>(RoomService);
   });

@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 
 
-const app = 'http://localhost:3000';
+const app = 'http://localhost:3001';
 
 var jwtFromResponse: string = "";
 
@@ -22,9 +22,9 @@ describe('USER', () => {
   // it('should register a user', () => {
   //   const user = {
   //     firstName: 'John',
-  //     lastName: 'White',
-  //     userName: 'JohnWhite3',
-  //     email: 'johnwhite3@gmail.com',
+  //     lastName: 'Black',
+  //     userName: 'JohnBlack',
+  //     email: 'JohnBlack@gmail.com',
   //     password: 'Password!123'
   //   };
 
@@ -137,8 +137,9 @@ describe('NOTIFICATION', () => {
                                                 .send({
                                                   userID: idFromResponse,
                                                   type: "newNotification",
-                                                  link: "audiosuite.xyz/newNotification",
-                                                  email: user.email,
+                                                  invite: "audiosuite.xyz/newNotification",
+                                                  userName: 'JohnWhite2',
+                                                  emailAddress: user.email,
                                                   password: user.password
                                                 })
                                                 .expect(HttpStatus.CREATED)
@@ -148,34 +149,34 @@ describe('NOTIFICATION', () => {
     .expect(HttpStatus.CREATED);
   });
 
-  // makes use of sendEmail
-  it('should make use of sendEmail from Notifications for John White.', () => {
+  // makes use of sendInviteCode
+  it('should make use of sendInviteCode from Notifications for John White.', () => {
     const body = {
-      email: 'johnwhite@gmail.com',
-      type: 'newNotification',
-      payload: 'This is a newNotification'
+      emailAddress: 'johnwhite@gmail.com',
+      name: 'John White',
+      inviteCode: 'gfoisdhg89365hshg98327598n'
     }
 
     return request(app)
-      .post('/api/notifications/sendEmail')
+      .post('/api/notifications/sendInviteCode')
       .set('Accept', 'application/json')
       .send(body)
       .expect(HttpStatus.CREATED);
   });
 
-  //makes use of sendVerification
-  // it('should make use of sendVerification from Notifications for John White.', () => {
-  //   const user = {
-  //     emailAddress: 'johnwhite2@gmail.com',
-  //     userName: 'JohnWhite2'
-  //   }
+  // makes use of sendVerification
+  it('should make use of sendVerification from Notifications for John White.', () => {
+    const user = {
+      emailAddress: 'johnwhite2@gmail.com',
+      userName: 'JohnWhite2'
+    }
 
-  //   return request(app)
-  //   .post('/api/notifications/sendVerification')
-  //   .set('Accept', 'application/json')
-  //   .send(user)
-  //   .expect(HttpStatus.CREATED);
-  // });
+    return request(app)
+    .post('/api/notifications/sendVerification')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(HttpStatus.CREATED);
+  });
 
   //makes use of retrieveNotification
   it('should make use of retrieveNotification from Notifications for John White', () => {
@@ -214,7 +215,7 @@ describe('NOTIFICATION', () => {
 
 });
 
-describe('NOTIFICATION', () => {
+describe('OFFICE', () => {
   var idFromResponse: string = "";
 
   // registering a new office
@@ -243,7 +244,7 @@ describe('NOTIFICATION', () => {
     .expect(HttpStatus.CREATED);
   });
 
-  // attempt to regist an office that already exists
+  // attempt to register an office that already exists
   it('should make use of registerOffice from Office to register a new office and return a 400 "Bad Request" since newOffice has already been registered.', () => {
     const user ={
       email: 'johnwhite@gmail.com',
@@ -262,6 +263,58 @@ describe('NOTIFICATION', () => {
                           .set('Accept', 'application/json')
                           .send({
                             name: "newOffice",
+                            jwt: jwtFromResponse
+                          })
+                          .expect(HttpStatus.BAD_REQUEST);
+    })
+    .expect(HttpStatus.CREATED);
+  });
+
+  // attempt to join an office
+  it('should make use of joinInvite from Office', () => {
+    const user ={
+      email: 'johnwhite@gmail.com',
+      password: 'Password!123'
+    };
+
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+      expect(body.response).toStrictEqual('Success');
+      jwtFromResponse=body.jwt;
+      const createOffice = request(app)
+                          .post('/office/joinInvite')
+                          .set('Accept', 'application/json')
+                          .send({
+                            invite: "3b942b255819aabff747b659b76ae3df",
+                            jwt: jwtFromResponse
+                          })
+                          .expect(HttpStatus.CREATED);
+    })
+    .expect(HttpStatus.CREATED);
+  });
+
+  // attempt to join an office with incorrect invite code
+  it('should make use of joinInvite from Office and return a 400 "Bad Request" since the invite code invalid', () => {
+    const user ={
+      email: 'johnwhite@gmail.com',
+      password: 'Password!123'
+    };
+
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+      expect(body.response).toStrictEqual('Success');
+      jwtFromResponse=body.jwt;
+      const createOffice = request(app)
+                          .post('/office/joinInvite')
+                          .set('Accept', 'application/json')
+                          .send({
+                            invite: "3b942b255819aaf747b659b76ae3df",
                             jwt: jwtFromResponse
                           })
                           .expect(HttpStatus.BAD_REQUEST);

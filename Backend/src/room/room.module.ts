@@ -3,11 +3,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoomService } from './room.service';
 import { RoomController } from './room.controller';
 import { Room } from './room.entity';
-import { RoomUsers } from 'src/roomusers/roomusers.entity';
+import { RoomUsers } from '../roomusers/roomusers.entity';
 import { JwtModule } from '@nestjs/jwt';
-import { User } from 'src/user/user.entity';
-import { UserService } from 'src/user/user.service';
-import { RoomUsersService } from 'src/roomusers/roomusers.service';
+import { User } from '../user/user.entity';
+import { UserService } from '../user/user.service';
+import { RoomUsersService } from '../roomusers/roomusers.service';
 
 @Module({
   imports: [

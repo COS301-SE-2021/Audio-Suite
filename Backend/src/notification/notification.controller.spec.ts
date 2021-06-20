@@ -7,7 +7,7 @@ describe('NotificationController', () => {
   let controller: NotificationController;
 
   const mockNotificationService = {
-    createNotification: jest.fn((userID, type, link, email, password) => {
+    createNotification: jest.fn((userID, type, invite, userName, emailAddress, password) => {
       if(password == "test"){
         return{
           payload: type,
@@ -54,12 +54,13 @@ describe('NotificationController', () => {
     const user = {
       userID: 'ID123',
       type: 'verification',
-      link: 'audiosuite.xyz/verification',
-      email: 'test@audiosuite.com',
+      invite: 'audiosuite.xyz/verification',
+      userName: 'newUser',
+      emailAddress: 'test@audiosuite.com',
       password: 'test',
     }
     
-    expect(await controller.createNotification(user.userID,user.type, user.link, user.email, user.password)).toStrictEqual({
+    expect(await controller.createNotification(user.userID, user.type, user.invite, user.userName, user.emailAddress, user.password)).toStrictEqual({
       payload: user.type,
       userID: user.userID,
       readDateTime: false,
