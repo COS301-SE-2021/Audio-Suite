@@ -16,11 +16,11 @@ const FloorPlan = ({ officeSelected, getRemoteUsers, getOfficeRooms}) => {
                 <Row>
                     <Col>
                         <center>
-                            <Card className="text-center" style={{height: "50vh" ,width: "30vw", "background-color": "#363636"}}>
+                            <Card className="text-center" style={{ height: "50vh" , width: "30vw", "background-color": "#363636" }}>
                                 <Card.Body>
                                     <br></br>
                                     <h2>Rooms</h2>
-                                    <hr style={{ width:"80%", "background-color": "white" }}></hr>
+                                    <hr style={{ width: "80%", "background-color": "white" }}></hr>
                                     <br></br>
                                     <br></br>
                                     <center>
@@ -34,14 +34,14 @@ const FloorPlan = ({ officeSelected, getRemoteUsers, getOfficeRooms}) => {
                     </Col>
                     <Col>
                         <center>
-                            <Card className="text-center" style={{height: "50vh" ,width: "30vw", "background-color": "#363636"}}>
+                            <Card className="text-center" style={{ height: "50vh" , width: "30vw", "background-color": "#363636" }}>
                                 <Card.Body>
                                     <br></br>
                                     <h2>Users</h2>
-                                    <hr style={{ width:"80%", "background-color": "white"}}></hr>
+                                    <hr style={{ width:"80%", "backgroundColor": "white" }} ></hr>
                                     <br></br>
                                     <center>
-                                        <pre style={{"font-size": "25px", "font-family": "Helvetica", "color": "white"}}>
+                                        <pre style={{ "color": "white", "font-size": "25px", "font-family": "Arial"}} >
                                         {
                                             getRemoteUsers()
                                         }

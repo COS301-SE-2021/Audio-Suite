@@ -22,8 +22,8 @@ const clientConfig = {
 const useClient = createClient(clientConfig);
 const useMicrophoneTrack = createMicrophoneAudioTrack();
 const appId = "7afb53157f754f6f8023f31fb343404a";
-const token = '0067afb53157f754f6f8023f31fb343404aIAA7FHB/JM+efHyluYJmW23N0zvuDPZakEfHilNwfhyhEaHYMoUAAAAAEABFAsi6YqjPYAEAAQBiqM9g';
-const channel = 'TestChannel';
+const token = "0067afb53157f754f6f8023f31fb343404aIACGoCNjvOJJ54fH6kkdnC1VPZlHa50LQvTt1uF+9v2QSRRkBDcAAAAAEABFAsi6k7/PYAEAAQCTv89g";
+const channel = "AUDIO CHANNEL";
 const apiURL = "http://127.0.0.1:3001";
 
 var uid = null; 
@@ -41,9 +41,9 @@ function UserCenter({userJWT}){
     // -------------------------- REACT STATES --------------------------
     const [pageChanges, setPageChanges] = useState(false);
     const [currentOffice, setCurrentOffice] = useState('');
-    const [usernames, setUsernames] = useState([]);
-    const [offices, setOffices] = useState([]);
-    const [rooms, setRooms] = useState([]);
+    const [usernames, setUsernames] = useState();
+    const [offices, setOffices] = useState();
+    const [rooms, setRooms] = useState();
     const [currentRoom, setCurrentRoom] = useState('');
     const [selectedTab, setSelectedTab] = useState('floorPlan');
 
@@ -55,16 +55,16 @@ function UserCenter({userJWT}){
         setCurrentRoom(Room);
     }
 
-    const updateUsers = (usernames) => {
-        setUsernames(usernames);
+    const updateUsers = () => {
+        setUsernames({});
     }
 
-    const updateOffices = (offices) => {
-        setOffices(offices);
+    const updateOffices = () => {
+        setOffices({});
     }
 
-    const updateRooms = (rooms) => {
-        setRooms(rooms);
+    const updateRooms = () => {
+        setRooms({});
     }
     // ------------------------------------------------------------------
 
@@ -86,7 +86,7 @@ function UserCenter({userJWT}){
                 }
                 else
                 {
-                    alert('Invalid JWT.');
+                    console.log('Invalid JWT.');
                 }
             }
         )
@@ -109,7 +109,7 @@ function UserCenter({userJWT}){
                 for(var x=0;x<result.Offices.length;x++){
                     const office = ""+result.Offices[x].name;
                     const id = ""+result.Offices[x].id;
-                    const newOfficeButton = <Row key={id}><Col><Button variant="primary" block onClick={ async () => {joinOffice(office)} }>{office}</Button></Col></Row>;
+                    const newOfficeButton = <Row key={id}><Col><Button variant="primary" block onClick={ async () => {await joinOffice(office)} }>{office}</Button></Col></Row>;
                     if(officesList.length < result.Offices.length){
                         officesList.push(newOfficeButton)
                         officeIDs.push([id,office]);
@@ -120,7 +120,7 @@ function UserCenter({userJWT}){
             }
             else
             {
-                alert('Invalid JWT.');
+                console.log('Invalid JWT.');
             } 
         }
         )
@@ -133,9 +133,11 @@ function UserCenter({userJWT}){
     const track = useMicrophoneTrack()['track'];
 
     // Function to initialise the SDK
-    async function init(){
+    let init = async () => {
+        console.log("--------------------- INIT ---------------------");
         setRemoteUsers([]);
         client.on("user-published", async (user, mediaType) => {
+            console.log("USER FOUND!");
             await client.subscribe(user, mediaType);
 
             requestOptions = {
@@ -151,7 +153,7 @@ function UserCenter({userJWT}){
                         usernameList.push([result.id+"" ,""+result.userName]);
                         updateUsers([]);
                     }else{
-                        alert('Invalid User ID.')
+                        console.log('Invalid User ID.')
                     }
                 }
             )
@@ -186,12 +188,15 @@ function UserCenter({userJWT}){
             console.log("leaving", user);
             updateUsers([]);
         });
-
+        console.log("JOINING...");
         await client.join(appId, channel, token, uid);
+        console.log("JOINED.");
         if (track) await client.publish(track);
+        console.log("PUBLISHING.");
     };
 
-    async function join(room){
+    let join = async (room) => {
+        console.log("--------------------- JOIN ---------------------");
         if(currentRoom !== room){
             if(currentRoom !== ''){
                 await leave("room");
@@ -201,7 +206,7 @@ function UserCenter({userJWT}){
                 console.log("init ready");
                 setRemoteUsers([]);
                 usernameList = [];
-                init(channel);
+                await init(channel);
             }
             /* ADD USER TO ROOM IN DB */
             // Get ID of current office
@@ -238,6 +243,7 @@ function UserCenter({userJWT}){
     }
 
     async function leave(type){
+        console.log("--------------------- LEAVE ---------------------");
         client.on("user-published", async (user, mediaType) => {
             await client.unsubscribe(user, mediaType);
             console.log("unsubscribe success");
@@ -302,60 +308,12 @@ function UserCenter({userJWT}){
         changeCurrentRoomTo('');
     };
 
-    function getRemoteUsers(){
-        var users = [];
-        usersList = [];
-        var userNames = [];
-        if(username !== null && currentRoom !== ''){
-            userNames.push(""+username+"\n");
-        }
-        
-        if(remoteUsers.length !== 0){
-            for(var i=0;i<remoteUsers.length;i++){
-                if(!users.includes("\n"+remoteUsers[i])){
-                    users.push("\n"+remoteUsers[i]);
-                    usersList.push(""+remoteUsers[i]);
-                }
-            }
-        }
-
-        if(!users.includes("\n"+uid)){
-            users.push("\n"+uid);
-            usersList.push(""+uid);
-        }
-        // ----------------- GET ROOMS OF REMOTE USERS -----------------
-        /*for(var x=0;x<)
-        requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ jwt: userJWT, officeID: currentOfficeID, roomID: currentRoomID })
-        };
-        
-        fetch(apiURL+"/api/room/join", requestOptions).then(res => {
-            if(res.status === 400){
-                console.log('Invalid JWT or Office/Room ID.')
-            }else{
-                console.log("JOINED ROOM: "+room);
-            }
-        })*/
-        // -------------------------------------------------------------
-        
-        for(var x=0;x<usernameList.length;x++){
-            if(usersList.includes(""+usernameList[x][0]) && !userNames.includes(""+usernameList[x][1]+"\n")){
-                userNames.push([""+usernameList[x][1]+"\n"]);
-            }
-        }
-
-        return userNames;
-    }
-
-    async function joinOffice(name){
-
+    let joinOffice = async (name) => {
+        console.log("--------------------- JOIN OFFICE ---------------------");
         if(currentRoom !== ''){
             leave("office");
-            changeCurrentOfficeTo('');
+            changeCurrentRoomTo('');
         }
-
         changeCurrentOfficeTo(name);
         currOffice = name;
 
@@ -383,17 +341,17 @@ function UserCenter({userJWT}){
                 for(var x=0;x<result.Rooms.length;x++){
                     const room = ""+result.Rooms[x].roomName;
                     const id = ""+result.Rooms[x].id;
-                    const newRoomButton = <Button style={{width: "50%"}} variant="secondary" key={id} block onClick={ async () => {join(room)} }>{room}</Button>;
+                    const newRoomButton = <Button style={{width: "50%"}} variant="secondary" key={id} block onClick={ async () => {await join(room)} }>{room}</Button>;
                     if(roomsList.length < result.Rooms.length){
                         roomsList.push(newRoomButton)
                         roomIDs.push([id,room]);
                     }
                 }
-                updateRooms([]);
+                updateOffices();
             }
             else
             {
-                alert('Invalid JWT.');
+                console.log('Invalid JWT.');
             } 
         }
         )
@@ -401,6 +359,7 @@ function UserCenter({userJWT}){
     }
 
     function getUserOffices(){
+        console.log("--------------------- GET USER OFFICES ---------------------");
         var tmp = [];
         for (var i=0;i<officesList.length;i++){
             if(!tmp.includes(officesList[i])){
@@ -412,6 +371,7 @@ function UserCenter({userJWT}){
     }
 
     function getOfficeRooms(){
+        console.log("--------------------- GET OFFICE ROOMS ---------------------");
         var tmp = [];
         for (var i=0;i<roomsList.length;i++){
             if(!tmp.includes(roomsList[i])){
@@ -422,6 +382,57 @@ function UserCenter({userJWT}){
         return tmp;
     }
 
+
+    function getRemoteUsers(){
+        console.log("--------------------- GET REMOTE USERS ---------------------");
+        var users = [];
+        usersList = [];
+        var userNames = [];
+        if(username !== null && currentRoom !== ''){
+            userNames.push(""+username+"\n");
+        }
+        
+        if(remoteUsers.length !== 0){
+            for(var i=0;i<remoteUsers.length;i++){
+                if(!users.includes("\n"+remoteUsers[i])){
+                    users.push("\n"+remoteUsers[i]);
+                    usersList.push(""+remoteUsers[i]);
+                }
+            }
+        }
+
+        if(!users.includes("\n"+uid)){
+            users.push("\n"+uid);
+            usersList.push(""+uid);  
+        }
+        console.log("USERNAME LIST: "+usersList);
+        // ----------------- GET ROOMS OF REMOTE USERS -----------------
+        /*for(var x=0;x<)
+        requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ jwt: userJWT, officeID: currentOfficeID, roomID: currentRoomID })
+        };
+        
+        fetch(apiURL+"/api/room/join", requestOptions).then(res => {
+            if(res.status === 400){
+                console.log('Invalid JWT or Office/Room ID.')
+            }else{
+                console.log("JOINED ROOM: "+room);
+            }
+        })*/
+        // -------------------------------------------------------------
+        
+        for(var x=0;x<usernameList.length;x++){
+            if(usersList.includes(""+usernameList[x][0]) && !userNames.includes(""+usernameList[x][1]+"\n")){
+                userNames.push(""+usernameList[x][1]+"\n");
+                console.log(userNames);
+            }
+        }
+
+        return userNames;
+    }
+
     return (
         <>
             <Col md={3} lg={2}>
@@ -430,7 +441,7 @@ function UserCenter({userJWT}){
             <Col md={9} lg={10}>
                 <div id="TabbedPane">
                     {
-                        currentOffice === '' 
+                        currOffice == '' 
                         ? 
                         <center>
                             <br></br>
