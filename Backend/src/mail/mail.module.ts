@@ -10,11 +10,11 @@ import { join } from 'path';
       // transport: 'smtps://user@example.com:topsecret@smtp.example.com',
       // or
       transport: {
-        host: '<REDACTED>',
+        host: 'smtp.office365.com',
         secure: false,
         auth: {
-          user: '<REDACTED>',
-          pass: '<REDACTED>',
+          user: 'projectpegasusdevs@outlook.com',
+          pass: 'PrOjEcTpEgAsUs',
         },
       },
       defaults: {

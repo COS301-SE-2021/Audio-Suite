@@ -12,6 +12,10 @@ import { NotificationModule } from './notification/notification.module';
 import { Notifications } from './notification/notification.entity';
 import { MailModule } from './mail/mail.module';
 import { ConfigModule } from '@nestjs/config';
+import { RoomModule } from './room/room.module';
+import { RoomusersModule } from './roomusers/roomusers.module';
+import { Room } from './room/room.entity';
+import { RoomUsers } from './roomusers/roomusers.entity';
 
 @Module({
   imports: [
@@ -25,11 +29,15 @@ import { ConfigModule } from '@nestjs/config';
       username: 'System', // TODO change to env var
       password: 'audiosuitetest', // TODO change to env var
       database: 'AUDIO_SUITE', // TODO change to env var
-      entities: [User, Office, OfficeUsers, Notifications],
+      entities: [User, Office, OfficeUsers, Notifications, Room, RoomUsers],
       synchronize: true,}), // TODO change to false for production
     UserModule, 
     OfficeModule, 
-    OfficeusersModule, NotificationModule, MailModule],
+    OfficeusersModule, 
+    NotificationModule, 
+    MailModule, 
+    RoomModule, 
+    RoomusersModule],
   controllers: [AppController],
   providers: [AppService],
 })

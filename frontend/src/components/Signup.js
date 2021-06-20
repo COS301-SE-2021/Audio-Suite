@@ -6,8 +6,14 @@ import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Modal from 'react-bootstrap/Modal'
 
 const Signup = ({onChangePageType}) => {
+    const [show, setShow] = useState(false);
+    const [otp, set_otp] = useState('');
+    const [user_input_otp, set_user_input_otp] = useState('');
+    const [otp_status, set_otp_status] = useState('Please enter otp.');
+
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [username, setUsername] = useState('')
@@ -20,10 +26,37 @@ const Signup = ({onChangePageType}) => {
     const [validEmail, setValidEmail] = useState(false)
     const [validPassword, setValidPassword] = useState(false)
 
+    const handleClose = () => 
+    {
+        if(otp === user_input_otp)
+        {
+            const OTP_requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ firstName: firstName, lastName: lastName, userName: username, email: email, password: password})
+            };
 
-    const onSubmit = (event) => {
-        event.preventDefault()
+            fetch("http://localhost:3001/api/register", OTP_requestOptions)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    //console.log(result);
+                    console.log("User registered successfully.");
+                }
+            )
+            
+            setShow(false);
+            onChangePageType('loginPage')
+        }
+        else
+        {
+            set_otp_status('Invalid OTP given, please try again.')
+        }
+    }
 
+
+    const handleShow = (event) => {
+        event.preventDefault();
         if(
             validFirstName && 
             validLastName && 
@@ -39,14 +72,28 @@ const Signup = ({onChangePageType}) => {
                 email: email,
                 password: password
             })
+            
+            const OTP_requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ emailAddress: email, userName: username})
+            };
 
-            onChangePageType('loginPage')
+            fetch("http://localhost:3001/api/notifications/sendVerification", OTP_requestOptions)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    console.log(result);
+                    set_otp(result.otp);
+                }
+            )
+
+            setShow(true);
         }
         else
         {
             alert('Not all input fields are valid.')
         }
-
     }
 
     const validateFirstName = (event) => 
@@ -132,7 +179,7 @@ const Signup = ({onChangePageType}) => {
                     <Row>
                         <Col xs={1} md={4}></Col>
                         <Col xs={10} md={4}>
-                            <Form onSubmit={onSubmit}>
+                            <Form onSubmit={handleShow}>
                                 <Form.Group controlId="formBasicFirstName">
                                     <Form.Label>First Name</Form.Label>
                                     <Form.Control 
@@ -189,6 +236,30 @@ const Signup = ({onChangePageType}) => {
                         <Col xs={1} md={4}></Col>
                     </Row>
                 </Container>
+
+                <Modal
+                    show={show}
+                    onHide={handleClose}
+                    backdrop="static"
+                    keyboard={false}
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Modal title</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                    <Form.Group controlId="formBasicOTP">
+                        <Form.Label>{otp_status}</Form.Label>
+                        <Form.Control 
+                            type="text" 
+                            placeholder="OTP" 
+                            value={user_input_otp}
+                            onChange={(event) => {set_user_input_otp(event.target.value)}}/>
+                    </Form.Group>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="primary" onClick={handleClose}>Confirm</Button>
+                    </Modal.Footer>
+                </Modal>
             </center>
         </div>
     )

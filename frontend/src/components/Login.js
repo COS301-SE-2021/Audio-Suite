@@ -7,7 +7,10 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
-const Login = ({onLogin, onChangePageType}) => {
+const Login = ({setJWT, onLogin, onChangePageType}) => {
+
+    const apiURL = "http://127.0.0.1:3001";
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -20,8 +23,28 @@ const Login = ({onLogin, onChangePageType}) => {
         if(validEmail && validPassword)
         {
             console.log("Log user in!")
-            console.log({email: email, password: password})
-            onLogin('UserPage')
+
+            const Login_requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email, password: password })
+            };
+
+            fetch(apiURL+"/api/login", Login_requestOptions)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    if(result.response === 'Success')
+                    {
+                        setJWT(result.jwt);
+                        onLogin('userPage');
+                    }
+                    else
+                    {
+                        alert('Invalid User credentials.')
+                    }
+                }
+            )
         }
         else
         {
@@ -35,7 +58,7 @@ const Login = ({onLogin, onChangePageType}) => {
         if(validator.isEmail(event.target.value))
         {
             setValidEmail(true)
-            console.log(event.target.value, " Valid email")
+            console.log("Email valid.")
         }
         else
         {
@@ -58,7 +81,7 @@ const Login = ({onLogin, onChangePageType}) => {
             }))
         {
             setValidPassword(true)
-            console.log(event.target.value, " Valid password")
+            console.log("Password Valid.")
         }
         else
         {

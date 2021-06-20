@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState } from 'react'
 
 import '../CSS/UserSideBar.css'
 
@@ -7,50 +7,88 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
-const UserSideBar = ({officeSelected, onClick}) => {
-    return (
-        <div className="sidebar">
-            <Container fluid>
+import FormModal from './FormModal'
+import SingleMessageModal from './SingleMessageModal'
+
+function UserSideBar({jwt, officeSelected, leaveOffice, getOffices, joinOffice, currentOfficeInviteCode, updateUserOfficeList}) {
+    const [modalShow, setModalShow] = useState(false);
+    const [modalType, setModalType] = useState('');
+
+    const [responseModalShow, setResponseModalShow] = useState(false);
+    const [responseModalTitle, setResponseModalTitle] = useState('');
+    const [responseModalMessage, setResponseModalMessage] = useState('');
+
+    return(
+        <Container fluid style={{color: "white"}}>
+            <Row>
+                <Col>
+                    <h3>Offices:</h3>
+                </Col>
+            </Row>
+            {
+                getOffices()
+            }
+            <br></br>
+            {
+                officeSelected !== ''
+                &&
+                <>
                 <Row>
                     <Col>
-                        <h3>Offices:</h3>
+                        <h4>Office Settings:</h4>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <Button variant="outline-light" block onClick={() => onClick('Epi-Use')}>Epi-Use</Button>
+                        <Button variant="success" block onClick={ async () => {setModalShow(true); setModalType('sendInvite') } }>Send Invite</Button>
                     </Col>
                 </Row>
                 <br></br>
                 <Row>
                     <Col>
-                        <Button variant="outline-light" block onClick={() => onClick('Pegasus')}>Pegasus</Button>
-                    </Col>
-                </Row>
-                <br></br>
-                <Row>
-                    <Col>
-                        <Button variant="outline-light" block onClick={() => onClick('Tuks CS')}>Tuks CS</Button>
+                        <Button variant="danger" block onClick={ async () => {await leaveOffice("office")} }>Leave Office</Button>
                     </Col>
                 </Row>
                 <br></br>
                 <br></br>
-                <Row>
-                    <Col>
-                        <h4>Quick Settings:</h4>
-                    </Col>
-                </Row>
-                {
-                    officeSelected !== ''
-                    &&
-                    <Row>
-                        <Col>
-                            <Button variant="outline-light" block onClick={() => onClick('')}>Leave Office</Button>
-                        </Col>
-                    </Row>
-                }
-            </Container>
-        </div>
+                </>
+            }
+            <Row>
+                <Col>
+                    <h4>Quick Settings:</h4>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <Button variant="info" block onClick={ async () => {setModalShow(true); setModalType('createOffice') } }>Create Office</Button>
+                </Col>
+            </Row>
+            <br></br>
+            <Row>
+                <Col>
+                    <Button variant="info" block onClick={ async () => {setModalShow(true); setModalType('joinOffice') } }>Join Office</Button>
+                </Col>
+            </Row>
+            
+            <FormModal 
+                jwt={jwt} 
+                show={modalShow} 
+                onHide={() => setModalShow(false)} 
+                type={modalType} 
+                currentOfficeInviteCode={currentOfficeInviteCode}
+                setResponseModalShow={setResponseModalShow} 
+                setResponseModalTitle={setResponseModalTitle} 
+                setResponseModalMessage={setResponseModalMessage}
+                updateUserOfficeList={updateUserOfficeList}
+            />
+
+            <SingleMessageModal 
+                show={responseModalShow} 
+                onHide={() => setResponseModalShow(false)} 
+                title={responseModalTitle} 
+                message={responseModalMessage}
+            />
+        </Container>
     )
 }
 

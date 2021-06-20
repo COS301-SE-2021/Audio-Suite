@@ -1,4 +1,3 @@
-import React, { Component } from 'react';
 import { useState } from 'react'
 
 import "../CSS/ChangeEmail.css";
@@ -30,12 +29,6 @@ const ChangeEmail = () => {
           </Modal>
         );
       }
-
-    // const navigateToLoginPage = () => 
-    // {
-    //     //onChangePageType('loginPage')
-    //     changePage('splashPage')
-    // }
 
     return (
         <>
