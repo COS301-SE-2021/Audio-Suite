@@ -1,7 +1,7 @@
 import { BadRequestException, HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RoomUsersService } from 'src/roomusers/roomusers.service';
-import { UserService } from 'src/user/user.service';
+import { RoomUsersService } from '../roomusers/roomusers.service';
+import { UserService } from '../user/user.service';
 import { Repository } from 'typeorm';
 import { Room } from './room.entity';
 

@@ -14,11 +14,12 @@ export class NotificationController {
     async createNotification(
         @Body('userID') userID: string,
         @Body('type') type: string,
-        @Body('link') link: string,
-        @Body('email') email: string,
+        @Body('invite') invite: string,
+        @Body('userName') userName: string,
+        @Body('emailAddress') emailAddress: string,
         @Body('password') password: string
     ){
-        return await this.notificationService.createNotification(userID, type, link,"", email, password);
+        return await this.notificationService.createNotification(userID, type, invite, userName, emailAddress, password);
     }
 
     @Post('notifications/sendInviteCode')
