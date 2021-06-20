@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { Office } from "src/office/office.entity";
+import { Office } from "../office/office.entity";
 import { OfficeService } from "src/office/office.service";
-import { User } from "src/user/user.entity";
-import { UserService } from "src/user/user.service";
+import { User } from "../user/user.entity";
+import { UserService } from "../user/user.service";
 import { OfficeUsers } from "./officeusers.entity";
 import { OfficeusersService } from "./officeusers.service";
 
