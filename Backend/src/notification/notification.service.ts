@@ -24,28 +24,52 @@ export class NotificationService {
     }
 
     //create the notification
-    async createNotification(userID: string, type: string, link: string, emailAddress: string, password: string) : Promise<any>{
-        //check for valid user
+    async createNotification(userID: string, type: string, invite: string, userName: string, emailAddress: string, password: string) : Promise<any>{
+
+        // check for valid user
         if(password === "test"){
-            //create the notification of no error was thrown
-            try{
-                //create the variables for the notification
-                const payload = await this.createType(type);
-                const notificationType = await this.getNotificationType(type);
+
+            // Check which type of notification to create
+            if(type === "OfficeInvite"){
                 
-                //add notification
-                const addNotification = this.addNotification(payload, userID, new Date(), notificationType)
+                // create the notification of no error was thrown
+                try{
+                    // create the variables for the notification
+                    const payload = await this.createType(type);
+                    const notificationType = await this.getNotificationType(type);
+                    
+                    // add notification
+                    const addNotification = this.addNotification(payload, userID, new Date(), notificationType)
 
-                //send emails
-                this.sendEmail(emailAddress, type, payload);
+                    //send emails
+                    return this.sendInviteCodeEmail(emailAddress, type, invite);
 
-                //return the created notification
-                return addNotification;
-
-            }catch(err){
-                throw new HttpException("Could not add notification to database", 500);
+                }
+                catch(err){
+                    throw new HttpException("Could not add notification to database", 500);
+                }
             }
-        } else{
+            else if(type === "OTP"){
+
+                // create the notification of no error was thrown
+                try{
+                    // create the variables for the notification
+                    const payload = await this.createType(type);
+                    const notificationType = await this.getNotificationType(type);
+                    
+                    // add notification (-1 is a system userId)
+                    const addNotification = this.addNotification(payload, "-1", new Date(), notificationType)
+
+                    //send emails
+                    return this.createOTP(emailAddress, userName);
+
+                }
+                catch(err){
+                    throw new HttpException("Could not add notification to database", 500);
+                }
+            }
+        }
+        else{
             throw new UnauthorizedException;
         }
 

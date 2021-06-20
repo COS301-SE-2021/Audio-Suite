@@ -18,7 +18,7 @@ export class NotificationController {
         @Body('email') email: string,
         @Body('password') password: string
     ){
-        return await this.notificationService.createNotification(userID, type, link, email, password);
+        return await this.notificationService.createNotification(userID, type, link,"", email, password);
     }
 
     @Post('notifications/sendInviteCode')
