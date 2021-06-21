@@ -161,11 +161,6 @@ function UserCenter({userJWT}){
             if (mediaType === "audio") {
                 usersList.push(""+user.uid);
                 setRemoteUsers(usersList);
-                if(user.uid == 27 || user.uid == 25){
-                    user.audioTrack.setVolume(15);
-                }else{
-                    user.audioTrack.setVolume(125);
-                }
                 user.audioTrack?.play();
                 updateUsers([]);
             }

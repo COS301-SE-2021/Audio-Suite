@@ -102,9 +102,30 @@ describe('USER', () => {
                           .post('/api/user/details')
                           .set('Accept', 'application/json')
                           .send(jwtFromResponse)
+                          .expect(({body}) => {
+                            expect(body.id).toHaveReturned();
+                            expect(body.firstName).toEqual('John')
+                            expect(body.lastName).toEqual('White')
+                            expect(body.userName).toEqual('JohnWhite3');
+                            expect(body.email).toEqual('johnwhite3@gmail.com');
+                          })
                           .expect(HttpStatus.CREATED);
     })
     .expect(HttpStatus.CREATED);
+  });
+
+  // Trying to getUser details with an invalid jwt
+  it('should try get user details with an invalid jwt', () => {
+    const jwt = {
+      //Random invalid jwt
+      jwt: "kl54353sgahklghlks345gdygh435askl54353ahgflk"
+    }
+
+    const userDetails = request(app)
+    .post('/api/user/details')
+    .set('Accept', 'application/json')
+    .send(jwt)
+    .expect(HttpStatus.UNAUTHORIZED);
   });
 });
 
@@ -161,6 +182,10 @@ describe('NOTIFICATION', () => {
       .post('/api/notifications/sendInviteCode')
       .set('Accept', 'application/json')
       .send(body)
+      .expect(({body}) => {
+        expect(body.Response).toStrictEqual('Success');
+        expect(body.Message).toStrictEqual('Invite code sent successfully');
+      })
       .expect(HttpStatus.CREATED);
   });
 
@@ -175,6 +200,9 @@ describe('NOTIFICATION', () => {
     .post('/api/notifications/sendVerification')
     .set('Accept', 'application/json')
     .send(user)
+    .expect(({body}) => {
+      expect(body.success).toStrictEqual('success');
+    })
     .expect(HttpStatus.CREATED);
   });
 
@@ -259,11 +287,15 @@ describe('OFFICE', () => {
       expect(body.response).toStrictEqual('Success');
       jwtFromResponse=body.jwt;
       const createOffice = request(app)
-                          .post('/office/register')
+                          .post('/api/office/register')
                           .set('Accept', 'application/json')
                           .send({
-                            name: "newOffice",
+                            name: "Pegasus",
                             jwt: jwtFromResponse
+                          })
+                          .expect(({body}) => {
+                            expect(body.statusCode).toStrictEqual('400');
+                            expect(body.message).toStrictEqual('Office with this name already exists.');
                           })
                           .expect(HttpStatus.BAD_REQUEST);
     })
