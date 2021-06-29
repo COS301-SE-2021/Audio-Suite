@@ -1,19 +1,14 @@
 {
-  "name": "blk-design-system-angular",
+  "name": "audio-suite-frontend-angular",
   "version": "1.2.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "description": "BLK Design System Angular: Free Angular Design System For Bootstrap 4 and Angular",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/creativetimofficial/blk-design-system-angular.git"
   },
   "keywords": [
     "design system",
@@ -58,10 +53,6 @@
   ],
   "author": "Creative Tim <hello@creative-tim.com> (https://www.creative-tim.com/)",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/creativetimofficial/blk-design-system-angular/issues"
-  },
-  "homepage": "https://demos.creative-tim.com/blk-design-system-angular/",
   "private": false,
   "dependencies": {
     "@angular/animations": "11.0.5",
