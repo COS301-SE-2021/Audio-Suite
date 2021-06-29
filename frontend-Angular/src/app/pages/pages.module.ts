@@ -21,6 +21,9 @@ import { IndexComponent } from "./index/index.component";
 import { ProfilepageComponent } from "./examples/profilepage/profilepage.component";
 import { RegisterpageComponent } from "./examples/registerpage/registerpage.component";
 import { LandingpageComponent } from "./examples/landingpage/landingpage.component";
+import { RegisterComponent } from './register/register.component';
+import { LoginComponent } from './login/login.component';
+import { FormModalComponent } from './components/form-modal/form-modal.component';
 
 @NgModule({
   imports: [
@@ -45,7 +48,10 @@ import { LandingpageComponent } from "./examples/landingpage/landingpage.compone
     IndexComponent,
     ProfilepageComponent,
     RegisterpageComponent,
-    LandingpageComponent
+    LandingpageComponent,
+    RegisterComponent,
+    LoginComponent,
+    FormModalComponent
   ],
   exports: [
     IndexComponent,
