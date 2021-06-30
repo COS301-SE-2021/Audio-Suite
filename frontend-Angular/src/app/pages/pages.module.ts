@@ -24,6 +24,7 @@ import { LandingpageComponent } from "./examples/landingpage/landingpage.compone
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { FormModalComponent } from './components/form-modal/form-modal.component';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
   imports: [
@@ -51,7 +52,8 @@ import { FormModalComponent } from './components/form-modal/form-modal.component
     LandingpageComponent,
     RegisterComponent,
     LoginComponent,
-    FormModalComponent
+    FormModalComponent,
+    UserComponent
   ],
   exports: [
     IndexComponent,
