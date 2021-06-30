@@ -1,4 +1,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +20,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   focus1;
   focus2;
 
-  constructor() { }
+  constructor(private userService: UserService, private router: Router) { }
 
   @HostListener("document:mousemove", ["$event"])
   onMouseMove(e) {
@@ -91,7 +94,60 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   logUserIn(): void{
+    if(this.email == ""){
+      this.alertMsg = "Email is required.";
+      this.sendAlert = true;
+      return;
+    }
+    else{
+      const emailControl = new FormControl(this.email, Validators.email);
+      if(emailControl.status == "INVALID"){
+        this.sendAlert = true;
+        this.alertMsg = "Email given is invalid.";
+        return
+      }
+      else{
+        this.sendAlert = false;
+        this.alertMsg = "";
+      }
+    }
 
+    if(this.password == ""){
+      this.sendAlert = true;
+      this.alertMsg = "Password is required.";
+      return
+    }
+    else{
+      const passwordControl = new FormControl(this.password, Validators.pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*()\-_\+\=|\\/?>.<,;:]).{8,}$"));
+      if(passwordControl.status == "INVALID"){
+        this.sendAlert = true;
+        this.alertMsg = "Password given is invalid.\nMin length 8, One Uppercase, One Lowercase, One digit and One special character.";
+        return
+      }
+      else{
+        this.sendAlert = false;
+        this.alertMsg = "";
+      }
+    }
+
+    var validUser: boolean = false;
+
+    this.userService.logUserIn(this.email, this.password).subscribe(response => {
+      //console.log(response);
+      if(response.response == "Success"){
+        validUser = true;
+        sessionStorage.setItem('jwt', response.jwt);
+        this.router.navigate(['user'])
+        return
+      }
+    })
+
+    if(!validUser){
+      this.password = "";
+      this.sendAlert = true;
+      this.alertMsg = "Invalid user credentials given.";
+      return
+    }
   }
 
   ngOnDestroy() {
