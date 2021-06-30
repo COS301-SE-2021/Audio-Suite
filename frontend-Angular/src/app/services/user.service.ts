@@ -17,7 +17,10 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  sendOTPVerificationEmail(email: string, userName: string): Observable<any>{
+  sendOTPVerificationEmail(
+    email: string, 
+    userName: string
+    ): Observable<any>{
     const body = {
       emailAddress: email,
       userName: userName
@@ -39,6 +42,17 @@ export class UserService {
       email: emailAddress,
       password: password
     }
-    return this.http.post('http://localhost:3001/api/register', body, httpOptions)
+    return this.http.post('http://localhost:3001/api/register', body, httpOptions);
+  }
+
+  logUserIn(
+    email: string,
+    password: string
+  ): Observable<any>{
+    const body = {
+      email: email,
+      password: password
+    }
+    return this.http.post<any>('http://localhost:3001/api/login', body, httpOptions);
   }
 }
