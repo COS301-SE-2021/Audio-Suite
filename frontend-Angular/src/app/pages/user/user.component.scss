@@ -1,0 +1,76 @@
+.sidebar{
+    margin: 0;
+    padding: 0;
+    width: 15%;
+    background: linear-gradient(45deg, rgba(10,250,207,1) 0%, rgba(220,123,255,1) 100%);
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+    font-size: 20px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+
+    #sidebar-title{
+        margin-top: 15px;
+        color: black;
+        text-align: center;
+    }
+
+    #sidebar-officeHeader{
+        margin-left: 5px;
+        color: black;
+        background-color: transparent;
+        border: none;
+        outline: none;
+    }
+
+    .showOffices{
+        display: block;
+
+        .officeBtn{
+            margin-left: 30px;
+            color: black;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+    }
+
+    .hideOffices{
+        display: none;
+
+        .officeBtn{
+            margin-left: 30px;
+            color: black;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+    }
+}
+
+.content{
+    margin-left: 15%;
+    padding: 1px 16px;
+    height: 100%;
+    width: 92%;
+    position: fixed;
+    text-align: center;
+}
+
+.TextChannelContent{
+    position: fixed;
+    height: 85%;
+    width: 83%;
+    border: 1px solid white;
+
+    .messageBoard{
+        height: 90%;
+    }
+
+    .newMessageInput{
+        display: flex;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}

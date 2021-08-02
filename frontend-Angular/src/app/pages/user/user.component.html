@@ -1,1 +1,75 @@
-<p>user works!</p>
+<!-- sidebar -->
+<div class="sidebar">
+    <h2 id='sidebar-title' >Audio Suite</h2>
+
+    <button id="sidebar-officeHeader" (click)="toggleOfficeListView()">
+        <i id="officeListIcon" class="tim-icons icon-minimal-down"></i> Offices:
+    </button>
+    <div id="officeList" class="showOffices">
+        <button class="officeBtn" (click)="selectOffice('Epi-Use')">Epi-Use</button>
+        <br>
+        <button class="officeBtn" (click)="selectOffice('Tuks-CS')">Tuks CS</button>
+        <br>
+        <button class="officeBtn" (click)="selectOffice('Project')">Project</button>
+        <br>
+        <button class="officeBtn" (click)="selectOffice('Pegasus')">Pegasus</button>
+        <br>
+    </div>
+</div>
+
+<!-- Page content -->
+<div class="content">
+    <div *ngIf="officeSelected">
+        <h2 style="margin-top: 10px; margin-bottom: 5px;">
+            {{selectedOffice}}
+        </h2>
+    </div>
+    <tabset *ngIf="officeSelected" class="nav-tabs-primary">
+        <tab>
+            <ng-template tabHeading>
+                <i class="tim-icons icon-bank"> </i> Floor Plan
+            </ng-template>
+            <p>
+                Collaboratively administrate empowered markets via
+                plug-and-play networks. Dynamically procrastinate B2C
+                users after installed base benefits. <br />
+
+                <br />
+
+                Dramatically visualize customer directed convergence
+                without revolutionary ROI.
+            </p>
+        </tab>
+        <tab>
+            <ng-template tabHeading>
+                <i class="tim-icons icon-email-85"> </i> Text Channel
+            </ng-template>
+            <div class="TextChannelContent">
+                <p>Text channel content</p>
+                <div class="messageBoard">
+
+                </div>
+
+                <div class="newMessageInput">
+                    <input type="text" class="form-control"> 
+                    <button class="btn btn-primary btn-sm">Send</button>
+                </div>
+            </div>
+        </tab>
+        <tab>
+            <ng-template tabHeading>
+                <i class="tim-icons icon-components"> </i> Kanban Boards
+            </ng-template>
+            <p>
+                Efficiently unleash cross-media information without
+                cross-media value. Quickly maximize timely deliverables
+                for real-time schemas. <br />
+
+                <br />
+
+                Dramatically maintain clicks-and-mortar solutions without
+                functional solutions.
+            </p>
+        </tab>
+    </tabset>
+</div>
