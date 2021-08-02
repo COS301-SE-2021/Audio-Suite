@@ -59,7 +59,8 @@ import { UserComponent } from './user/user.component';
     IndexComponent,
     ProfilepageComponent,
     RegisterpageComponent,
-    LandingpageComponent
+    LandingpageComponent,
+    UserComponent
   ],
   providers: []
 })
