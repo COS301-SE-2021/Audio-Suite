@@ -1,15 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RoomusersService } from './roomusers.service';
+import { RoomUsersService } from './roomusers.service';
 
 describe('RoomusersService', () => {
-  let service: RoomusersService;
+  let service: RoomUsersService;
+
+  const mockRoomUsersService = {};
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [RoomusersService],
-    }).compile();
+      providers: [RoomUsersService],
+    }).overrideProvider(RoomUsersService)
+    .useValue(mockRoomUsersService)
+    .compile();
 
-    service = module.get<RoomusersService>(RoomusersService);
+    service = module.get<RoomUsersService>(RoomUsersService);
   });
 
   it('should be defined', () => {

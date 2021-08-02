@@ -5,9 +5,9 @@ import { Office } from './office.entity';
 import { OfficeService } from './office.service';
 import { UserService } from '../user/user.service';
 import {JwtModule} from "@nestjs/jwt";
-import { User } from 'src/user/user.entity';
-import { OfficeUsers } from 'src/officeusers/officeusers.entity';
-import { OfficeusersService } from 'src/officeusers/officeusers.service';
+import { User } from '../user/user.entity';
+import { OfficeUsers } from '../officeusers/officeusers.entity';
+import { OfficeusersService } from '../officeusers/officeusers.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Office]),
