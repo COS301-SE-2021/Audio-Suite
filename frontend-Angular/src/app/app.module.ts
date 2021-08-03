@@ -25,6 +25,10 @@ import { RegisterpageComponent } from "./pages/examples/registerpage/registerpag
 import { LandingpageComponent } from "./pages/examples/landingpage/landingpage.component";
 import { AudioComponent } from './audio/audio.component';
 
+import { BrowserModule } from '@angular/platform-browser';
+import { AudioModule } from "./audio/audio.module";
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,6 +45,8 @@ import { AudioComponent } from './audio/audio.component';
     HttpClientModule,
     RouterModule,
     AppRoutingModule,
+    BrowserModule,
+    AudioModule,
     // BsDropdownModule.forRoot(),
     // ProgressbarModule.forRoot(),
     // TooltipModule.forRoot(),
