@@ -24,7 +24,7 @@ import { ProfilepageComponent } from "./pages/examples/profilepage/profilepage.c
 import { RegisterpageComponent } from "./pages/examples/registerpage/registerpage.component";
 import { LandingpageComponent } from "./pages/examples/landingpage/landingpage.component";
 
-import { AudioModule } from "./audio/audio.module";
+//import { AudioModule } from "./audio/audio.module";
 
 
 import { BrowserModule } from '@angular/platform-browser';
