@@ -1,4 +1,6 @@
+import { ThisReceiver } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
+import { TextChannelsService } from 'src/app/services/text-channels.service';
 
 @Component({
   selector: 'app-user',
@@ -13,11 +15,29 @@ export class UserComponent implements OnInit {
   officeSelected = false;
   selectedOffice = '';
 
-  constructor() { }
+  newMessageInput: string = "";
+
+  constructor(private textChannelsService: TextChannelsService) { }
 
   ngOnInit(): void {
     var body = document.getElementsByTagName("body")[0];
     body.classList.add("user-page");
+
+    this.textChannelsService.listen("joinedRoom").subscribe(data => {
+      console.log("Joined room: ", data);
+    })
+
+    this.textChannelsService.listen("leftRoom").subscribe(data => {
+      console.log("Left room: ", data);
+    })
+
+    this.textChannelsService.listen("msgToClient").subscribe(data => {
+      console.log("Message to client: ", data);
+      this.receivedMessage(data);
+    })
+    
+    //this.textChannelsService.sendMsgToServer("chris", "testing1", "hello world");
+
   }
 
   toggleSidebar(): void {
@@ -27,6 +47,15 @@ export class UserComponent implements OnInit {
   selectOffice(office): void{
     this.selectedOffice = office;
     this.officeSelected = true;
+
+    this.textChannelsService.joinRoom(office);
+  }
+
+  leaveOffice(): void{
+    this.textChannelsService.leaveRoom(this.selectedOffice);
+
+    this.selectedOffice = '';
+    this.officeSelected = false;
   }
 
   toggleOfficeListView(): void{
@@ -40,6 +69,23 @@ export class UserComponent implements OnInit {
       document.getElementById('officeListIcon').classList.replace("icon-minimal-right", "icon-minimal-down");
       this.showOfficeList = true;
     }
+  }
+
+  toggleQuickSettingsListView(): void{
+    
+  }
+
+  sendMessage(): void{
+    this.textChannelsService.sendMsgToServer("chris", this.selectedOffice, this.newMessageInput);
+    this.newMessageInput = "";
+  }
+
+  receivedMessage(data: any): void{
+    var newMessageObject = 
+    `
+     <p>${data.message}</p>
+    `;
+    document.getElementById("messageBoard").innerHTML += newMessageObject;
   }
 
   ngOnDestroy() {

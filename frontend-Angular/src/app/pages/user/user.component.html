@@ -15,6 +15,17 @@
         <button class="officeBtn" (click)="selectOffice('Pegasus')">Pegasus</button>
         <br>
     </div>
+
+    <br>
+    <br>
+    <div *ngIf="officeSelected">
+        <button id="sidebar-officeHeader" (click)="toggleQuickSettingsListView()">
+            <i id="officeListIcon" class="tim-icons icon-minimal-down"></i> Quick Settings:
+        </button>
+        <div id="quickSettingsList" class="showQuickSettings">
+            <button class="sidebarBtn" (click)="leaveOffice()">Leave Office</button>
+        </div>
+    </div>
 </div>
 
 <!-- Page content -->
@@ -45,15 +56,16 @@
                 <i class="tim-icons icon-email-85"> </i> Text Channel
             </ng-template>
             <div class="TextChannelContent">
-                <p>Text channel content</p>
-                <div class="messageBoard">
-
+                <div class="messageBoard" id="messageBoard">
+                    <!--Messages will be displayed here when fetched from the server.-->
                 </div>
-
-                <div class="newMessageInput">
-                    <input type="text" class="form-control"> 
-                    <button class="btn btn-primary btn-sm">Send</button>
-                </div>
+                
+                <form>
+                    <div class="newMessageInput form-group">
+                        <input name="newMessageInput" [(ngModel)]="newMessageInput" type="text" class="form-control"> 
+                        <button type="submit" class="btn btn-primary btn-sm" (click)="sendMessage()">Send</button>
+                    </div>
+                </form>
             </div>
         </tab>
         <tab>

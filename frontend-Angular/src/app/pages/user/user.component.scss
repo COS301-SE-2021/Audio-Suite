@@ -36,6 +36,14 @@
         }
     }
 
+    .sidebarBtn{
+        margin-left: 30px;
+        color: black;
+        background-color: transparent;
+        border: none;
+        outline: none;
+    }
+
     .hideOffices{
         display: none;
 
@@ -62,10 +70,10 @@
     position: fixed;
     height: 85%;
     width: 83%;
-    border: 1px solid white;
+    border-top: 1px solid white;
 
     .messageBoard{
-        height: 90%;
+        height: 94%;
     }
 
     .newMessageInput{
@@ -74,3 +82,4 @@
         padding-right: 5px;
     }
 }
+
