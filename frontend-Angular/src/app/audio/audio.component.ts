@@ -108,9 +108,15 @@ export class AudioComponent implements OnInit {
         // ------- Play Audio Stream in audioContext --------
         let audioStream = this.audioContext.createMediaStreamSource(audioStreamTrack);
         let volumeControl = this.audioContext.createGain();
+        let panner = this.audioContext.createPanner();
+        //let listener = this.audioContext.listener();
         volumeControl.gain.setValueAtTime(volume, this.audioContext.currentTime);
         audioStream.connect(volumeControl);
-        volumeControl.connect(this.audioContext.destination);
+        volumeControl.connect(panner);
+        panner.connect(this.audioContext.destination);
+        panner.positionX.setValueAtTime( 0, this.audioContext.currentTime );
+        panner.positionY.setValueAtTime( 0, this.audioContext.currentTime );
+        panner.positionZ.setValueAtTime( -100, this.audioContext.currentTime );
         //audioStream.connect(this.audioContext.destination);
         console.log(audioStream);
         // --------------------------------------------------
