@@ -91,7 +91,7 @@ export class AudioComponent implements OnInit {
 
   mixAudio(): void{
     // --------- Loop through remote audio streams ----------
-    let volume = 10; // Set Volume
+    let volume = 3; // Set Volume
 
     this.remoteStreams.forEach( (stream, i, arr) => {
       var track = stream.getAudioTrack();
@@ -109,16 +109,16 @@ export class AudioComponent implements OnInit {
         let audioStream = this.audioContext.createMediaStreamSource(audioStreamTrack);
         let volumeControl = this.audioContext.createGain();
         let panner = this.audioContext.createPanner();
-        //let listener = this.audioContext.listener();
+        let compressor = this.audioContext.createDynamicsCompressor();
         volumeControl.gain.setValueAtTime(volume, this.audioContext.currentTime);
         audioStream.connect(volumeControl);
         volumeControl.connect(panner);
-        panner.connect(this.audioContext.destination);
+        panner.connect(compressor);
+        compressor.connect(this.audioContext.destination);
         panner.positionX.setValueAtTime( 0, this.audioContext.currentTime );
         panner.positionY.setValueAtTime( 0, this.audioContext.currentTime );
-        panner.positionZ.setValueAtTime( -100, this.audioContext.currentTime );
+        panner.positionZ.setValueAtTime( 25, this.audioContext.currentTime );
         //audioStream.connect(this.audioContext.destination);
-        console.log(audioStream);
         // --------------------------------------------------
       }
     });
