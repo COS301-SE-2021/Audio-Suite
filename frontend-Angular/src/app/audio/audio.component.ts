@@ -90,10 +90,13 @@ export class AudioComponent implements OnInit {
   }
 
   mixAudio(): void{
+    // --------- Loop through remote audio streams ----------
+    let volume = 10; // Set Volume
+
     this.remoteStreams.forEach( (stream, i, arr) => {
       var track = stream.getAudioTrack();
       if (typeof track !== 'undefined'){
-        // ---------- Janky Fix I don't understand ----------
+        // ---------- Work Around for Chrome Bugs -----------
         var audioStreamTrack = new MediaStream([track]);
         let a = new Audio();
         a.muted = true;
@@ -102,13 +105,18 @@ export class AudioComponent implements OnInit {
             a = null;
         });
         // --------------------------------------------------
-        // ---------- Play stream in audioContext -----------
+        // ------- Play Audio Stream in audioContext --------
         let audioStream = this.audioContext.createMediaStreamSource(audioStreamTrack);
-        audioStream.connect(this.audioContext.destination);
+        let volumeControl = this.audioContext.createGain();
+        volumeControl.gain.setValueAtTime(volume, this.audioContext.currentTime);
+        audioStream.connect(volumeControl);
+        volumeControl.connect(this.audioContext.destination);
+        //audioStream.connect(this.audioContext.destination);
         console.log(audioStream);
         // --------------------------------------------------
       }
     });
+    // ------------------------------------------------------
   }
 
   protected init(): void {
