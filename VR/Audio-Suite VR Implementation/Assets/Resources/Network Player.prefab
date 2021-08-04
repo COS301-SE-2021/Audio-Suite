@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5531517365896210777}
   - component: {fileID: 5229817215012786668}
   - component: {fileID: 8064439664835425152}
+  - component: {fileID: 4165065821109998122}
   m_Layer: 0
   m_Name: Network Player
   m_TagString: Untagged
@@ -91,6 +92,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 5229817215012786668}
   speed: 12
+--- !u!114 &4165065821109998122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3754300684724101866}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e57f2ab7a16543c41aff965076221977, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseSens: 100
+  playerBody: {fileID: 8714433628349048827}
 --- !u!1 &4831647473733944012
 GameObject:
   m_ObjectHideFlags: 0
