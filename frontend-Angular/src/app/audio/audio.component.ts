@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { isType } from '@angular/core/src/type';
 import { FormControl } from '@angular/forms';
 
 import { AgoraClient, ClientEvent, NgxAgoraService, Stream, StreamEvent } from 'ngx-agora';
@@ -29,6 +30,10 @@ export class AudioComponent implements OnInit {
    * All the IDs of other users that have joined the call
    */
   remoteCalls: string[] = [];
+  remoteStreams: Stream[] = [];
+
+  audioContext = new AudioContext();
+
   /**
    * Whether the local client has tuned in to the Agora meeting room
    */
@@ -84,6 +89,28 @@ export class AudioComponent implements OnInit {
     }
   }
 
+  mixAudio(): void{
+    this.remoteStreams.forEach( (stream, i, arr) => {
+      var track = stream.getAudioTrack();
+      if (typeof track !== 'undefined'){
+        // ---------- Janky Fix I don't understand ----------
+        var audioStreamTrack = new MediaStream([track]);
+        let a = new Audio();
+        a.muted = true;
+        a.srcObject = audioStreamTrack;
+        a.addEventListener('canplaythrough', () => {
+            a = null;
+        });
+        // --------------------------------------------------
+        // ---------- Play stream in audioContext -----------
+        let audioStream = this.audioContext.createMediaStreamSource(audioStreamTrack);
+        audioStream.connect(this.audioContext.destination);
+        console.log(audioStream);
+        // --------------------------------------------------
+      }
+    });
+  }
+
   protected init(): void {
     this.localStream.init(
       () => {
@@ -135,7 +162,9 @@ export class AudioComponent implements OnInit {
       const id = this.getRemoteId(stream);
       if (!this.remoteCalls.length) {
         this.remoteCalls.push(id);
-        setTimeout(() => stream.play(id), 1000);
+        this.remoteStreams.push(stream);
+        this.mixAudio();
+        //setTimeout(() => this.remoteStreams.reverse()[0].play(id), 1000);
       }
     });
 

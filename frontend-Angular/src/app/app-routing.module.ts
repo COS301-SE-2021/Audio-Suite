@@ -13,8 +13,6 @@ import { RegisterpageComponent } from "./pages/examples/registerpage/registerpag
 import { LandingpageComponent } from "./pages/examples/landingpage/landingpage.component";
 import { AudioComponent } from "./audio/audio.component";
 
-import { AudioComponent } from "./audio/audio.component";
-
 const routes: Routes = [
   { path: "", redirectTo: "login", pathMatch: "full" },
   { path: "home", component: IndexComponent },
