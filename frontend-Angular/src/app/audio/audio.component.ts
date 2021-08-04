@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularAgoraRtcService } from 'angular-agora-rtc';
-
 import { FormControl } from '@angular/forms';
 
 import { AgoraClient, ClientEvent, NgxAgoraService, Stream, StreamEvent } from 'ngx-agora';
@@ -14,11 +12,10 @@ import { environment } from 'src/environments/environment';
 export class AudioComponent implements OnInit {
   private localStream: Stream;
   private client: AgoraClient;
-
   /**
    * App ID used when connecting to the Agora.io servers
    */
-  appId: FormControl = new FormControl((environment as any).agora ? (environment as any).agora.appId : '023766436b244044ab85f65470dcbae2');
+  appId: FormControl = new FormControl((environment as any).agora ? (environment as any).agora.appId : '');
   /**
    * Channel (meeting room) within the Agora app to join
    */
@@ -42,8 +39,7 @@ export class AudioComponent implements OnInit {
   published = false;
 
   constructor(private agoraService: NgxAgoraService) {
-    this.uid = Math.floor(Math.random() * 10000000);
-    console.log("UID: "+this.uid);
+    this.uid = Math.floor(Math.random() * 100);
 
     this.client = this.agoraService.createClient({ mode: 'rtc', codec: 'vp8' });
     this.assignClientHandlers();
@@ -54,7 +50,7 @@ export class AudioComponent implements OnInit {
   }
 
   join(): void {
-    this.localStream = this.agoraService.createStream({ audio: true, video: false });
+    this.localStream = this.agoraService.createStream({ streamID: this.uid, audio: true, video: false, screen: false });
     this.assignLocalStreamHandlers();
     this.init();
 
