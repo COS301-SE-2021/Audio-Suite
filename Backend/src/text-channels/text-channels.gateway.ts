@@ -2,7 +2,8 @@ import { OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } fr
 import { Socket, Server } from 'socket.io';
 import { Logger } from '@nestjs/common';
 
-@WebSocketGateway({namespace: '/chat'})
+
+@WebSocketGateway({cors: true})
 export class TextChannelsGateway implements OnGatewayInit{
 
   private logger: Logger = new Logger('ChatGateway');
@@ -22,6 +23,7 @@ export class TextChannelsGateway implements OnGatewayInit{
   @SubscribeMessage('joinRoom')
   handleRoomJoin(client: Socket, room: string ) {
     client.join(room);
+    this.logger.log('someone joined the room.')
     client.emit('joinedRoom', room);
   }
 
