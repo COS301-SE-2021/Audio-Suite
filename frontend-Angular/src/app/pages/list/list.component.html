@@ -5,7 +5,5 @@
 	</div>
 	
 	<input #addCardInput type="text" (keyup.enter)="onEnter(addCardInput.value); addCardInput.value=''; displayAddCard=false;" *ngIf="displayAddCard" autofocus>
-	<!-- <a href="#" class="list__newcard" (click)="toggleDisplayAddCard();">Add a card...</a> -->
-	<button class="list__newcard" (click)="toggleDisplayAddCard();" >Add a card...</button>
-	<!-- Change a tags to buttons -->
+	<button (click)="toggleDisplayAddCard();" >Create Issue</button>
 </div>
