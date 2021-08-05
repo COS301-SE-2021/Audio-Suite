@@ -9,6 +9,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     // Variables
     string gameVersion = "1";
 
+    private bool isConnecting;
+
     [SerializeField]
     private byte maxPlayersPerRoom = 4;
 
@@ -45,7 +47,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         else
         {
-            PhotonNetwork.ConnectUsingSettings();
+            isConnecting = PhotonNetwork.ConnectUsingSettings();
             PhotonNetwork.GameVersion = gameVersion;
         }
     }
@@ -56,24 +58,30 @@ public class Launcher : MonoBehaviourPunCallbacks
         
     public override void OnConnectedToMaster()
     {
-        // Let user know they have connected
-        progressLabel.SetActive(false);
-        controlPanel.SetActive(false);
-
+        // Log the connection
         Debug.Log("Connected to Master");
-        PhotonNetwork.JoinRandomRoom();
+
+        // Check that we dont continuously look for new rooms 
+        if (isConnecting)
+        {
+            PhotonNetwork.JoinRandomRoom();
+            isConnecting = false;
+        }
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
+        // Log the cause and reset isConnecting
         Debug.LogWarningFormat("Disconnected because of: {0}", cause);
+        isConnecting = false;
 
         // Let the user know they disconnected
         progressLabel.SetActive(false);
         controlPanel.SetActive(true);
+
     }
 
-    public override void OnJoinRoomFailed(short returnCode, string message)
+    public override void OnJoinRandomFailed(short returnCode, string message)
     {
         Debug.Log("No room availible creating new one");
         PhotonNetwork.CreateRoom(null, new RoomOptions{MaxPlayers = maxPlayersPerRoom});
@@ -81,7 +89,16 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        // Log that a room has been joined
         Debug.Log("Joinded a room");
+
+        // Check which scene to load
+        if(PhotonNetwork.CurrentRoom.PlayerCount == 1)
+        {
+            // Log the room chosen and connect to it
+            Debug.Log("Loading Room 1");
+            PhotonNetwork.LoadLevel("Room for 1");
+        }
     }
 }
 
