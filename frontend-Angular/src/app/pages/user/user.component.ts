@@ -32,7 +32,7 @@ export class UserComponent implements OnInit {
         cards: []
       },
       {
-        name: 'Doing',
+        name: 'In Progress',
         cards: []
       },
       {

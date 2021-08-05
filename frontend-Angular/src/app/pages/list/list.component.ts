@@ -4,25 +4,31 @@ import { CardStore } from "../CardStore";
 @Component({
   selector: "app-list",
   templateUrl: "./list.component.html",
-  styleUrls: ["./list.component.css"],
+  styleUrls: ["./list.component.scss"],
 })
 export class ListComponent implements OnInit {
   @Input() list: ListSchema;
   @Input() cardStore: CardStore;
   displayAddCard = false;
+
   constructor() {}
+
   toggleDisplayAddCard() {
     this.displayAddCard = !this.displayAddCard;
   }
+
   ngOnInit(): void {}
+
   allowDrop($event) {
     $event.preventDefault();
   }
+
   drop($event) {
     $event.preventDefault();
     const data = $event.dataTransfer.getData("text");
     let target = $event.target;
     const targetClassName = target.className;
+
     while (target.className !== "list") {
       target = target.parentNode;
     }
@@ -42,6 +48,7 @@ export class ListComponent implements OnInit {
       target.appendChild(document.getElementById(data));
     }
   }
+
   onEnter(value: string) {
     const cardId = this.cardStore.newCard(value);
     this.list.cards.push(cardId);
