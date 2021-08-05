@@ -70,6 +70,11 @@ export class OfficeService {
                     }
                 }
             }
+
+            return {
+                Response: "Success",
+                Offices: []
+            }
         }
         catch(err) {
             throw new BadRequestException();
