@@ -9,6 +9,7 @@
     font-size: 20px;
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
+    z-index: 2;
 
     #sidebar-title{
         margin-top: 15px;
@@ -36,18 +37,58 @@
         }
     }
 
-    .sidebarBtn{
-        margin-left: 30px;
-        color: black;
-        background-color: transparent;
-        border: none;
-        outline: none;
+    .showOfficeSettings{
+        display: block;
+
+        .sidebarBtn{
+            margin-left: 30px;
+            color: black;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+    }
+
+    .showQuickSettings{
+        display: block;
+
+        .sidebarBtn{
+            margin-left: 30px;
+            color: black;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
     }
 
     .hideOffices{
         display: none;
 
         .officeBtn{
+            margin-left: 30px;
+            color: black;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+    }
+
+    .hideOfficeSettings{
+        display: none;
+
+        .sidebarBtn{
+            margin-left: 30px;
+            color: black;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+    }
+
+    .hideQuickSettings{
+        display: none;
+
+        .sidebarBtn{
             margin-left: 30px;
             color: black;
             background-color: transparent;
@@ -64,6 +105,15 @@
     width: 92%;
     position: fixed;
     text-align: center;
+
+    .newJoinOfficeContent{
+        display: flex;
+        position: fixed;
+        height: 100%;
+        width: 83%;
+        justify-content: center;
+        align-items: center;
+    }
 }
 
 .TextChannelContent{

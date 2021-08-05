@@ -6,30 +6,167 @@
         <i id="officeListIcon" class="tim-icons icon-minimal-down"></i> Offices:
     </button>
     <div id="officeList" class="showOffices">
-        <button class="officeBtn" (click)="selectOffice('Epi-Use')">Epi-Use</button>
+        <!--<button class="officeBtn" (click)="selectOffice('Epi-Use')">Epi-Use</button>
         <br>
         <button class="officeBtn" (click)="selectOffice('Tuks-CS')">Tuks CS</button>
         <br>
         <button class="officeBtn" (click)="selectOffice('Project')">Project</button>
         <br>
         <button class="officeBtn" (click)="selectOffice('Pegasus')">Pegasus</button>
+        <br>-->
+    </div>
+
+    <div *ngIf="officeSelected">
         <br>
+        <button id="sidebar-officeHeader" (click)="toggleOfficeSettingsListView()">
+            <i id="officeSettingsListIcon" class="tim-icons icon-minimal-down"></i> Office Settings:
+        </button>
+        <div id="officeSettingsList" class="showOfficeSettings">
+            <button class="sidebarBtn" (click)="leaveOffice()">Leave Office</button>
+        </div>
     </div>
 
     <br>
-    <br>
-    <div *ngIf="officeSelected">
+    <div>
         <button id="sidebar-officeHeader" (click)="toggleQuickSettingsListView()">
-            <i id="officeListIcon" class="tim-icons icon-minimal-down"></i> Quick Settings:
+            <i id="quickSettingsListIcon" class="tim-icons icon-minimal-down"></i> Quick Settings:
         </button>
         <div id="quickSettingsList" class="showQuickSettings">
-            <button class="sidebarBtn" (click)="leaveOffice()">Leave Office</button>
+            <button class="sidebarBtn" (click)="logOut()">Log out</button>
         </div>
     </div>
 </div>
 
 <!-- Page content -->
 <div class="content">
+    <div *ngIf="!officeSelected" class="newJoinOfficeContent">
+        <div class="card card-registerNewOffice" id="card-newOffice">
+            <div class="card-header">
+              <img
+                alt="Card image"
+                class="card-img"
+                src="assets/img/square-purple-1.png"
+              />
+
+              <h4 class="card-title">New Office</h4>
+            </div>
+            <div id="alertPosition">
+              <div *ngIf="sendNewOfficeAlert">
+                <alert class="alert-with-icon" [type]="'primary alert-with-icon'">
+                    <span class=" tim-icons icon-trophy" data-notify="icon">
+                    </span>
+                    <span>
+                      <b>
+                        Error -
+                      </b>
+                      {{ newOfficeAlertMsg }}
+                    </span>
+                </alert>
+              </div>
+            </div>
+            <div class="card-body">
+              <form class="form">
+                <div
+                  class="input-group"
+                  [ngClass]="{ 'input-group-focus': focus1 === true }"
+                >
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="tim-icons icon-email-85"> </i>
+                    </div>
+                  </div>
+                  <input
+                    class="form-control"
+                    placeholder="Office Name"
+                    name= "newOfficeName"
+                    [(ngModel)]="newOfficeName"
+                    type="text"
+                    (focus)="focus1 = true"
+                    (blur)="focus1 = false"
+                  />
+                </div>
+              </form>
+            </div>
+            <div class="card-footer">
+              <button 
+                  data-target="#formModal"
+                  (click)="createNewOffice();"
+                  class="btn btn-success btn-round btn-lg"
+              >
+                  Create New Office
+              </button>
+            </div>
+          </div>
+
+          <div class="card card-joinOffice" id="card-joinOffice">
+            <div class="card-header">
+              <img
+                alt="Card image"
+                class="card-img"
+                src="assets/img/square-purple-1.png"
+              />
+
+              <h4 class="card-title">Join Office</h4>
+            </div>
+            <div id="alertPosition">
+              <div *ngIf="sendJoinOfficeAlert">
+                <alert class="alert-with-icon" [type]="'primary alert-with-icon'">
+                    <span class=" tim-icons icon-trophy" data-notify="icon">
+                    </span>
+                    <span>
+                      <b>
+                        Error -
+                      </b>
+                      {{ joinOfficeAlertMsg }}
+                    </span>
+                </alert>
+              </div>
+            </div>
+            <div class="card-body">
+              <form class="form">
+                <div
+                  class="input-group"
+                  [ngClass]="{ 'input-group-focus': focus2 === true }"
+                >
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="tim-icons icon-email-85"> </i>
+                    </div>
+                  </div>
+                  <input
+                    class="form-control"
+                    placeholder="Office Invite Code"
+                    name= "joinOfficeCode"
+                    [(ngModel)]="joinOfficeCode"
+                    type="text"
+                    (focus)="focus2 = true"
+                    (blur)="focus2 = false"
+                  />
+                </div>
+              </form>
+            </div>
+            <div class="card-footer">
+              <button 
+                  data-target="#formModal"
+                  (click)="joinOffice();"
+                  class="btn btn-success btn-round btn-lg"
+              >
+                  Join Office
+              </button>
+            </div>
+          </div>
+
+        <div class="square square-1" id="square1"></div>
+        <div class="square square-2" id="square2"></div>
+        <div class="square square-3" id="square3"></div>
+        <div class="square square-4" id="square4"></div>
+        <div class="square square-5" id="square5"></div>
+        <div class="square square-6" id="square6"></div>
+        <div class="square square-7" id="square7"></div>
+        <div class="square square-8" id="square8"></div>
+    </div>
+
+
     <div *ngIf="officeSelected">
         <h2 style="margin-top: 10px; margin-bottom: 5px;">
             {{selectedOffice}}
@@ -63,7 +200,7 @@
                 <form>
                     <div class="newMessageInput form-group">
                         <input name="newMessageInput" [(ngModel)]="newMessageInput" type="text" class="form-control"> 
-                        <button type="submit" class="btn btn-primary btn-sm" (click)="sendMessage()">Send</button>
+                        <button type="submit" class="btn btn-primary btn-sm" (click)="sendMessage()"><i class="tim-icons icon-send"> </i>  Send</button>
                     </div>
                 </form>
             </div>
