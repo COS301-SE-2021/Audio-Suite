@@ -90,7 +90,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     var body = document.getElementsByTagName("body")[0];
     body.classList.add("login-page");
 
-    this.onMouseMove(event);
+    //this.onMouseMove(event);
   }
 
   logUserIn(): void{
@@ -132,7 +132,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     var validUser: boolean = false;
 
-    this.userService.logUserIn(this.email, this.password).subscribe(response => {
+    this.userService.logUserIn(this.email, this.password).subscribe((response) => {
       //console.log(response);
       if(response.response == "Success"){
         validUser = true;
@@ -140,14 +140,14 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.router.navigate(['user'])
         return
       }
-    })
-
-    if(!validUser){
+    },
+    (error) => {
+      console.log(error);
       this.password = "";
       this.sendAlert = true;
       this.alertMsg = "Invalid user credentials given.";
       return
-    }
+    })
   }
 
   ngOnDestroy() {
