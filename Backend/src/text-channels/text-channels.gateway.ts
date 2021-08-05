@@ -23,7 +23,7 @@ export class TextChannelsGateway implements OnGatewayInit{
   @SubscribeMessage('joinRoom')
   handleRoomJoin(client: Socket, room: string ) {
     client.join(room);
-    this.logger.log('someone joined the room.')
+    this.logger.log(client.id + ' joined the ' + room + '.')
     client.emit('joinedRoom', room);
   }
 
