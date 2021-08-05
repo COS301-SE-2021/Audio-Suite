@@ -1,6 +1,8 @@
 import { ThisReceiver } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { TextChannelsService } from 'src/app/services/text-channels.service';
+import { CardStore } from '../CardStore';
+import { ListSchema } from '../ListSchema';
 
 @Component({
   selector: 'app-user',
@@ -15,9 +17,31 @@ export class UserComponent implements OnInit {
   officeSelected = false;
   selectedOffice = '';
 
+  cardStore: CardStore;
+  lists: ListSchema[];
+
   newMessageInput: string = "";
 
   constructor(private textChannelsService: TextChannelsService) { }
+
+  setMockData(): void {
+    this.cardStore = new CardStore();
+    const lists: ListSchema[] = [
+      {
+        name: 'To Do',
+        cards: []
+      },
+      {
+        name: 'Doing',
+        cards: []
+      },
+      {
+        name: 'Done',
+        cards: []
+      }
+    ]
+    this.lists = lists;
+  }
 
   ngOnInit(): void {
     var body = document.getElementsByTagName("body")[0];
@@ -35,6 +59,8 @@ export class UserComponent implements OnInit {
       console.log("Message to client: ", data);
       this.receivedMessage(data);
     })
+
+    this.setMockData();
     
     //this.textChannelsService.sendMsgToServer("chris", "testing1", "hello world");
 

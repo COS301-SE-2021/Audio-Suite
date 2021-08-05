@@ -72,16 +72,9 @@
             <ng-template tabHeading>
                 <i class="tim-icons icon-components"> </i> Kanban Boards
             </ng-template>
-            <p>
-                Efficiently unleash cross-media information without
-                cross-media value. Quickly maximize timely deliverables
-                for real-time schemas. <br />
-
-                <br />
-
-                Dramatically maintain clicks-and-mortar solutions without
-                functional solutions.
-            </p>
+            <div class="board_component">
+                <app-list *ngFor="let list of lists" [list]="list" [cardStore]="cardStore"></app-list>
+            </div>
         </tab>
     </tabset>
 </div>
