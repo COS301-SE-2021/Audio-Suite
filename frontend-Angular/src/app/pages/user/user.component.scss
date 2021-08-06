@@ -64,6 +64,7 @@
     width: 92%;
     position: fixed;
     text-align: center;
+    overflow: auto;
 }
 
 .TextChannelContent{
@@ -88,6 +89,5 @@
     display: flex;
     padding: 0 5px;
     height: 100vh;
-    // overflow-x: scroll;
+    // overflow: auto;
 }
-

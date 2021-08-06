@@ -20,6 +20,7 @@
 
 	min-height: 200px;
 	// max-height: 200px;
+	// height: 100%;
 	
 	&:before {
 		content: '';
@@ -32,12 +33,14 @@
 		overflow :auto;
 		min-height: 200px;
 		// max-height: 200px;
+		// height: 100%;
 	}
 }
 
 .list__title {
 	margin: 0;
-	padding: 16px 0;
+	// padding: 16px 0;
+	padding: 16px 0 38px;
 }
 
 .card_button {
@@ -66,9 +69,8 @@ input{
   box-shadow:none;
 }
 
-// #createIssueButton{
-// 	position: absolute;
-// 	bottom:   0;
-// 	right: 0px;
-// 	padding-top: 6px;
-// }
+#createIssueButton{
+	position: absolute;
+	top:   48px;
+	right: 0px;
+}
