@@ -58,4 +58,14 @@ export class UserService {
     var logUserInURL = baseUrl + '/api/login'
     return this.http.post<any>(logUserInURL, body, httpOptions);
   }
+
+  getUserDetails(
+    jwt: string
+  ): Observable<any>{
+    const body = {
+      jwt: jwt
+    }
+    var getUserDetailsURL = baseUrl + '/api/user/details';
+    return this.http.post<any>(getUserDetailsURL, body, httpOptions);
+  }
 }
