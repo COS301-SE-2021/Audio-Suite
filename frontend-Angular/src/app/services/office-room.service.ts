@@ -29,6 +29,18 @@ export class OfficeRoomService {
     return this.http.post<any>(registerOfficeURL, body, httpOptions)
   }
 
+  joinOffice(
+    jwt: string,
+    invite: string
+  ): Observable<any>{
+    const body = {
+      jwt: jwt,
+      invite: invite
+    }
+    var joinOfficeURL = baseUrl + '/api/office/joinInvite';
+    return this.http.post<any>(joinOfficeURL, body, httpOptions);
+  }
+
   getUserOffices(
     jwt: string
   ): Observable<any>{
@@ -37,5 +49,19 @@ export class OfficeRoomService {
     }
     var getUserOfficesURL = baseUrl + '/api/office/getUserOffices';
     return this.http.post<any>(getUserOfficesURL, body, httpOptions);
+  }
+
+  sendOfficeInvite(
+    email: string,
+    name: string, 
+    invite: string
+  ): Observable<any>{
+    const body = {
+      emailAddress: email,
+      name: name,
+      inviteCode: invite
+    }
+    var sendInviteCodeURL = baseUrl + '/api/notifications/sendInviteCode';
+    return this.http.post<any>(sendInviteCodeURL, body, httpOptions);
   }
 }
