@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Router } from '@angular/router';
 import { OfficeRoomService } from 'src/app/services/office-room.service';
 import { TextChannelsService } from 'src/app/services/text-channels.service';
@@ -24,8 +24,12 @@ interface textMessage{
   styleUrls: ['./user.component.scss']
 })
 
-export class UserComponent implements OnInit, OnDestroy {
+export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  @ViewChild('scrollframe', {static: false}) scrollFrame: ElementRef;
+  @ViewChildren('messageitem') itemElements: QueryList<any>;
+  scrollContainer: any;
+  
   sidebarOpened: boolean = true;
   showOfficeList: boolean = true;
   showQuickSettingsList: boolean = true;
@@ -174,11 +178,14 @@ export class UserComponent implements OnInit, OnDestroy {
     this.textChannelsService.listen("msgToClient").subscribe(data => {
       console.log("Message to client: ", data);
       this.receivedMessage(data);
-    })
+    }) 
 
     this.getUserDetails();
 
     this.setMockData();
+  }
+
+  ngAfterViewInit(): void {
   }
 
   getUserOfficeList(): void{
@@ -238,6 +245,11 @@ export class UserComponent implements OnInit, OnDestroy {
     }
   }
 
+  tabSetOpened(): void {
+    this.scrollContainer = this.scrollFrame.nativeElement;  
+    this.itemElements.changes.subscribe(_ => this.scrollMessageBoardToBottom());
+  }
+
   leaveOffice(): void{
     this.textChannelsService.leaveRoom(this.selectedOffice);
 
@@ -284,6 +296,11 @@ export class UserComponent implements OnInit, OnDestroy {
       document.getElementById('quickSettingsListIcon').classList.replace("icon-minimal-right", "icon-minimal-down");
       this.showQuickSettingsList = true;
     }
+  }
+
+  scrollMessageBoardToBottom(): void{
+    var messageBoard = document.getElementById("messageBoard");
+    messageBoard.scrollTop = messageBoard.scrollHeight;
   }
 
   sendMessage(): void{
