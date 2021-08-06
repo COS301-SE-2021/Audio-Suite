@@ -169,29 +169,50 @@
 .TextChannelContent{
     position: fixed;
     height: 85%;
-    width: 83%;
-    border-top: 1px solid white;
+    width: 86%;
 
     .messageBoard{
         height: 94%;
+        padding-right: 3%;
+        margin-bottom: 1%;
+        border-top: 1px solid white;
+        color: black;
+        overflow-y: scroll;
 
         .message{
-            border: 2px solid #dedede;
-            background-color: transparent;
-            border-radius: 5px;
-            padding: 10px;
-            margin: 10px 0;
-            width: 50%;
-        }
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 10px;
+            grid-template-areas: "a a a a b b b b";
 
-        .incomming{
-            display: flex;
-            justify-content: right;
-        }
+            .incomming{
+                //border: 2px solid #dedede;
+                background-color: #03205e;
+                border-radius: 5px;
+                padding: 10px;
+                margin: 10px 0;
+                grid-area: a;
+                text-align: left;
 
-        .outgoing{
-            display: flex;
-            justify-content: left;
+                .messageContent{
+                    overflow-x: hidden;
+                    word-wrap: break-word;
+                }
+            }
+
+            .outgoing{
+                background-color: #03205e;
+                border-radius: 5px;
+                padding: 10px;
+                margin: 10px 0;
+                grid-area: b;
+                text-align: left;
+
+                .messageContent{
+                    overflow-x: hidden;
+                    word-wrap: break-word;
+                }
+            }
         }
     }
 
@@ -199,6 +220,11 @@
         display: flex;
         padding-left: 5px;
         padding-right: 5px;
+        margin-right: 3%;
+
+        #sendOfficeMessageBtn{
+            margin-left: 1%;
+        }
     }
 }
 
@@ -210,3 +236,13 @@
     overflow-x: scroll;
 }
 
+#messageBoard::webkit-scrollbar{
+    display: none;
+    width: 0;
+    background: transparent;
+}
+
+.messageBoard {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
