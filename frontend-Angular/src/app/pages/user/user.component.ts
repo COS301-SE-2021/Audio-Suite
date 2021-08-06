@@ -1,10 +1,22 @@
-import { ThisReceiver } from '@angular/compiler';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { OfficeRoomService } from 'src/app/services/office-room.service';
 import { TextChannelsService } from 'src/app/services/text-channels.service';
+import { UserService } from 'src/app/services/user.service';
 import { CardStore } from '../CardStore';
 import { ListSchema } from '../ListSchema';
+
+interface Office{
+  id: string,
+  name: string,
+  invite: string
+}
+
+interface textMessage{
+  sender: string,
+  room: string,
+  message: string
+}
 
 @Component({
   selector: 'app-user',
@@ -12,7 +24,7 @@ import { ListSchema } from '../ListSchema';
   styleUrls: ['./user.component.scss']
 })
 
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit, OnDestroy {
 
   sidebarOpened: boolean = true;
   showOfficeList: boolean = true;
@@ -21,22 +33,42 @@ export class UserComponent implements OnInit {
   officeSelected: boolean = false;
   sendNewOfficeAlert: boolean = false;
   sendJoinOfficeAlert: boolean = false;
+  sendOfficeInviteAlert: boolean = false;
+  officeListLoaded: boolean = false;
+  showInviteModal: boolean = false;
+  focus6: boolean = false;
+  focus7: boolean = false;
 
   selectedOffice: string = '';
   selectedOfficeID: string = '';
+  selectedOfficeInvite: string = '';
   newOfficeName: string = '';
   joinOfficeCode: string = '';
   newMessageInput: string = '';
   newOfficeAlertMsg: string = '';
   joinOfficeAlertMsg: string = '';
+  officeInviteAlertMsg: string = '';
+
+  userID: string = '';
+  userFirstName: string = '';
+  userLastName: string = '';
+  userUsername: string = '';
+  userEmail: string = '';
+
+  sendInviteToEmail: string = '';
+  sendInviteToName: string = '';
+
+  officeList: Office[] = [];
+
+  officeTextChannelMessages: textMessage[] = [];
+
   cardStore: CardStore;
   lists: ListSchema[];
-
-  newMessageInput: string = "";
 
   constructor(
     private textChannelsService: TextChannelsService,
     private officeRoomService: OfficeRoomService,
+    private userService: UserService,
     private router: Router) { }
 
   setMockData(): void {
@@ -144,32 +176,38 @@ export class UserComponent implements OnInit {
       this.receivedMessage(data);
     })
 
-    this.setMockData();
-    
-    //this.textChannelsService.sendMsgToServer("chris", "testing1", "hello world");
+    this.getUserDetails();
 
+    this.setMockData();
   }
 
   getUserOfficeList(): void{
     var jwt = sessionStorage.getItem("jwt");
     this.officeRoomService.getUserOffices(jwt).subscribe((response) =>{
-      console.log(response);
-      var officeListHtml = ``;
       var listOfOffices = response.Offices;
       for(let i = 0; i < listOfOffices.length; i++) {
-        console.log(listOfOffices[i]);
-        officeListHtml += 
-        `
-          <button 
-            class="officeBtn" 
-            onclick="selectOffice(${listOfOffices[i].id}, ${listOfOffices[i].name})"
-            style="margin-left: 30px; color: black; background-color: transparent; border: none; outline: none;"
-            >${listOfOffices[i].name}</button>
-          <br>
-        `;
+        var newOffice = {
+          id: listOfOffices[i].id, 
+          name: listOfOffices[i].name, 
+          invite: listOfOffices[i].invite
+        }
+        this.officeList.push(newOffice);
       }
+      this.officeListLoaded = true;
+    },
+    (error) => {
+      console.log(error);
+    })
+  }
 
-      document.getElementById('officeList').innerHTML = officeListHtml;
+  getUserDetails(): void{
+    var jwt = sessionStorage.getItem('jwt');
+    this.userService.getUserDetails(jwt).subscribe((response) => {
+      this.userID = response.id;
+      this.userFirstName = response.firstName;
+      this.userLastName = response.lastName;
+      this.userUsername = response.userName;
+      this.userEmail = response.email;
     },
     (error) => {
       console.log(error);
@@ -180,12 +218,13 @@ export class UserComponent implements OnInit {
     this.sidebarOpened = !this.sidebarOpened;
   }
 
-  selectOffice(officeID, office): void{
+  selectOffice(officeID, office, officeInvite): void{
     if(this.officeSelected){
       if(this.selectedOffice != office){
         this.leaveOffice();
         this.selectedOffice = office;
         this.selectedOfficeID = officeID;
+        this.selectedOfficeInvite = officeInvite;
         this.officeSelected = true;
         this.textChannelsService.joinRoom(office);
       }
@@ -193,6 +232,7 @@ export class UserComponent implements OnInit {
     else{
       this.selectedOffice = office;
       this.selectedOfficeID = officeID;
+      this.selectedOfficeInvite = officeInvite;
       this.officeSelected = true;
       this.textChannelsService.joinRoom(office);
     }
@@ -203,6 +243,7 @@ export class UserComponent implements OnInit {
 
     this.selectedOffice = '';
     this.selectedOfficeID = '';
+    this.selectedOfficeInvite = '';
     this.officeSelected = false;
   }
 
@@ -248,40 +289,93 @@ export class UserComponent implements OnInit {
   sendMessage(): void{
     if(this.newMessageInput != "")
     {
-      this.textChannelsService.sendMsgToServer("chris", this.selectedOffice, this.newMessageInput);
+      this.textChannelsService.sendMsgToServer(this.userUsername, this.selectedOffice, this.newMessageInput);
       this.newMessageInput = "";
     }
   }
 
   receivedMessage(data: any): void{
-    var newMessageObject = 
-    `
-     <p>${data.message}</p>
-    `;
-    document.getElementById("messageBoard").innerHTML += newMessageObject;
+    console.log(data);
+    var message = {
+      sender: data.sender,
+      room: data.room,
+      message: data.message
+    }
+    this.officeTextChannelMessages.push(message);
   }
 
   createNewOffice(): void{
     var jwt = sessionStorage.getItem('jwt');
     console.log(jwt)
-    this.officeRoomService.registerOffice(jwt, this.newOfficeName).subscribe((data) =>{
-      console.log(data);
-      if(data.Response == "Success"){
+    this.officeRoomService.registerOffice(jwt, this.newOfficeName).subscribe((response) =>{
+      console.log(response);
+      if(response.Response == "Success"){
         console.log("new Office created")
         this.newOfficeAlertMsg = "New Office created successfully.";
-      this.sendNewOfficeAlert = true;
+        this.sendNewOfficeAlert = true;
+
+        this.officeListLoaded = false;
+        this.officeList = [];
+        this.getUserOfficeList();
+        this.officeListLoaded = true;
       }
     },
     (error) => {
       console.log(error)
-      this.newOfficeAlertMsg = "An office with this name already exists or an error occurred. Please try again.";
+      this.newOfficeAlertMsg = "Error - An office with this name already exists or an error occurred. Please try again.";
       this.sendNewOfficeAlert = true;
     })
     this.newOfficeName = "";
   }
 
   joinOffice(): void{
-    console.log(this.joinOfficeCode)
+    var jwt = sessionStorage.getItem('jwt');
+    this.officeRoomService.joinOffice(jwt, this.joinOfficeCode).subscribe((response) =>{
+      if(response.Response == "Success"){
+        console.log("User added to office");
+        this.joinOfficeAlertMsg = "Added to office successfully.";
+        this.sendJoinOfficeAlert = true;
+
+        this.officeListLoaded = false;
+        this.officeList = [];
+        this.getUserOfficeList();
+        this.officeListLoaded = true;
+      }
+    },
+    (error) => {
+      console.log(error)
+      this.newOfficeAlertMsg = "Error - You could not be added to the office, the invite may be invalid. Please try again.";
+      this.sendNewOfficeAlert = true;
+    })
+  }
+
+  showSendInviteModal(): void{
+    this.showInviteModal = true;
+  }
+
+  hideSendInviteModal(): void{
+    this.showInviteModal = false;
+    this.officeInviteAlertMsg = "";
+    this.sendOfficeInviteAlert = false;
+  }
+
+  sendOfficeInvite(): void{
+    this.officeRoomService.sendOfficeInvite(this.sendInviteToEmail, this.sendInviteToName, this.selectedOfficeInvite).subscribe((response) =>{
+      console.log(response)
+      if(response.Response == "Success"){
+        console.log('invite sent')
+        this.officeInviteAlertMsg = "Invite send Successfully.";
+        this.sendOfficeInviteAlert = true;
+      }
+    },
+    (error) => {
+      console.log(error);
+      this.officeInviteAlertMsg = "Error - Office Invite could not be sent. Please try again.";
+        this.sendOfficeInviteAlert = true;
+    })
+
+    this.sendInviteToEmail = '';
+    this.sendInviteToName = '';
   }
 
   logOut(): void{
