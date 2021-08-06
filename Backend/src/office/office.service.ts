@@ -35,7 +35,7 @@ export class OfficeService {
             const user = await this.userService.validateUser(jwt);
             const office = await this.officesRepository.create({name, invite});
             const savedOffice = await this.officesRepository.save(office);
-            const addUserToOffice = await this.officeUserService.addUserToOffice(user.id,name);
+            const addUserToOffice = await this.officeUserService.addUserToOffice(user.id,name, "Manager");
             return{
                 Response: "Success",
                 Office: savedOffice
@@ -97,10 +97,10 @@ export class OfficeService {
         try{
             const user = await this.userService.validateUser(jwt);
             const office = await this.officesRepository.findOne({invite: officeInviteLink});
-            const addUserToOffice = await this.officeUserService.addUserToOffice(user.id,office.name);
+            const addUserToOffice = await this.officeUserService.addUserToOffice(user.id,office.name, "Unassigned");
             return {
-                status: "Success",
-                response: "User added to office"
+                Response: "Success",
+                Message: "User added to office"
             }
         }catch(err){
             throw new BadRequestException("Unable to add user to office");
