@@ -9,6 +9,36 @@ using Photon.Realtime;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
+    // Variablse
+    public static GameManager Instance;
+    public GameObject playerPrefab;
+
+    // Run before update
+    void Start()
+    {
+        // Instanciate the GameManager for use in other programs
+        Instance = this;
+
+        // Create the Prefab for spawning players
+        if (playerPrefab == null)
+        {
+            Debug.LogError("< Color = Red >< a > Missing </ a ></ Color > playerPrefab Reference.Please set it up in GameObject 'Game Manager'", this);
+        }
+        else
+        {
+            // Only instanciate if the local player doesnt have an instance
+            if (PlayerManager.LocalPlayerInstance == null)
+            {
+                Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.loadedLevelName);
+                PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+            }
+            else
+            {
+                Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
+            }
+        }
+    }
+    
     public override void OnLeftRoom()
     {
         SceneManager.LoadScene(0);
@@ -59,4 +89,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             LoadArena();
         }
     }
+
+
 }
