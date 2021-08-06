@@ -3,7 +3,8 @@
 	width: 350px;
 	padding: 6px;
 	margin: 5px;
-	display: inline-block;
+	// display: inline-block;
+	display: inline-table;
 	position: relative;
 	right: 40px;
 	
@@ -12,6 +13,13 @@
 	background-clip: padding-box;
 	border: solid $border transparent;
 	border-radius: 1em;
+
+	// overflow: relative!important;
+
+	overflow: auto;
+
+	min-height: 200px;
+	// max-height: 200px;
 	
 	&:before {
 		content: '';
@@ -21,6 +29,9 @@
 		margin: -$border;
 		border-radius: inherit;
 		background: linear-gradient(45deg, #0afacf 0%, #dc7bff 100%);
+		overflow :auto;
+		min-height: 200px;
+		// max-height: 200px;
 	}
 }
 
@@ -29,19 +40,20 @@
 	padding: 16px 0;
 }
 
-.list button {
+.card_button {
 	width: 100%;
 	display: block;
 	text-decoration: none;
-	margin-top: 10px;
+	// margin-top: 10px;
 	background-color: rgba(23, 25, 65, 0.1);
 	border: 2px solid rgba(23, 25, 65, 0.9);
 	border-radius: 1em;
 	color: #e14eca;
+	outline: none;
 	transition: border-color 0.3s;
 }
 
-.list button:hover{
+.card_button:hover{
 	border-color: #e14eca;
 }
 
@@ -53,3 +65,10 @@ input{
   background: #fff;
   box-shadow:none;
 }
+
+// #createIssueButton{
+// 	position: absolute;
+// 	bottom:   0;
+// 	right: 0px;
+// 	padding-top: 6px;
+// }

@@ -15,6 +15,9 @@ export class ListComponent implements OnInit {
 
   toggleDisplayAddCard() {
     this.displayAddCard = !this.displayAddCard;
+    if(this.displayAddCard){
+      document.getElementById("addCardInput").focus();
+    }
   }
 
   ngOnInit(): void {}
