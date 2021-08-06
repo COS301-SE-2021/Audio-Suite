@@ -6,14 +6,25 @@
         <i id="officeListIcon" class="tim-icons icon-minimal-down"></i> Offices:
     </button>
     <div id="officeList" class="showOffices">
-        <!--<button class="officeBtn" (click)="selectOffice('Epi-Use')">Epi-Use</button>
-        <br>
-        <button class="officeBtn" (click)="selectOffice('Tuks-CS')">Tuks CS</button>
-        <br>
-        <button class="officeBtn" (click)="selectOffice('Project')">Project</button>
-        <br>
-        <button class="officeBtn" (click)="selectOffice('Pegasus')">Pegasus</button>
-        <br>-->
+        <div class="box" *ngIf="!officeListLoaded">
+            <div class="container">
+              <span class="circle"></span>
+              <span class="circle"></span>
+              <span class="circle"></span>
+              <span class="circle"></span>
+              <span class="circle"></span>
+              <span class="circle"></span>
+              <span class="circle"></span>
+              <span class="circle"></span>
+              <span class="circle"></span>
+            </div>
+        </div>
+        <div *ngIf="officeListLoaded">
+            <div *ngFor="let office of officeList">
+                <button class="officeBtn" (click)="selectOffice(office.id, office.name, office.invite)">{{office.name}}</button>
+                <br>
+            </div>
+        </div>
     </div>
 
     <div *ngIf="officeSelected">
@@ -22,7 +33,10 @@
             <i id="officeSettingsListIcon" class="tim-icons icon-minimal-down"></i> Office Settings:
         </button>
         <div id="officeSettingsList" class="showOfficeSettings">
+            <button class="sidebarBtn" (click)="showSendInviteModal()">Send Invite</button>
+            <br>
             <button class="sidebarBtn" (click)="leaveOffice()">Leave Office</button>
+            <br>
         </div>
     </div>
 
@@ -56,9 +70,6 @@
                     <span class=" tim-icons icon-trophy" data-notify="icon">
                     </span>
                     <span>
-                      <b>
-                        Error -
-                      </b>
                       {{ newOfficeAlertMsg }}
                     </span>
                 </alert>
@@ -114,9 +125,6 @@
                     <span class=" tim-icons icon-trophy" data-notify="icon">
                     </span>
                     <span>
-                      <b>
-                        Error -
-                      </b>
                       {{ joinOfficeAlertMsg }}
                     </span>
                 </alert>
@@ -195,6 +203,23 @@
             <div class="TextChannelContent">
                 <div class="messageBoard" id="messageBoard">
                     <!--Messages will be displayed here when fetched from the server.-->
+                    <div *ngFor="let message of officeTextChannelMessages">
+                        <div *ngIf="message.sender == userUsername; then incommingMessage else outgoingMessage"></div>
+                        <ng-template #incommingMessage>
+                            <div class="message incomming">
+                                <p>{{message.sender}}</p>
+                                <br>
+                                <p>{{message.message}}</p>
+                            </div>
+                        </ng-template>
+                        <ng-template #outgoingMessage>
+                            <div class="message outgoing">
+                                <p>{{message.sender}}</p>
+                                <br>
+                                <p>{{message.message}}</p>
+                            </div>
+                        </ng-template>
+                    </div>
                 </div>
                 
                 <form>
@@ -214,4 +239,94 @@
             </div>
         </tab>
     </tabset>
+</div>
+
+<div *ngIf="showInviteModal ? formModal.show() : formModal.hide()" ></div>
+<div 
+    aria-hidden="true"
+    aria-labelledby="myModalLabel"
+    bsModal
+    class="modal fade modal-black"
+    #formModal="bs-modal"
+    id="formModal"
+    role="dialog"
+    tabindex="-1"
+    style="margin-left: 15%"
+    >
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header justify-content-center">
+        <button
+            aria-hidden="true"
+            class="close"
+            data-dismiss="modal"
+            (click)="hideSendInviteModal()"
+            type="button"
+        >
+            <i class="tim-icons icon-simple-remove text-white"> </i>
+        </button>
+        <div class="text-muted text-center ml-auto mr-auto">
+            <h3 class="mb-0">Enter details of invitee:</h3>
+        </div>
+        </div>
+        <div class="modal-body">
+        <form role="form">
+            <div *ngIf="sendOfficeInviteAlert">
+                <alert class="alert-with-icon" [type]="'primary alert-with-icon'">
+                    <span class=" tim-icons icon-trophy" data-notify="icon">
+                    </span>
+                    <span>
+                        {{ officeInviteAlertMsg }}
+                    </span>
+                </alert>
+                </div>
+            <div class="form-group mb-3">
+                <div class="input-group input-group-alternative" [ngClass]="{'input-group-focus':focus6===true}">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <i class="tim-icons icon-email-85"> </i>
+                    </span>
+                    </div>
+                    <input
+                        class="form-control"
+                        placeholder="Name"
+                        name="sendInviteToName"
+                        [(ngModel)]="sendInviteToName"
+                        type="text"
+                        (focus)="focus6=true" 
+                        (blur)="focus6=false"
+                    />
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <div class="input-group input-group-alternative" [ngClass]="{'input-group-focus':focus7===true}">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <i class="tim-icons icon-email-85"> </i>
+                    </span>
+                    </div>
+                    <input
+                        class="form-control"
+                        placeholder="Email"
+                        name="sendInviteToEmail"
+                        [(ngModel)]="sendInviteToEmail"
+                        type="email"
+                        (focus)="focus7=true" 
+                        (blur)="focus7=false"
+                    />
+                </div>
+            </div>
+            <div class="text-center">
+                <button 
+                    class="btn btn-success my-4" 
+                    type="button"
+                    (click)="sendOfficeInvite()"
+                >
+                    Submit
+                </button>
+            </div>
+        </form>
+        </div>
+    </div>
+    </div>
 </div>
