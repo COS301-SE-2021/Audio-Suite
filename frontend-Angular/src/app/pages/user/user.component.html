@@ -180,7 +180,7 @@
             {{selectedOffice}}
         </h2>
     </div>
-    <tabset *ngIf="officeSelected" class="nav-tabs-primary">
+    <tabset *ngIf="officeSelected" class="nav-tabs-primary" (click)="tabSetOpened()">
         <tab>
             <ng-template tabHeading>
                 <i class="tim-icons icon-bank"> </i> Floor Plan
@@ -201,31 +201,35 @@
                 <i class="tim-icons icon-email-85"> </i> Text Channel
             </ng-template>
             <div class="TextChannelContent">
-                <div class="messageBoard" id="messageBoard">
+                <div class="messageBoard" id="messageBoard" #scrollframe>
                     <!--Messages will be displayed here when fetched from the server.-->
-                    <div *ngFor="let message of officeTextChannelMessages">
-                        <div *ngIf="message.sender == userUsername; then incommingMessage else outgoingMessage"></div>
-                        <ng-template #incommingMessage>
-                            <div class="message incomming">
-                                <p>{{message.sender}}</p>
-                                <br>
-                                <p>{{message.message}}</p>
-                            </div>
-                        </ng-template>
-                        <ng-template #outgoingMessage>
-                            <div class="message outgoing">
-                                <p>{{message.sender}}</p>
-                                <br>
-                                <p>{{message.message}}</p>
-                            </div>
-                        </ng-template>
+                    <div *ngFor="let message of officeTextChannelMessages" #messageitem>
+                        <div>
+                            <div *ngIf="message.sender == userUsername; then incommingMessage else outgoingMessage"></div>
+                            <ng-template #incommingMessage>
+                                <div class="message">
+                                    <div class="outgoing">
+                                        <p>{{message.sender}}</p>
+                                        <p class="messageContent">{{message.message}}</p>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template #outgoingMessage>
+                                <div class="message">
+                                    <div class="incomming">
+                                        <p>{{message.sender}}</p>
+                                        <p class="messageContent">{{message.message}}</p>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </div>
                     </div>
                 </div>
                 
                 <form>
                     <div class="newMessageInput form-group">
                         <input name="newMessageInput" [(ngModel)]="newMessageInput" type="text" class="form-control"> 
-                        <button type="submit" class="btn btn-primary btn-sm" (click)="sendMessage()"><i class="tim-icons icon-send"> </i>  Send</button>
+                        <button type="submit" id="sendOfficeMessageBtn" class="btn btn-primary btn-sm" (click)="sendMessage()"><i class="tim-icons icon-send"> </i>  Send</button>
                     </div>
                 </form>
             </div>
