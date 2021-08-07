@@ -55,4 +55,23 @@ export class UserService {
     }
     return this.http.post<any>('http://localhost:3001/api/login', body, httpOptions);
   }
+
+  getUserDetails(
+    user_jwt: string
+    ): Observable<any>{
+    const body = {
+      jwt: user_jwt
+    }
+    return this.http.post<any>('http://localhost:3001/api/user/details', body, httpOptions);
+  }
+
+  getUsernameById(
+    userID: number
+    ): Observable<any>{
+    const body = {
+      id: userID
+    }
+    return this.http.post<any>('http://localhost:3001/api/user/getUsernameById', body, httpOptions);
+  }
+
 }
