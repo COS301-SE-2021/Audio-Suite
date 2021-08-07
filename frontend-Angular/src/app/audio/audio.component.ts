@@ -86,43 +86,44 @@ export class AudioComponent implements OnInit {
   }
   // -------------------------------------------------
     
-// -------------- HANDLE REMOTE STREAMS AND OUTPUT AUDIO --------------
-mixAudio(): void{
-  // --------- Loop through remote audio streams ----------
-  let volume = 15; // Set Volume
-  
-  this.remoteStreams.forEach( (stream) => {
-    var track = stream.getAudioTrack();
-    if (typeof track !== 'undefined'){
-      // ---------- Work Around for Chrome Bugs -----------
-      var audioStreamTrack = new MediaStream([track]);
-      let a = new Audio();
-      a.muted = true;
-      a.srcObject = audioStreamTrack;
-      a.addEventListener('canplaythrough', () => {
-        a = null;
-      });
-      // --------------------------------------------------
-      // ------- Play Audio Stream in audioContext --------
-      let audioStream = this.audioContext.createMediaStreamSource(audioStreamTrack);
-      let volumeControl = this.audioContext.createGain();
-      let panner = this.audioContext.createPanner();
-      let compressor = this.audioContext.createDynamicsCompressor();
-      volumeControl.gain.setValueAtTime(volume, this.audioContext.currentTime);
-      audioStream.connect(volumeControl);
-      volumeControl.connect(panner);
-      panner.connect(compressor);
-      compressor.connect(this.audioContext.destination);
-      panner.positionX.setValueAtTime( 0, this.audioContext.currentTime );
-      panner.positionY.setValueAtTime( 0, this.audioContext.currentTime );
-      panner.positionZ.setValueAtTime( 0, this.audioContext.currentTime );
-      // --------------------------------------------------
-    }
-  });
-  // ------------------------------------------------------
-}
-// --------------------------------------------------------------------
+  // -------------- HANDLE REMOTE STREAMS AND OUTPUT AUDIO --------------
+  mixAudio(): void{
+    // --------- Loop through remote audio streams ----------
+    let volume = 15; // Set Volume
+    
+    this.remoteStreams.forEach( (stream) => {
+      var track = stream.getAudioTrack();
+      if (typeof track !== 'undefined'){
+        // ---------- Work Around for Chrome Bugs -----------
+        var audioStreamTrack = new MediaStream([track]);
+        let a = new Audio();
+        a.muted = true;
+        a.srcObject = audioStreamTrack;
+        a.addEventListener('canplaythrough', () => {
+          a = null;
+        });
+        // --------------------------------------------------
+        // ------- Play Audio Stream in audioContext --------
+        let audioStream = this.audioContext.createMediaStreamSource(audioStreamTrack);
+        let volumeControl = this.audioContext.createGain();
+        let panner = this.audioContext.createPanner();
+        let compressor = this.audioContext.createDynamicsCompressor();
+        volumeControl.gain.setValueAtTime(volume, this.audioContext.currentTime);
+        audioStream.connect(volumeControl);
+        volumeControl.connect(panner);
+        panner.connect(compressor);
+        compressor.connect(this.audioContext.destination);
+        panner.positionX.setValueAtTime( 0, this.audioContext.currentTime );
+        panner.positionY.setValueAtTime( 0, this.audioContext.currentTime );
+        panner.positionZ.setValueAtTime( 0, this.audioContext.currentTime );
+        // --------------------------------------------------
+      }
+    });
+    // ------------------------------------------------------
+  }
+  // --------------------------------------------------------------------
 
+  // -------------- AUDIO STREAM INIT --------------
   protected init(): void {
     this.localStream.init(
       () => {
@@ -132,9 +133,11 @@ mixAudio(): void{
         this.connected = true;
       },
       err => console.log('getUserMedia failed', err)
-    );
+      );
   }
-
+  // -----------------------------------------------
+  
+  // -------------- MIC ACCESS CHECK --------------
   private assignLocalStreamHandlers(): void {
     this.localStream.on(StreamEvent.MediaAccessAllowed, () => {
       console.log('accessAllowed');
@@ -144,14 +147,18 @@ mixAudio(): void{
       console.log('accessDenied');
     });
   }
+  // ----------------------------------------------
 
+  // -------------- CLIENT AUDIO EVENT LISTENERS --------------
   private assignClientHandlers(): void {
+    // Local stream published event listener and handler
     this.client.on(ClientEvent.LocalStreamPublished, evt => {
       this.published = true;
       console.log('Publish local stream successfully');
       
     });
-
+    
+    // Channel token invalid event listener and handler
     this.client.on(ClientEvent.Error, error => {
       console.log('Got error msg:', error.reason);
       if (error.reason === 'DYNAMIC_KEY_TIMEOUT') {
@@ -159,10 +166,11 @@ mixAudio(): void{
           '',
           () => console.log('Renewed the channel key successfully.'),
           renewError => console.error('Renew channel key failed: ', renewError)
-        );
+          );
       }
     });
-
+    
+    // Remote user stream published event listener and handler
     this.client.on(ClientEvent.RemoteStreamAdded, evt => {
       const stream = evt.stream as Stream;
       this.client.subscribe(stream, { audio: true, video: false}, err => {
@@ -172,7 +180,8 @@ mixAudio(): void{
       this.updateRemoteUser(stream.getId());
       //alert(stream.getId());
     });
-
+    
+    // Subscribed to remote user stream event listener and handler
     this.client.on(ClientEvent.RemoteStreamSubscribed, evt => {
       const stream = evt.stream as Stream;
       const id = this.getRemoteId(stream);
@@ -183,9 +192,10 @@ mixAudio(): void{
         console.log(`Remote stream is subscribed ${stream.getId()}`);
         console.log(this.setRemoteUserUsername(stream.getId()));
       }
-    
+      
     });
-
+    
+    // Remote user stream unpublished event listener and handler
     this.client.on(ClientEvent.RemoteStreamRemoved, evt => {
       const stream = evt.stream as Stream;
       if (stream) {
@@ -195,7 +205,8 @@ mixAudio(): void{
         this.removeRemoteUser(stream.getId());
       }
     });
-
+    
+    // Remote user left channel event listener and handler
     this.client.on(ClientEvent.PeerLeave, evt => {
       const stream = evt.stream as Stream;
       if (stream) {
@@ -205,12 +216,16 @@ mixAudio(): void{
       }
     });
   }
-
+  // ----------------------------------------------------------
+  
+  // -------------- GET ID OF REMOTE USER --------------
   private getRemoteId(stream: Stream): string {
     //var userName = this.setRemoteUserUsername(stream.getId());
     return `agora_remote-${stream.getId()}`;
   }
-
+  // ---------------------------------------------------
+  
+  // -------------- GET CURRENT USER DETAILS --------------
   private setUserDetails(): void{
     this.userService.getUserDetails(this.user_jwt).subscribe(response => {
       console.log(response);
@@ -219,9 +234,11 @@ mixAudio(): void{
         this.uid = response.id;
         return
       }
-    })
+    });
   }
+  // ------------------------------------------------------
 
+  // -------------- UPDATE REMOTE USER LIST --------------
   private updateRemoteUser(remoteID): void{
     //alert('nr1');
     if(!this.remoteUsers.includes(remoteID)){
@@ -232,7 +249,9 @@ mixAudio(): void{
     //this.remoteUsernames = [];
     this.remoteUsers.forEach(this.setRemoteUserUsername);
   }
+  // -----------------------------------------------------
 
+  // -------------- REMOVE REMOTE USER FROM LIST --------------
   private removeRemoteUser(remoteID): void{
     if(this.remoteUsers.includes(remoteID)){
       const index = this.remoteUsers.indexOf(remoteID);
@@ -242,9 +261,11 @@ mixAudio(): void{
     }
     console.log(this.remoteUsers);
     //this.remoteUsernames = [];
-    this.remoteUsers.forEach(this.setRemoteUserUsername)
+    this.remoteUsers.forEach(this.setRemoteUserUsername);
   }
+  // ----------------------------------------------------------  
 
+  // -------------- SET USERNAME OF REMOTE USER IN LIST --------------
   private setRemoteUserUsername(remoteID): void{
     var userName = '';
     this.userService.getUsernameById(remoteID).subscribe(response => {
@@ -256,8 +277,8 @@ mixAudio(): void{
         }
         //console.log(userName);
         return
-      //}
-    })
+        //}
+    });
   }
-
+  // -----------------------------------------------------------------
 }
