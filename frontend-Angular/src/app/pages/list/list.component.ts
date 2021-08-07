@@ -56,4 +56,11 @@ export class ListComponent implements OnInit {
     const cardId = this.cardStore.newCard(value);
     this.list.cards.push(cardId);
   }
+
+  deleteCard(id: string){
+    if(this.list.cards.length === 1){
+      this.list.cards.pop();
+    }
+    this.list.cards.splice(parseInt(id),1);
+  }
 }
