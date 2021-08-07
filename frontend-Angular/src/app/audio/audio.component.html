@@ -23,7 +23,8 @@
           <button mat-button color="accent" (click)="leave()">Leave</button>
         </div>
         <div class="col-12">
-          User id: {{ uid }}
+          User id: {{ uid }} <br>
+          Username: {{ username }}
         </div>
       </div>
     </div>
@@ -36,7 +37,8 @@
     </div>
 
     <div class="col-12">
-      {{ remoteCalls}}
+      {{ remoteCalls | json }}
+      <li *ngFor="let rc of remoteCalls; index as i; trackBy: trackByFn">...</li>
     </div>
   </article>
 
@@ -47,8 +49,13 @@
     </div>
     <div class="col">
       <h2>Remote</h2>
-      <div class="remote_calls" [id]="remoteCalls[0]" class="remote"></div>
+      <div class="remote_calls" [id]="remoteCalls[0]" class="remote">
+          <ul class="remote_users">
+            <li *ngFor="let user of remoteUsernames">
+              <span class="item">{{user}}</span>
+            </li>
+          </ul>
+      </div>
     </div>
   </article>
-
 </section>
