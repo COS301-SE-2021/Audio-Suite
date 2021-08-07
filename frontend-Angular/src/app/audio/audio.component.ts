@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { isType } from '@angular/core/src/type';
+import { Component, OnInit,  Renderer2, ElementRef, ChangeDetectorRef, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+//import { isType } from '@angular/core/src/type';
 import { FormControl } from '@angular/forms';
-
+import {AudioService} from '../services/audio.service';
+import { UserService } from 'src/app/services/user.service';
 import { AgoraClient, ClientEvent, NgxAgoraService, Stream, StreamEvent } from 'ngx-agora';
 import { environment } from 'src/environments/environment';
 
@@ -31,6 +32,9 @@ export class AudioComponent implements OnInit {
    */
   remoteCalls: string[] = [];
   remoteStreams: Stream[] = [];
+  remoteUsers: number[] = [];
+  remoteUsernames: string[] = [];
+  //test: string[] = ['onw', 'two', 'five'];
 
   audioContext = new AudioContext();
 
@@ -42,24 +46,54 @@ export class AudioComponent implements OnInit {
    * Whether the local client's A/V stream has been published to the remote meeting room
    */
   published = false;
+  /**
+   * The jwt of the current user
+   */
+   user_jwt=sessionStorage.getItem('jwt');
+  /**
+   * The username of the current user
+   */
+   username = '';
+   /**
+   * The userID of the current user
+   */
+    userID : number;
 
-  constructor(private agoraService: NgxAgoraService) {
-    this.uid = Math.floor(Math.random() * 100);
+
+  constructor(private agoraService: NgxAgoraService, private userService: UserService, private audioService: AudioService, private element: ElementRef, 
+    private renderer2: Renderer2, private ref:ChangeDetectorRef) {
+    
+    this.setUserDetails();
+    //this.uid = Math.floor(Math.random() * 100);
 
     this.client = this.agoraService.createClient({ mode: 'rtc', codec: 'vp8' });
     this.assignClientHandlers();
   }
 
+  // private unlistener: () => void;
+ 
   ngOnInit() {
     this.client.init(this.appId.value, () => console.log('Initialized successfully'), () => console.log('Could not initialize'));
+    this.ref.detectChanges();
+    // this.unlistener = this.renderer2.listen("document", "mousemove", event => {
+    //   console.log(`I am detecting mousemove at ${event.pageX}, ${event.pageY} on Document!`);
+    // });
   }
 
+  // ngOnDestroy() {
+  //   this.unlistener();
+  // }
+
   join(): void {
+    // this.client.on("user-published", handleUserPublished);
+    // this.client.on("user-unpublished", handleUserUnpublished);
+
     this.localStream = this.agoraService.createStream({ streamID: this.uid, audio: true, video: false, screen: false });
     this.assignLocalStreamHandlers();
     this.init();
 
     this.client.join(null, this.channel.value, this.uid);
+    
   }
 
   publish(): void {
@@ -91,7 +125,7 @@ export class AudioComponent implements OnInit {
 
   mixAudio(): void{
     // --------- Loop through remote audio streams ----------
-    let volume = 3; // Set Volume
+    let volume = 22; // Set Volume
 
     this.remoteStreams.forEach( (stream, i, arr) => {
       var track = stream.getAudioTrack();
@@ -116,8 +150,8 @@ export class AudioComponent implements OnInit {
         panner.connect(compressor);
         compressor.connect(this.audioContext.destination);
         panner.positionX.setValueAtTime( 0, this.audioContext.currentTime );
-        panner.positionY.setValueAtTime( 0, this.audioContext.currentTime );
-        panner.positionZ.setValueAtTime( 25, this.audioContext.currentTime );
+        panner.positionY.setValueAtTime( 70, this.audioContext.currentTime );
+        panner.positionZ.setValueAtTime( 0, this.audioContext.currentTime );
         //audioStream.connect(this.audioContext.destination);
         // --------------------------------------------------
       }
@@ -151,6 +185,7 @@ export class AudioComponent implements OnInit {
     this.client.on(ClientEvent.LocalStreamPublished, evt => {
       this.published = true;
       console.log('Publish local stream successfully');
+      
     });
 
     this.client.on(ClientEvent.Error, error => {
@@ -166,9 +201,12 @@ export class AudioComponent implements OnInit {
 
     this.client.on(ClientEvent.RemoteStreamAdded, evt => {
       const stream = evt.stream as Stream;
-      this.client.subscribe(stream, { audio: true, video: false }, err => {
+      this.client.subscribe(stream, { audio: true, video: false}, err => {
         console.log('Subscribe stream failed', err);
       });
+      
+      this.updateRemoteUser(stream.getId());
+      //alert(stream.getId());
     });
 
     this.client.on(ClientEvent.RemoteStreamSubscribed, evt => {
@@ -179,17 +217,24 @@ export class AudioComponent implements OnInit {
         this.remoteStreams.push(stream);
         this.mixAudio();
         //setTimeout(() => this.remoteStreams.reverse()[0].play(id), 1000);
+        console.log(`Remote stream is subscribed ${stream.getId()}`);
+        console.log(this.setRemoteUserUsername(stream.getId()));
+        
+        this.removeRemoteUser(stream.getId());
       }
+    
     });
 
     this.client.on(ClientEvent.RemoteStreamRemoved, evt => {
       const stream = evt.stream as Stream;
       if (stream) {
         stream.stop();
-        this.remoteCalls = [];
-        console.log(`Remote stream is removed ${stream.getId()}`);
+        //this.remoteCalls = [];
+        console.log(`Remote stream is removed ${stream.getId()} username is ${stream.getId()}`);
       }
     });
+
+    
 
     this.client.on(ClientEvent.PeerLeave, evt => {
       const stream = evt.stream as Stream;
@@ -202,6 +247,60 @@ export class AudioComponent implements OnInit {
   }
 
   private getRemoteId(stream: Stream): string {
+    //console.log("here2");
+    //var userName = this.setRemoteUserUsername(stream.getId());
     return `agora_remote-${stream.getId()}`;
+    
   }
+
+  private setUserDetails(): void{
+    console.log("here");
+    this.userService.getUserDetails(this.user_jwt).subscribe(response => {
+      console.log(response);
+      //if(response.response == "Success"){
+        this.username = response.userName;
+        this.uid = response.id;
+        return
+      //}
+    })
+  }
+
+  private updateRemoteUser(remoteID): void{
+    //alert('nr1');
+    if(!this.remoteUsers.includes(remoteID)){
+      this.remoteUsers.push(remoteID);
+      //console.log('nr2');
+      //console.log(this.remoteUsers);
+    }
+    //this.remoteUsernames = [];
+    this.remoteUsers.forEach(this.setRemoteUserUsername);
+  }
+
+  private removeRemoteUser(remoteID): void{
+    if(this.remoteUsers.includes(remoteID)){
+      const index = this.remoteUsers.indexOf(remoteID);
+      if (index > -1) {
+        this.remoteUsers.splice(index, 1);
+      }
+    }
+    console.log(this.remoteUsers);
+    //this.remoteUsernames = [];
+    this.remoteUsers.forEach(this.setRemoteUserUsername)
+  }
+
+  private setRemoteUserUsername(remoteID): void{
+    var userName = '';
+    this.userService.getUsernameById(remoteID).subscribe(response => {
+      console.log(response);
+      //if(response.response == "Success"){
+        userName = response.userName;
+        if(!this.remoteUsernames.includes(userName)){
+          this.remoteUsernames.push(userName);
+        }
+        //console.log(userName);
+        return
+      //}
+    })
+  }
+
 }
