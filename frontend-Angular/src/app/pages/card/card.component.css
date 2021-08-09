@@ -1,8 +1,30 @@
-p {
-	background: darkgoldenrod;
+.card {
+	background: #331ea8;
 	margin: 0 0 6px 0;
 	padding: 6px 6px 2px 8px;
 	border: 1px solid green;
-	font-style: italic;
+	/* font-style: italic; */
 	color: #fff;
+	/* position: relative; */
+	display: inline-block;
+	max-width: 332px;
+	outline: none;
+	border-radius: 1em;
+	border: 2px solid rgba(23, 25, 65, 0.9);
+	text-decoration: none;;
+}
+
+#delete_button{
+	position: relative;
+	float: left;
+	outline: none;
+	border-radius: 1em;
+	border: 2px solid rgba(23, 25, 65, 0.9);
+	background-color: rgba(23, 25, 65, 0.1);
+	text-decoration: none;
+	bottom: 2px;
+}
+
+.p{
+	text-align: center;
 }

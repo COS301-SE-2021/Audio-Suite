@@ -1,6 +1,7 @@
 .list {
 	background-color: rgba(23, 25, 65, 0.9);
 	width: 350px;
+	max-width: 350px;
 	padding: 6px;
 	margin: 5px;
 	// display: inline-block;
@@ -32,6 +33,7 @@
 		background: linear-gradient(45deg, #0afacf 0%, #dc7bff 100%);
 		overflow :auto;
 		min-height: 200px;
+		max-width: 350px;
 		// max-height: 200px;
 		// height: 100%;
 	}
