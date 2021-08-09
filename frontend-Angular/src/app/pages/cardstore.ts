@@ -13,9 +13,10 @@ export class CardStore {
     return this.cards[cardId];
   }
   
-  newCard(description: string): string {
+  newCard(description: string, listName:string): string {
     const card = new CardSchema();
     card.description = description;
+    card.listName = listName;
     return this._addCard(card);
   }
 }

@@ -1,11 +1,11 @@
 <div class="list" (dragover)="allowDrop($event)" (drop)="drop($event)">
 	<p class="list__title"><strong>{{list.name}}</strong></p>
 	
-	<input #addCardInput type="text" (keyup.enter)="onEnter(addCardInput.value); addCardInput.value=''; displayAddCard=false;" *ngIf="displayAddCard" autofocus>
+	<input #addCardInput type="text" (keyup.enter)="onEnter(addCardInput.value, list.name); addCardInput.value=''; displayAddCard=false;" *ngIf="displayAddCard" autofocus>
 	<p *ngIf="displayAddCard" >Press enter to add issue.</p>
 	<button class="card_button"  (click)="displayAddCard=false; addCardInput.value='';" *ngIf="displayAddCard" > Cancel </button>
 	<button id='createIssueButton' class="card_button" (click)="toggleDisplayAddCard();" *ngIf="!displayAddCard" >Create Issue</button>
 	<div class="cards">
-		<app-card *ngFor="let cardId of list.cards" [card]="cardStore.getCard(cardId)" (click)="deleteCard(cardId);" ></app-card>
+		<app-card *ngFor="let cardId of list.cards" [card]="cardStore.getCard(cardId)" ></app-card>
 	</div>
 </div>

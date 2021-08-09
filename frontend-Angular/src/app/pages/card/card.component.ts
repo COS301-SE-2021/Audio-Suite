@@ -12,4 +12,16 @@ export class CardComponent implements OnInit {
   dragStart(ev) {
     ev.dataTransfer.setData("text", ev.target.id);
   }
+
+  deleteCard(id: string){
+    // if(this.list.cards.length === 1){
+      // this.list.cards.pop();
+    // }
+    // this.list.cards.splice(parseInt(id),1);
+    console.log(id);
+
+    var element = document.getElementById(id);
+    element.parentNode.removeChild(element);
+  }
+
 } 

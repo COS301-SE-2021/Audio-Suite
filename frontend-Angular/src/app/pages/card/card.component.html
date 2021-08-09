@@ -1,4 +1,9 @@
 
-<p class="card" draggable="true" (dragstart)="dragStart($event)" id="{{card.id}}">
-    {{card.description}}
-</p>
+<div>
+    <span>
+        <p class="card" draggable="true" (dragstart)="dragStart($event)" id="{{card.id}}">
+            {{card.description}}
+            <button (click)="deleteCard(card.id);" > x </button>
+        </p>
+    </span>
+</div>
