@@ -9,11 +9,11 @@ export class TextChannelsService {
   constructor(private socket: Socket) { }
 
   joinRoom(room: string){
-    this.socket.emit('joinRoom', room);
+    this.socket.emit('joinRoomText', room);
   }
 
   leaveRoom(room: string){
-    this.socket.emit('leaveRoom', room);
+    this.socket.emit('leaveRoomText', room);
   }
 
   sendMsgToServer(sender: string, room: string, message: string){
