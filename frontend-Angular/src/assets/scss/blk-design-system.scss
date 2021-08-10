@@ -79,7 +79,7 @@
 @import "blk-design-system/custom/misc.scss";
 @import "blk-design-system/custom/rtl.scss";
 @import "blk-design-system/custom/input-group.scss";
-@import "blk-design-system/custom/example-pages.scss";
+@import "blk-design-system/custom/main-pages.scss";
 @import "blk-design-system/custom/progress.scss";
 @import "blk-design-system/custom/badge.scss";
 @import "blk-design-system/custom/pills.scss";
@@ -105,7 +105,9 @@
 @import "blk-design-system/custom/cards/card-user";
 @import "blk-design-system/custom/cards/card-task";
 @import "blk-design-system/custom/cards/card-plain";
+@import "blk-design-system/custom/cards/card-joinOffice";
 @import "blk-design-system/custom/cards/card-register";
+@import "blk-design-system/custom/cards/card-registerNewOffice";
 @import "blk-design-system/custom/cards/card-stats";
 @import "blk-design-system/custom/cards/card-chart";
 
@@ -114,4 +116,4 @@
 @import "blk-design-system/angular/pills";
 @import "blk-design-system/angular/alerts";
 @import "blk-design-system/angular/datepicker";
-@import "blk-design-system/angular/example-pages";
+@import "blk-design-system/angular/main-pages";
