@@ -5,6 +5,7 @@ import { RouterModule } from "@angular/router";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { HttpClientModule } from "@angular/common/http";
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { ProgressbarModule } from "ngx-bootstrap/progressbar";
@@ -24,12 +25,7 @@ import { ProfilepageComponent } from "./pages/examples/profilepage/profilepage.c
 import { RegisterpageComponent } from "./pages/examples/registerpage/registerpage.component";
 import { LandingpageComponent } from "./pages/examples/landingpage/landingpage.component";
 
-//import { AudioModule } from "./audio/audio.module";
-
-
-import { BrowserModule } from '@angular/platform-browser';
-import { AudioModule } from "./audio/audio.module";
-
+const config: SocketIoConfig = { url: 'http://localhost:3001', options: {} };
 
 @NgModule({
   declarations: [
@@ -46,14 +42,13 @@ import { AudioModule } from "./audio/audio.module";
     HttpClientModule,
     RouterModule,
     AppRoutingModule,
-    BrowserModule,
-    AudioModule,
+    PagesModule, 
+    SocketIoModule.forRoot(config),
     // BsDropdownModule.forRoot(),
     // ProgressbarModule.forRoot(),
     // TooltipModule.forRoot(),
     // CollapseModule.forRoot(),
     // TabsModule.forRoot(),
-    PagesModule
     // PaginationModule.forRoot(),
     // AlertModule.forRoot(),
     // BsDatepickerModule.forRoot(),
