@@ -114,18 +114,19 @@
                 <h4 class="card-title">Login</h4>
               </div>
               <div id="alertPosition">
-                <div *ngIf="sendAlert">
-                  <alert class="alert-with-icon" [type]="'primary alert-with-icon'">
-                      <span class=" tim-icons icon-trophy" data-notify="icon">
-                      </span>
-                      <span>
-                        <b>
-                          Error -
-                        </b>
-                        {{ alertMsg }}
-                      </span>
-                  </alert>
-                </div>
+            
+              <div *ngIf="sendAlert">
+                <alert class="alert-with-icon" [type]="'primary alert-with-icon'">
+                    <span class=" tim-icons icon-trophy" data-notify="icon">
+                    </span>
+                    <span>
+                      <b>
+                        Error -
+                      </b>
+                      {{ alertMsg }}
+                    </span>
+                </alert>
+              </div>
               </div>
               <div class="card-body">
                 <form class="form">
@@ -167,6 +168,14 @@
                       (blur)="focus2 = false"
                     />
                   </div>
+                  <!-- <div class="form-check text-left">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" />
+
+                      <span class="form-check-sign"> </span> I agree to the
+                      <a href="javascript:void(0)"> terms and conditions </a> .
+                    </label>
+                  </div> -->
                 </form>
               </div>
               <div class="card-footer">
