@@ -35,6 +35,15 @@
         <div id="officeSettingsList" class="showOfficeSettings">
             <button class="sidebarBtn" (click)="showSendInviteModal()">Send Invite</button>
             <br>
+            <div *ngIf="inFloorPlanEditorMode; then closeEditorMode else openEditorMode"></div>
+            <ng-template #openEditorMode>
+                <button class="sidebarBtn" (click)="EditFloorPlan()">Edit FloorPlan</button>
+                <br>
+            </ng-template>
+            <ng-template #closeEditorMode>
+                <button class="sidebarBtn" (click)="closeEditFloorPlan()">Exit Edit Mode</button>
+                <br>
+            </ng-template>
             <button class="sidebarBtn" (click)="leaveOffice()">Leave Office</button>
             <br>
         </div>
@@ -185,16 +194,52 @@
             <ng-template tabHeading>
                 <i class="tim-icons icon-bank"> </i> Floor Plan
             </ng-template>
-            <p>
-                Collaboratively administrate empowered markets via
-                plug-and-play networks. Dynamically procrastinate B2C
-                users after installed base benefits. <br />
-
-                <br />
-
-                Dramatically visualize customer directed convergence
-                without revolutionary ROI.
-            </p>
+            <div class="floorPlanContent" id="floorPlanContent">
+                <div id="grid-content">
+                    <ktd-grid
+                        [cols]="cols"
+                        [rowHeight]="rowHeight"
+                        [layout]="layout"
+                        [compactType]="compactType"
+                        [preventCollision]="preventCollision"
+                        [scrollableParent]="scrollableParent"
+                        (layoutUpdated)="onLayoutUpdated($event)">
+                        <ktd-grid-item 
+                            class="ktd-grid-item" 
+                            *ngFor="let item of layout; trackBy:trackById" 
+                            [id]="item.id" [transition]="currentTransition"
+                            [dragStartThreshold]="dragStartThreshold" 
+                            [draggable]="!disableDrag" 
+                            [resizable]="!disableResize">
+                                <div *ngIf="disableDrag; then click else dblClick"></div>
+                                <ng-template #click>
+                                    <div *ngIf="selectedRoom == item.id; then leaveRoom else enterRoom"></div>
+                                    <ng-template #enterRoom>
+                                        <div class="grid-item-content">
+                                            <button (click)="selectRoom(item.id, false)" class="grid-item-button">
+                                                <b>Enter Room:</b><br> {{ item.id }}
+                                            </button>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template #leaveRoom>
+                                        <div class="grid-item-content">
+                                            <button (click)="selectRoom(item.id, true)" class="grid-item-button">
+                                                <b>Leave Room:</b><br> {{ item.id }}
+                                            </button>
+                                        </div>
+                                    </ng-template>
+                                </ng-template>
+                                <ng-template #dblClick>
+                                    <div class="grid-item-content">
+                                        <button (dblclick)="removeRoom(item.id)" class="grid-item-button">
+                                            <b>Double click to delete room:</b><br> {{ item.id }}
+                                        </button>
+                                    </div>
+                                </ng-template>
+                        </ktd-grid-item>
+                    </ktd-grid>
+                </div>
+            </div>
         </tab>
         <tab>
             <ng-template tabHeading>
@@ -229,7 +274,45 @@
                 <form>
                     <div class="newMessageInput form-group">
                         <input name="newMessageInput" [(ngModel)]="newMessageInput" type="text" class="form-control"> 
-                        <button type="submit" id="sendOfficeMessageBtn" class="btn btn-primary btn-sm" (click)="sendMessage()"><i class="tim-icons icon-send"> </i>  Send</button>
+                        <button type="submit" id="sendOfficeMessageBtn" class="btn btn-primary btn-sm" (click)="sendMessage(selectedOffice)"><i class="tim-icons icon-send"> </i>  Send</button>
+                    </div>
+                </form>
+            </div>
+        </tab>
+        <tab *ngIf="roomSelected">
+            <ng-template tabHeading>
+                <i class="tim-icons icon-email-85"> </i> {{ selectedRoom }} Channel
+            </ng-template>
+            <div class="TextChannelContent">
+                <div class="messageBoard" id="messageBoard" #scrollframe>
+                    <!--Messages will be displayed here when fetched from the server.-->
+                    <div *ngFor="let message of roomTextChannelMessages" #messageitem>
+                        <div>
+                            <div *ngIf="message.sender == userUsername; then incommingMessage else outgoingMessage"></div>
+                            <ng-template #incommingMessage>
+                                <div class="message">
+                                    <div class="outgoing">
+                                        <p>{{message.sender}}</p>
+                                        <p class="messageContent">{{message.message}}</p>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template #outgoingMessage>
+                                <div class="message">
+                                    <div class="incomming">
+                                        <p>{{message.sender}}</p>
+                                        <p class="messageContent">{{message.message}}</p>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+                
+                <form>
+                    <div class="newMessageInput form-group">
+                        <input name="newMessageInput" [(ngModel)]="newMessageInput" type="text" class="form-control"> 
+                        <button type="submit" id="sendOfficeMessageBtn" class="btn btn-primary btn-sm" (click)="sendMessage(selectedRoom)"><i class="tim-icons icon-send"> </i>  Send</button>
                     </div>
                 </form>
             </div>
