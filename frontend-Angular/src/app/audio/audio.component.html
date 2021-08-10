@@ -1,0 +1,61 @@
+<router-outlet></router-outlet>
+
+<section class="container">
+
+  <article class="row">
+    <!-- <mat-form-field appearance="standard" class="col-6">
+      <mat-label>App Id</mat-label>
+      <input matInput [formControl]="appId">
+    </mat-form-field>
+
+    <mat-form-field appearance="standard" class="col-6">
+      <mat-label>Channel</mat-label>
+      <input matInput [formControl]="channel">
+    </mat-form-field> -->
+
+
+    <div class="col-6">
+      <div class="row h-100">
+        <div class="col-12">
+          <button mat-button color="primary" (click)="join()">Join Channel</button>
+          <button mat-button color="primary" (click)="publish()">Publish Local Stream</button>
+          <button mat-button color="primary" (click)="unpublish()">Unpublish Local Stream</button>
+          <button mat-button color="accent" (click)="leave()">Leave</button>
+        </div>
+        <div class="col-12">
+          User id: {{ uid }} <br>
+          Username: {{ username }}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="row">
+        <h2 class="col-12">Connected: {{ connected }}</h2>
+        <h2 class="col-12">Published: {{ published }}</h2>
+      </div>
+    </div>
+
+    <div class="col-12">
+      {{ remoteCalls | json }}
+      <li *ngFor="let rc of remoteCalls; index as i; trackBy: trackByFn">...</li>
+    </div>
+  </article>
+
+  <article class="row pt-3">
+    <div class="col">
+      <h2>Local</h2>
+      <div id="agora_local" class="local"></div>
+    </div>
+    <div class="col">
+      <h2>Remote</h2>
+      <div class="remote_calls" [id]="remoteCalls[0]" class="remote">
+          <ul class="remote_users">
+            <li *ngFor="let user of remoteUsernames">
+              <span class="item">{{user}}</span>
+            </li>
+          </ul>
+      </div>
+    </div>
+  </article>
+</section>

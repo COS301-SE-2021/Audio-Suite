@@ -27,6 +27,9 @@ import { LandingpageComponent } from "./pages/examples/landingpage/landingpage.c
 
 const config: SocketIoConfig = { url: 'http://localhost:3001', options: {} };
 
+import { BrowserModule } from '@angular/platform-browser';
+import { AudioModule } from "./audio/audio.module";
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,7 +45,9 @@ const config: SocketIoConfig = { url: 'http://localhost:3001', options: {} };
     HttpClientModule,
     RouterModule,
     AppRoutingModule,
-    PagesModule, 
+    PagesModule,
+    BrowserModule,
+    AudioModule,
     SocketIoModule.forRoot(config),
     // BsDropdownModule.forRoot(),
     // ProgressbarModule.forRoot(),

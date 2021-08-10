@@ -68,4 +68,13 @@ export class UserService {
     var getUserDetailsURL = baseUrl + '/api/user/details';
     return this.http.post<any>(getUserDetailsURL, body, httpOptions);
   }
+
+  getUsernameById(
+    userID: number
+    ): Observable<any>{
+    const body = {
+      id: userID
+    }
+    return this.http.post<any>('http://localhost:3001/api/user/getUsernameById', body, httpOptions);
+  }
 }
