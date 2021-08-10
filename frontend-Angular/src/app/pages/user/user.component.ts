@@ -3,8 +3,11 @@ import { Router } from '@angular/router';
 import { OfficeRoomService } from 'src/app/services/office-room.service';
 import { TextChannelsService } from 'src/app/services/text-channels.service';
 import { UserService } from 'src/app/services/user.service';
+import { NgxAgoraService } from 'ngx-agora';
 import { CardStore } from '../cardstore';
 import { ListSchema } from '../listschema';
+
+import { AudioComponent } from '../../audio/audio.component';
 
 interface Office{
   id: string,
@@ -69,10 +72,14 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   cardStore: CardStore;
   lists: ListSchema[];
 
+  // Audio Variables
+  audioComponent: AudioComponent = new AudioComponent( this.ngxService, this.userService );
+
   constructor(
     private textChannelsService: TextChannelsService,
     private officeRoomService: OfficeRoomService,
     private userService: UserService,
+    private ngxService: NgxAgoraService,
     private router: Router) { }
 
   setMockData(): void {
@@ -225,7 +232,8 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     this.sidebarOpened = !this.sidebarOpened;
   }
 
-  selectOffice(officeID, office, officeInvite): void{
+  async selectOffice(officeID, office, officeInvite){
+    await this.audioComponent.join();
     if(this.officeSelected){
       if(this.selectedOffice != office){
         this.leaveOffice();
