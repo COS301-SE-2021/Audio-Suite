@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import {AudioService} from '../services/audio.service';
+import { AudioService } from '../services/audio.service';
 import { UserService } from 'src/app/services/user.service';
 import { AgoraClient, ClientEvent, NgxAgoraService, Stream, StreamEvent } from 'ngx-agora';
 import { environment } from 'src/environments/environment';
@@ -32,8 +32,7 @@ export class AudioComponent implements OnInit {
   // ---------------------------------------
   
   // -------------- CONSTRUCTOR --------------
-  constructor(private agoraService: NgxAgoraService, private userService: UserService, private audioService: AudioService, private element: ElementRef, 
-    private ref:ChangeDetectorRef) {
+  constructor(private agoraService: NgxAgoraService, private userService: UserService) {
       this.setUserDetails();
       this.client = this.agoraService.createClient({ mode: 'rtc', codec: 'vp8' });
       this.assignClientHandlers();
@@ -42,8 +41,7 @@ export class AudioComponent implements OnInit {
   
   // -------------- ANGULAR INIT --------------
   ngOnInit() {
-    this.client.init(this.appId.value, () => console.log('Initialized successfully'), () => console.log('Could not initialize'));
-    this.ref.detectChanges();
+    
   }
   // ------------------------------------------
 
@@ -88,11 +86,18 @@ export class AudioComponent implements OnInit {
     
   // -------------- HANDLE REMOTE STREAMS AND OUTPUT AUDIO --------------
   mixAudio(): void{
+    // Remote stream audio settings
+    let volume = 15; 
+    let pannerX = 0;
+    let pannerY = 0;
+    let pannerZ = 0;
+
     // --------- Loop through remote audio streams ----------
-    let volume = 15; // Set Volume
-    
     this.remoteStreams.forEach( (stream) => {
+
+      // Convert stream to track
       var track = stream.getAudioTrack();
+      
       if (typeof track !== 'undefined'){
         // ---------- Work Around for Chrome Bugs -----------
         var audioStreamTrack = new MediaStream([track]);
@@ -103,19 +108,25 @@ export class AudioComponent implements OnInit {
           a = null;
         });
         // --------------------------------------------------
+
         // ------- Play Audio Stream in audioContext --------
+        // Create AudioNodes in AudioContext
         let audioStream = this.audioContext.createMediaStreamSource(audioStreamTrack);
         let volumeControl = this.audioContext.createGain();
         let panner = this.audioContext.createPanner();
         let compressor = this.audioContext.createDynamicsCompressor();
-        volumeControl.gain.setValueAtTime(volume, this.audioContext.currentTime);
+
+        // Connect AudioNodes in Sequence (RemoteStream -> VolumeController -> Panner -> Compressor -> Destination(Output))
         audioStream.connect(volumeControl);
         volumeControl.connect(panner);
         panner.connect(compressor);
         compressor.connect(this.audioContext.destination);
-        panner.positionX.setValueAtTime( 0, this.audioContext.currentTime );
-        panner.positionY.setValueAtTime( 0, this.audioContext.currentTime );
-        panner.positionZ.setValueAtTime( 0, this.audioContext.currentTime );
+
+        // Configure AudioNodes
+        volumeControl.gain.setValueAtTime( volume, this.audioContext.currentTime );
+        panner.positionX.setValueAtTime( pannerX, this.audioContext.currentTime );
+        panner.positionY.setValueAtTime( pannerY, this.audioContext.currentTime );
+        panner.positionZ.setValueAtTime( pannerZ, this.audioContext.currentTime );
         // --------------------------------------------------
       }
     });
@@ -125,6 +136,7 @@ export class AudioComponent implements OnInit {
 
   // -------------- AUDIO STREAM INIT --------------
   protected init(): void {
+    this.client.init(this.appId.value, () => console.log('Initialized successfully'), () => console.log('Could not initialize'));
     this.localStream.init(
       () => {
         // The user has granted access to the camera and mic.
@@ -151,11 +163,11 @@ export class AudioComponent implements OnInit {
 
   // -------------- CLIENT AUDIO EVENT LISTENERS --------------
   private assignClientHandlers(): void {
+
     // Local stream published event listener and handler
     this.client.on(ClientEvent.LocalStreamPublished, evt => {
       this.published = true;
       console.log('Publish local stream successfully');
-      
     });
     
     // Channel token invalid event listener and handler
@@ -172,13 +184,12 @@ export class AudioComponent implements OnInit {
     
     // Remote user stream published event listener and handler
     this.client.on(ClientEvent.RemoteStreamAdded, evt => {
+      console.log(evt);
       const stream = evt.stream as Stream;
       this.client.subscribe(stream, { audio: true, video: false}, err => {
         console.log('Subscribe stream failed', err);
       });
-      
       this.updateRemoteUser(stream.getId());
-      //alert(stream.getId());
     });
     
     // Subscribed to remote user stream event listener and handler
@@ -192,7 +203,6 @@ export class AudioComponent implements OnInit {
         console.log(`Remote stream is subscribed ${stream.getId()}`);
         console.log(this.setRemoteUserUsername(stream.getId()));
       }
-      
     });
     
     // Remote user stream unpublished event listener and handler
@@ -215,6 +225,11 @@ export class AudioComponent implements OnInit {
         console.log(`${evt.uid} left from this channel`);
       }
     });
+
+    // Remote user joins channel event listener and handler
+    this.client.on(ClientEvent.PeerOnline, evt => {
+      
+    });
   }
   // ----------------------------------------------------------
   
@@ -229,7 +244,7 @@ export class AudioComponent implements OnInit {
   private setUserDetails(): void{
     this.userService.getUserDetails(this.user_jwt).subscribe(response => {
       console.log(response);
-      if(response.id !== null){
+      if(typeof response.id !== "undefined"){
         this.username = response.userName;
         this.uid = response.id;
         return
@@ -240,11 +255,8 @@ export class AudioComponent implements OnInit {
 
   // -------------- UPDATE REMOTE USER LIST --------------
   private updateRemoteUser(remoteID): void{
-    //alert('nr1');
     if(!this.remoteUsers.includes(remoteID)){
       this.remoteUsers.push(remoteID);
-      //console.log('nr2');
-      //console.log(this.remoteUsers);
     }
     //this.remoteUsernames = [];
     this.remoteUsers.forEach(this.setRemoteUserUsername);
@@ -270,14 +282,13 @@ export class AudioComponent implements OnInit {
     var userName = '';
     this.userService.getUsernameById(remoteID).subscribe(response => {
       console.log(response);
-      //if(response.response == "Success"){
+      if(typeof response.userName !== "undefined"){
         userName = response.userName;
         if(!this.remoteUsernames.includes(userName)){
           this.remoteUsernames.push(userName);
         }
-        //console.log(userName);
         return
-        //}
+      }
     });
   }
   // -----------------------------------------------------------------
