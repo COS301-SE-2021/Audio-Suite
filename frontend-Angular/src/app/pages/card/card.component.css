@@ -2,7 +2,6 @@
 	background: #331ea8;
 	margin: 0 0 6px 0;
 	padding: 6px 6px 2px 8px;
-	border: 1px solid green;
 	/* font-style: italic; */
 	color: #fff;
 	/* position: relative; */
@@ -11,7 +10,8 @@
 	outline: none;
 	border-radius: 1em;
 	border: 2px solid rgba(23, 25, 65, 0.9);
-	text-decoration: none;;
+	text-decoration: none;
+	/* text-align: center; */
 }
 
 #delete_button{
@@ -25,6 +25,7 @@
 	bottom: 2px;
 }
 
-.p{
-	text-align: center;
+#class_description{
+	position: relative;
+	margin-left: 20px;
 }
