@@ -25,8 +25,6 @@ import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { FormModalComponent } from './components/form-modal/form-modal.component';
 import { UserComponent } from './user/user.component';
-import { ListComponent } from './list/list.component';
-import { CardComponent } from './card/card.component';
 
 @NgModule({
   imports: [
@@ -55,16 +53,13 @@ import { CardComponent } from './card/card.component';
     RegisterComponent,
     LoginComponent,
     FormModalComponent,
-    UserComponent,
-    ListComponent,
-    CardComponent
+    UserComponent
   ],
   exports: [
     IndexComponent,
     ProfilepageComponent,
     RegisterpageComponent,
-    LandingpageComponent,
-    UserComponent
+    LandingpageComponent
   ],
   providers: []
 })

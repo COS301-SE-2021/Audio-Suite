@@ -16,7 +16,6 @@ import { RoomModule } from './room/room.module';
 import { RoomusersModule } from './roomusers/roomusers.module';
 import { Room } from './room/room.entity';
 import { RoomUsers } from './roomusers/roomusers.entity';
-import { TextChannelsGateway } from './text-channels/text-channels.gateway';
 
 @Module({
   imports: [
@@ -40,6 +39,6 @@ import { TextChannelsGateway } from './text-channels/text-channels.gateway';
     RoomModule, 
     RoomusersModule],
   controllers: [AppController],
-  providers: [AppService, TextChannelsGateway],
+  providers: [AppService],
 })
 export class AppModule {}

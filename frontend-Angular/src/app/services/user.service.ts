@@ -25,8 +25,7 @@ export class UserService {
       emailAddress: email,
       userName: userName
     }
-    var sendOTPVerificationEmailURL = baseUrl + '/api/notifications/sendVerification';
-    return this.http.post<any>(sendOTPVerificationEmailURL, body, httpOptions);
+    return this.http.post<any>('http://localhost:3001/api/notifications/sendVerification', body, httpOptions);
   }
 
   registerUser(
@@ -43,8 +42,7 @@ export class UserService {
       email: emailAddress,
       password: password
     }
-    var registerUserURL = baseUrl + '/api/register';
-    return this.http.post<any>(registerUserURL, body, httpOptions);
+    return this.http.post('http://localhost:3001/api/register', body, httpOptions);
   }
 
   logUserIn(
@@ -55,17 +53,25 @@ export class UserService {
       email: email,
       password: password
     }
-    var logUserInURL = baseUrl + '/api/login'
-    return this.http.post<any>(logUserInURL, body, httpOptions);
+    return this.http.post<any>('http://localhost:3001/api/login', body, httpOptions);
   }
 
   getUserDetails(
-    jwt: string
-  ): Observable<any>{
+    user_jwt: string
+    ): Observable<any>{
     const body = {
-      jwt: jwt
+      jwt: user_jwt
     }
-    var getUserDetailsURL = baseUrl + '/api/user/details';
-    return this.http.post<any>(getUserDetailsURL, body, httpOptions);
+    return this.http.post<any>('http://localhost:3001/api/user/details', body, httpOptions);
   }
+
+  getUsernameById(
+    userID: number
+    ): Observable<any>{
+    const body = {
+      id: userID
+    }
+    return this.http.post<any>('http://localhost:3001/api/user/getUsernameById', body, httpOptions);
+  }
+
 }
