@@ -166,6 +166,35 @@
     }
 }
 
+.floorPlanContent{
+    width: 100%;
+    height: 85%;
+    position: fixed;
+    overflow-y: scroll;
+
+    #grid-content{
+        padding-right: 8%;
+
+        .ktd-grid-item{ 
+            background-color: #03205e;
+            border: 1px solid white;
+            border-radius: 10px;
+
+            .grid-item-content{
+                height: inherit;
+
+                .grid-item-button{
+                    width: 100%;
+                    height: inherit;
+                    background-color: inherit;
+                    outline: none;
+                    color: white;
+                }
+            }
+        }
+    }
+}
+
 .TextChannelContent{
     position: fixed;
     height: 85%;
