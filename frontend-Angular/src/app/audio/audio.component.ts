@@ -35,7 +35,7 @@ export class AudioComponent implements OnInit {
   }
     
   join(onSuccess?: (uid: number | string) => void, onFailure?: (error: Error) => void): void {
-    this.client.join(null, 'foo-bar', this.uid, onSuccess, onFailure);
+    this.client.join('0067afb53157f754f6f8023f31fb343404aIAB/DZs+sbjmEuzqwX+wu61CndpqrBrbYhUOtRFh/fJJkS/kRDEAAAAAEADVf7iLd/8UYQEAAQB2/xRh', 'audio-suite', this.uid, onSuccess, onFailure);
   }
   
   publish(): void {
