@@ -1,6 +1,6 @@
 import { Component, HostListener, Input, OnInit } from "@angular/core";
-import { ListSchema } from "../ListSchema";
-import { CardStore } from "../CardStore";
+import { ListSchema } from "../listschema";
+import { CardStore } from "../cardstore";
 @Component({
   selector: "app-list",
   templateUrl: "./list.component.html",

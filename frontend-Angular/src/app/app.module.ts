@@ -27,6 +27,11 @@ import { LandingpageComponent } from "./pages/examples/landingpage/landingpage.c
 
 const config: SocketIoConfig = { url: 'http://localhost:3001/serversocket', options: {} };
 
+import { BrowserModule } from '@angular/platform-browser';
+import { AudioModule } from "./audio/audio.module";
+import { NgxAgoraModule } from 'ngx-agora';
+import { environment } from 'src/environments/environment';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,8 +47,11 @@ const config: SocketIoConfig = { url: 'http://localhost:3001/serversocket', opti
     HttpClientModule,
     RouterModule,
     AppRoutingModule,
-    PagesModule, 
+    PagesModule,
+    BrowserModule,
+    AudioModule,
     SocketIoModule.forRoot(config),
+    NgxAgoraModule.forRoot({ AppID: environment.agora.appId }),
     // BsDropdownModule.forRoot(),
     // ProgressbarModule.forRoot(),
     // TooltipModule.forRoot(),
