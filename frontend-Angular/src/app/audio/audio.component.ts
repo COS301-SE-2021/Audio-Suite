@@ -27,6 +27,14 @@ export class AudioComponent {
     });
   }
 
+  leave() {
+    this.agoraService.client.leave(() => {
+      console.log("Leavel channel successfully");
+    }, (err) => {
+      console.log("Leave channel failed");
+    });
+  }
+
   // Add
   private subscribeToStreams() {
     this.localStream.on("accessAllowed", () => {
