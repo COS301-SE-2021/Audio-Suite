@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Router } from '@angular/router';
-import { KtdDragEnd, KtdDragStart, KtdGridComponent, KtdGridLayout, KtdGridLayoutItem, KtdResizeEnd, KtdResizeStart, ktdTrackById} from '@katoid/angular-grid-layout';
+import { KtdGridComponent, KtdGridLayout, KtdGridLayoutItem } from '@katoid/angular-grid-layout';
 import { fromEvent, merge, Subscription } from 'rxjs';
 import { debounceTime, filter } from 'rxjs/operators';
 import { OfficeRoomService } from 'src/app/services/office-room.service';
@@ -238,11 +238,11 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.textChannelsService.listen("joinedRoomText").subscribe(data => {
       console.log("Joined room: ", data);
-    })
+    });
 
     this.textChannelsService.listen("leftRoomText").subscribe(data => {
       console.log("Left room: ", data);
-    })
+    });
 
     this.textChannelsService.listen("msgToClient").subscribe(data => {
       console.log("Message to client: ", data);
@@ -285,7 +285,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     },
     (error) => {
       console.log(error);
-    })
+    });
   }
 
   getUserDetails(): void{
@@ -299,15 +299,14 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     },
     (error) => {
       console.log(error);
-    })
+    });
   }
 
   toggleSidebar(): void {
     this.sidebarOpened = !this.sidebarOpened;
   }
 
-  async selectOffice(officeID, office, officeInvite){
-    await this.audioComponent.join();
+  selectOffice(officeID, office, officeInvite){
     if(this.officeSelected){
       if(this.selectedOffice != office){
         this.leaveOffice();
@@ -316,6 +315,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         this.selectedOfficeInvite = officeInvite;
         this.officeSelected = true;
         this.textChannelsService.joinRoom(office + "-Text");
+        this.audioComponent.join();
       }
     }
     else{
@@ -324,6 +324,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.selectedOfficeInvite = officeInvite;
       this.officeSelected = true;
       this.textChannelsService.joinRoom(office + "-Text");
+      this.audioComponent.join();
     }
   }
 
@@ -332,9 +333,9 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     this.itemElements.changes.subscribe(_ => this.scrollMessageBoardToBottom());
   }
 
-  leaveOffice(): void{
+  async leaveOffice(){
     this.textChannelsService.leaveRoom(this.selectedOffice + "-Text");
-
+    this.audioComponent.leave();
     this.selectedOffice = '';
     this.selectedOfficeID = '';
     this.selectedOfficeInvite = '';
@@ -342,12 +343,13 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     this.officeTextChannelMessages = [];
   }
 
-  selectRoom(id: string, leaveRoom: boolean): void{
+  selectRoom(id: string, leaveRoom: boolean){
     if(leaveRoom){
       this.textChannelsService.leaveRoom(id + "-Text");
       this.roomSelected = false;
       this.selectedRoom = '';
       this.roomTextChannelMessages = [];
+      this.audioComponent.unpublish();
     }
     else{
       if(this.roomSelected){
@@ -356,37 +358,40 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
           this.roomSelected = true;
           this.selectedRoom = id;
           this.textChannelsService.joinRoom(id + "-Text");
+          this.audioComponent.publish();
         }
       }
       else{
         this.roomSelected = true;
         this.selectedRoom = id;
         this.textChannelsService.joinRoom(id + "-Text");
+        this.audioComponent.publish();
       }
     }
   }
 
-  leaveRoom(): void{
+  async leaveRoom(){
     this.textChannelsService.leaveRoom(this.selectedRoom + "-Text");
     this.roomSelected = false;
     this.selectedRoom = '';
     this.roomTextChannelMessages = [];
+    this.audioComponent.unpublish();
   }
 
   removeRoom(id: string): void{
-    console.log("remove room: ", id)
+    console.log("remove room: ", id);
     var newLayout: KtdGridLayout = []
     this.layout.forEach(item => {
       if(item.id != id){
         var newItem: KtdGridLayoutItem = {id: item.id, x: item.x, y: item.y, w: item.w, h: item.h};
-        newLayout.push(newItem)
+        newLayout.push(newItem);
       }
-    })
+    });
     this.layout = newLayout;
   }
 
   onLayoutUpdated(layout: KtdGridLayout): void{
-    console.log("Layout updated", layout)
+    console.log("Layout updated", layout);
     this.layout = layout;
   }
 
@@ -459,11 +464,11 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
   createNewOffice(): void{
     var jwt = sessionStorage.getItem('jwt');
-    console.log(jwt)
+    console.log(jwt);
     this.officeRoomService.registerOffice(jwt, this.newOfficeName).subscribe((response) =>{
       console.log(response);
       if(response.Response == "Success"){
-        console.log("new Office created")
+        console.log("new Office created");
         this.newOfficeAlertMsg = "New Office created successfully.";
         this.sendNewOfficeAlert = true;
 
@@ -474,10 +479,10 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     },
     (error) => {
-      console.log(error)
+      console.log(error);
       this.newOfficeAlertMsg = "Error - An office with this name already exists or an error occurred. Please try again.";
       this.sendNewOfficeAlert = true;
-    })
+    });
     this.newOfficeName = "";
   }
 
@@ -496,10 +501,10 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     },
     (error) => {
-      console.log(error)
+      console.log(error);
       this.newOfficeAlertMsg = "Error - You could not be added to the office, the invite may be invalid. Please try again.";
       this.sendNewOfficeAlert = true;
-    })
+    });
   }
 
   showSendInviteModal(): void{
@@ -514,9 +519,9 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
   sendOfficeInvite(): void{
     this.officeRoomService.sendOfficeInvite(this.sendInviteToEmail, this.sendInviteToName, this.selectedOfficeInvite).subscribe((response) =>{
-      console.log(response)
+      console.log(response);
       if(response.Response == "Success"){
-        console.log('invite sent')
+        console.log('invite sent');
         this.officeInviteAlertMsg = "Invite send Successfully.";
         this.sendOfficeInviteAlert = true;
       }
@@ -525,7 +530,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       console.log(error);
       this.officeInviteAlertMsg = "Error - Office Invite could not be sent. Please try again.";
         this.sendOfficeInviteAlert = true;
-    })
+    });
 
     this.sendInviteToEmail = '';
     this.sendInviteToName = '';
