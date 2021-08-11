@@ -46,7 +46,7 @@ export class AudioComponent implements OnInit {
   // ------------------------------------------
 
   // -------------- JOIN AGORA CHANNEL --------------
-  join(): void {
+  async join(){
     this.localStream = this.agoraService.createStream({ audio: true, video: false });
     this.assignLocalStreamHandlers();
     this.init();
@@ -55,20 +55,20 @@ export class AudioComponent implements OnInit {
   // ------------------------------------------------
 
   // -------------- PUBLISH LOCAL STREAM --------------
-  publish(): void {
+  async publish(){
     this.client.publish(this.localStream, err => console.log('Publish local stream error: ' + err));
   }
   // --------------------------------------------------
 
   // -------------- UNPUBLISH LOCAL STREAM --------------
-  unpublish(): void {
+  async unpublish(){
     this.client.unpublish(this.localStream, error => console.error(error));
     this.published = false;
   }
   // ----------------------------------------------------
   
   // -------------- LEAVE AGORA CHANNEL --------------
-  leave(): void {
+  async leave(){
     if (this.connected) {
       this.client.leave( () => {
         console.log('Left the channel successfully');
@@ -87,7 +87,7 @@ export class AudioComponent implements OnInit {
   // -------------- HANDLE REMOTE STREAMS AND OUTPUT AUDIO --------------
   mixAudio(): void{
     // Remote stream audio settings
-    let volume = 15; 
+    let volume = 20; 
     let pannerX = 0;
     let pannerY = 0;
     let pannerZ = 0;
