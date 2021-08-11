@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { AudioService } from '../services/audio.service';
 import { UserService } from 'src/app/services/user.service';
@@ -33,9 +33,9 @@ export class AudioComponent implements OnInit {
   
   // -------------- CONSTRUCTOR --------------
   constructor(private agoraService: NgxAgoraService, private userService: UserService) {
-    this.setUserDetails();
-    this.client = this.agoraService.createClient({ mode: 'rtc', codec: 'vp8' });
-    this.assignClientHandlers();
+      this.setUserDetails();
+      this.client = this.agoraService.createClient({ mode: 'rtc', codec: 'vp8' });
+      this.assignClientHandlers();
   }
   // -----------------------------------------
   
@@ -46,7 +46,7 @@ export class AudioComponent implements OnInit {
   // ------------------------------------------
 
   // -------------- JOIN AGORA CHANNEL --------------
-  join(){
+  join(): void {
     this.localStream = this.agoraService.createStream({ audio: true, video: false });
     this.assignLocalStreamHandlers();
     this.init();
@@ -55,20 +55,20 @@ export class AudioComponent implements OnInit {
   // ------------------------------------------------
 
   // -------------- PUBLISH LOCAL STREAM --------------
-  publish(){
+  publish(): void {
     this.client.publish(this.localStream, err => console.log('Publish local stream error: ' + err));
   }
   // --------------------------------------------------
 
   // -------------- UNPUBLISH LOCAL STREAM --------------
-  unpublish(){
+  unpublish(): void {
     this.client.unpublish(this.localStream, error => console.error(error));
     this.published = false;
   }
   // ----------------------------------------------------
   
   // -------------- LEAVE AGORA CHANNEL --------------
-  leave(){
+  leave(): void {
     if (this.connected) {
       this.client.leave( () => {
         console.log('Left the channel successfully');
@@ -87,7 +87,7 @@ export class AudioComponent implements OnInit {
   // -------------- HANDLE REMOTE STREAMS AND OUTPUT AUDIO --------------
   mixAudio(): void{
     // Remote stream audio settings
-    let volume = 20; 
+    let volume = 15; 
     let pannerX = 0;
     let pannerY = 0;
     let pannerZ = 0;
