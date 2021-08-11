@@ -306,7 +306,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     this.sidebarOpened = !this.sidebarOpened;
   }
 
-  selectOffice(officeID, office, officeInvite){
+  async selectOffice(officeID, office, officeInvite){
     if(this.officeSelected){
       if(this.selectedOffice != office){
         this.leaveOffice();
@@ -315,7 +315,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         this.selectedOfficeInvite = officeInvite;
         this.officeSelected = true;
         this.textChannelsService.joinRoom(office + "-Text");
-        this.audioComponent.join();
+        await this.audioComponent.join();
       }
     }
     else{
@@ -324,7 +324,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.selectedOfficeInvite = officeInvite;
       this.officeSelected = true;
       this.textChannelsService.joinRoom(office + "-Text");
-      this.audioComponent.join();
+      await this.audioComponent.join();
     }
   }
 
@@ -335,7 +335,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async leaveOffice(){
     this.textChannelsService.leaveRoom(this.selectedOffice + "-Text");
-    this.audioComponent.leave();
+    await this.audioComponent.leave();
     this.selectedOffice = '';
     this.selectedOfficeID = '';
     this.selectedOfficeInvite = '';
@@ -343,13 +343,13 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     this.officeTextChannelMessages = [];
   }
 
-  selectRoom(id: string, leaveRoom: boolean){
+  async selectRoom(id: string, leaveRoom: boolean){
     if(leaveRoom){
       this.textChannelsService.leaveRoom(id + "-Text");
       this.roomSelected = false;
       this.selectedRoom = '';
       this.roomTextChannelMessages = [];
-      this.audioComponent.unpublish();
+      await this.audioComponent.unpublish();
     }
     else{
       if(this.roomSelected){
@@ -358,14 +358,14 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
           this.roomSelected = true;
           this.selectedRoom = id;
           this.textChannelsService.joinRoom(id + "-Text");
-          this.audioComponent.publish();
+          await this.audioComponent.publish();
         }
       }
       else{
         this.roomSelected = true;
         this.selectedRoom = id;
         this.textChannelsService.joinRoom(id + "-Text");
-        this.audioComponent.publish();
+        await this.audioComponent.publish();
       }
     }
   }
@@ -375,7 +375,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     this.roomSelected = false;
     this.selectedRoom = '';
     this.roomTextChannelMessages = [];
-    this.audioComponent.unpublish();
+    await this.audioComponent.unpublish();
   }
 
   removeRoom(id: string): void{
