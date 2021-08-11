@@ -12,7 +12,7 @@ import { environment } from 'src/environments/environment';
 })
 
 export class AudioComponent implements OnInit {
-  title = 'angular-video';
+  title = 'audio-suite';
   localCallId = 'agora_local';
   remoteCalls: string[] = [];
 
@@ -68,6 +68,7 @@ private initLocalStream(onSuccess?: () => any): void {
 
   private assignClientHandlers(): void {
     this.client.on(ClientEvent.LocalStreamPublished, evt => {
+      console.log("------------ LOCAL STREAM PUBLISHED ------------\n"+evt.stream);
       console.log('Publish local stream successfully');
     });
 
@@ -83,6 +84,7 @@ private initLocalStream(onSuccess?: () => any): void {
     });
 
     this.client.on(ClientEvent.RemoteStreamAdded, evt => {
+      console.log("------------ REMOTE STREAM ADDED ------------\n"+evt.stream);
       const stream = evt.stream as Stream;
       this.client.subscribe(stream, { audio: true, video: false }, err => {
         console.log('Subscribe stream failed', err);
@@ -90,24 +92,27 @@ private initLocalStream(onSuccess?: () => any): void {
     });
 
     this.client.on(ClientEvent.RemoteStreamSubscribed, evt => {
+      console.log("------------ REMOTE STREAM SUBSCRIBED ------------\n"+evt.stream);
       const stream = evt.stream as Stream;
       const id = this.getRemoteId(stream);
-      if (!this.remoteCalls.length) {
-        this.remoteCalls.push(id);
-        setTimeout(() => stream.play(id), 1000);
-      }
+      this.remoteCalls.push(id);
+      console.log("REMOTE CALLS: "+ this.remoteCalls);
+      setTimeout(() => stream.play(id), 1000);
     });
 
     this.client.on(ClientEvent.RemoteStreamRemoved, evt => {
+      console.log("------------ REMOTE STREAM REMOVED ------------\n"+evt.stream);
       const stream = evt.stream as Stream;
       if (stream) {
         stream.stop();
         this.remoteCalls = [];
+        console.log("REMOTE CALLS: "+ this.remoteCalls);
         console.log(`Remote stream is removed ${stream.getId()}`);
       }
     });
 
     this.client.on(ClientEvent.PeerLeave, evt => {
+      console.log("------------ PEER LEAVE ------------\n"+evt.stream);
       const stream = evt.stream as Stream;
       if (stream) {
         stream.stop();
