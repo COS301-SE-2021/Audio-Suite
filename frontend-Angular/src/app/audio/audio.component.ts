@@ -33,9 +33,9 @@ export class AudioComponent implements OnInit {
   
   // -------------- CONSTRUCTOR --------------
   constructor(private agoraService: NgxAgoraService, private userService: UserService) {
-      this.setUserDetails();
-      this.client = this.agoraService.createClient({ mode: 'rtc', codec: 'vp8' });
-      this.assignClientHandlers();
+    this.setUserDetails();
+    this.client = this.agoraService.createClient({ mode: 'rtc', codec: 'vp8' });
+    this.assignClientHandlers();
   }
   // -----------------------------------------
   
