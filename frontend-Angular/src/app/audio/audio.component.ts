@@ -13,36 +13,22 @@ export class AudioComponent implements OnInit {
   private localStream: Stream;
   private client: AgoraClient;
 
-  /**
-   * App ID used when connecting to the Agora.io servers
-   */
   appId: FormControl = new FormControl((environment as any).agora ? (environment as any).agora.appId : '');
-  /**
-   * Channel (meeting room) within the Agora app to join
-   */
+  
   channel = new FormControl('123');
-  /**
-   * Generated user ID that is attached to the local client when joining a meeting room
-   */
+
   uid: number;
 
-  /**
-   * All the IDs of other users that have joined the call
-   */
   remoteCalls: string[] = [];
-  /**
-   * Whether the local client has tuned in to the Agora meeting room
-   */
+  
   connected = false;
-  /**
-   * Whether the local client's A/V stream has been published to the remote meeting room
-   */
+  
   published = false;
 
   constructor(private agoraService: NgxAgoraService) {
     this.uid = Math.floor(Math.random() * 100);
 
-    this.client = this.agoraService.createClient({ mode: 'rtc', codec: 'h264' });
+    this.client = this.agoraService.createClient({ mode: 'rtc', codec: 'vp8' });
     this.assignClientHandlers();
   }
 
@@ -51,7 +37,7 @@ export class AudioComponent implements OnInit {
   }
 
   join(): void {
-    this.localStream = this.agoraService.createStream({ streamID: this.uid, audio: true, video: false  });
+    this.localStream = this.agoraService.createStream({ streamID: this.uid, audio: true, video: false });
     this.assignLocalStreamHandlers();
     this.init();
 
@@ -126,7 +112,7 @@ export class AudioComponent implements OnInit {
 
     this.client.on(ClientEvent.RemoteStreamAdded, evt => {
       const stream = evt.stream as Stream;
-      this.client.subscribe(stream, { audio: true, video: true }, err => {
+      this.client.subscribe(stream, { audio: true, video: false }, err => {
         console.log('Subscribe stream failed', err);
       });
     });
