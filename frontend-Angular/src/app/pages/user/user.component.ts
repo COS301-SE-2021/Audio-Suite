@@ -80,12 +80,8 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   cols = 12;
   rowHeight = 50;
   compactType: 'vertical' | 'horizontal' | null = null;
-  layout: KtdGridLayout = [
-    { id: 'Coffee Station', x: 3, y: 9, w: 3, h: 3 },
-    { id: 'Conference Room 1', x: 5, y: 1, w: 2, h: 4 },
-    { id: 'Conference Room 2', x: 5, y: 5, w: 2, h: 4 },
-    { id: 'Open Plan Office', x: 2, y: 5, w: 3, h: 4 }
-  ];
+  officeRooms = [];
+  layout: KtdGridLayout = [];
   transitions: { name: string; value: string }[] = [
     {
       name: 'ease',
@@ -302,6 +298,29 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     if(this.officeSelected){
       if(this.selectedOffice != office){
         this.leaveOffice();
+
+        var jwt = sessionStorage.getItem('jwt');
+        this.officeRoomService.getOfficeRoomList(jwt, officeID).subscribe((response) => {
+          console.log(response);
+          if(response.Response == "Success"){
+            var newLayout: KtdGridLayout = [];
+            for(let room of response.Rooms){
+              var newRoom: KtdGridLayoutItem = { 
+                id: room.roomName, 
+                x: room.xCoordinate, 
+                y: room.yCoordinate, 
+                w: room.width, 
+                h: room.height 
+              };
+              newLayout.push(newRoom);
+            }
+            this.layout = newLayout;
+          }
+        },
+        (error) => {
+          console.log(error);
+        });
+
         this.selectedOffice = office;
         this.selectedOfficeID = officeID;
         this.selectedOfficeInvite = officeInvite;
@@ -310,6 +329,28 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
     else{
+      var jwt = sessionStorage.getItem('jwt');
+      this.officeRoomService.getOfficeRoomList(jwt, officeID).subscribe((response) => {
+        console.log(response);
+        if(response.Response == "Success"){
+          var newLayout: KtdGridLayout = [];
+          for(let room of response.Rooms){
+            var newRoom: KtdGridLayoutItem = { 
+              id: room.roomName, 
+              x: room.xCoordinate, 
+              y: room.yCoordinate, 
+              w: room.width, 
+              h: room.height 
+            };
+            newLayout.push(newRoom);
+          }
+          this.layout = newLayout;
+        }
+      },
+      (error) => {
+        console.log(error);
+      });
+
       this.selectedOffice = office;
       this.selectedOfficeID = officeID;
       this.selectedOfficeInvite = officeInvite;
