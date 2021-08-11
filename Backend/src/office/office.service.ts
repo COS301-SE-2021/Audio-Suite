@@ -31,6 +31,7 @@ export class OfficeService {
         }catch(err){
             throw new UnauthorizedException();
         }
+
         try{
             const user = await this.userService.validateUser(jwt);
             const office = await this.officesRepository.create({name, invite});
@@ -73,6 +74,26 @@ export class OfficeService {
         }
         catch(err) {
             throw new BadRequestException();
+        }
+    }
+
+    async getOfficeFromOfficeID(jwt: string, officeID) : Promise<any> {
+        //verify the user
+        try{
+            const user = await this.userService.validateUser(jwt);
+        }catch(err){
+            throw new UnauthorizedException();
+        }
+        
+        try{
+            const office = await this.officesRepository.findOne({id: officeID});
+            
+            if(office!=null){
+                return office;
+            }
+
+        }catch(err) {
+            throw new BadRequestException("Office does not exist.");
         }
     }
 
