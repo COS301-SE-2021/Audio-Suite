@@ -29,13 +29,30 @@ export class KanbanService {
                 Response: "Success",
                 Card: savedCard
             };
-        }catch{
+        }catch(err){
             throw new BadRequestException("Cannot Create Card.");
         }
 
     }
-    
-    async getAllCards(jwt: string, officeId: string) : Promise<any>{
 
+    async deleteCard(jwt: string, officeID: number, cardID:string) : Promise<any>{
+        //verify the office -> this includes verifying the user.
+        try{
+            const office = this.officeService.getOfficeFromOfficeID(jwt, officeID);
+        }catch(err){
+            throw new UnauthorizedException();
+        }
+
+        try{
+            const card = await this.kanbanRepository.findOne({where: {officeID:officeID, cardID:cardID}});
+            const removedCard = await this.kanbanRepository.remove(card);
+            return{
+                Response: "Success",
+                RemovedCard: removedCard
+            }
+        }
+        catch(err) {
+            throw new HttpException("Could not remove card from list.", 400);
+        }
     }
 }

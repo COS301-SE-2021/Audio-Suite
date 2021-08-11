@@ -16,4 +16,14 @@ export class KanbanController {
     ){
         return await this.kanbanService.createCard(jwt, officeID, listName, cardID, cardMessage);
     }
+
+    //Deleting a card from a list.
+    @Post('kanban/createCard')
+    async deleteCard(
+        @Body('jwt') jwt: string,
+        @Body('officeID')officeID: number,
+        @Body('cardID')cardID: string
+    ){
+        return await this.kanbanService.deleteCard(jwt, officeID, cardID);
+    }
 }
