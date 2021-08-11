@@ -12,7 +12,7 @@ export class Kanban{
     listName: string;
 
     @Column()
-    cardId: string;
+    cardID: string;
 
     @Column()
     cardMessage: string;
