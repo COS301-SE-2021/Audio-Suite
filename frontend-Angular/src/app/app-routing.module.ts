@@ -7,20 +7,22 @@ import { IndexComponent } from "./pages/index/index.component";
 import { RegisterComponent } from "./pages/register/register.component";
 import { LoginComponent } from "./pages/login/login.component";
 import { UserComponent } from "./pages/user/user.component";
+import { AudioComponent } from "./audio/audio.component";
 
 import { ProfilepageComponent } from "./pages/examples/profilepage/profilepage.component";
 import { RegisterpageComponent } from "./pages/examples/registerpage/registerpage.component";
 import { LandingpageComponent } from "./pages/examples/landingpage/landingpage.component";
 
 const routes: Routes = [
-  { path: "", redirectTo: "login", pathMatch: "full" },
+  { path: "", redirectTo: "audioTest", pathMatch: "full" },
   { path: "home", component: IndexComponent },
   { path: "login", component: LoginComponent},
   { path: "register", component: RegisterComponent },
   { path: "user", component: UserComponent },
   { path: "profile", component: ProfilepageComponent },
   { path: "registerExample", component: RegisterpageComponent },
-  { path: "landing", component: LandingpageComponent }
+  { path: "landing", component: LandingpageComponent },
+  { path: "audioTest", component: AudioComponent}
 ];
 
 @NgModule({
