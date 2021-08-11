@@ -18,7 +18,7 @@ export class KanbanController {
     }
 
     //Deleting a card from a list.
-    @Post('kanban/createCard')
+    @Post('kanban/deleteCard')
     async deleteCard(
         @Body('jwt') jwt: string,
         @Body('officeID')officeID: number,
