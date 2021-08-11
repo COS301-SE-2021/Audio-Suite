@@ -17,6 +17,9 @@ import { RoomusersModule } from './roomusers/roomusers.module';
 import { Room } from './room/room.entity';
 import { RoomUsers } from './roomusers/roomusers.entity';
 import { TextChannelsGateway } from './text-channels/text-channels.gateway';
+import { KanbanController } from './kanban/kanban.controller';
+import { KanbanModule } from './kanban/kanban.module';
+import { Kanban } from './kanban/kanban.entity';
 
 @Module({
   imports: [
@@ -30,7 +33,7 @@ import { TextChannelsGateway } from './text-channels/text-channels.gateway';
       username: 'AudioSuiteDev', // TODO change to env var
       password: '4uLrYf49J3W6az', // TODO change to env var
       database: 'AUDIO_SUITE', // TODO change to env var
-      entities: [User, Office, OfficeUsers, Notifications, Room, RoomUsers],
+      entities: [User, Office, OfficeUsers, Notifications, Room, RoomUsers, Kanban],
       synchronize: true,}), // TODO change to false for production
     UserModule, 
     OfficeModule, 
@@ -38,8 +41,8 @@ import { TextChannelsGateway } from './text-channels/text-channels.gateway';
     NotificationModule, 
     MailModule, 
     RoomModule, 
-    RoomusersModule],
-  controllers: [AppController],
+    RoomusersModule, KanbanModule],
+  controllers: [AppController, KanbanController],
   providers: [AppService, TextChannelsGateway],
 })
 export class AppModule {}
