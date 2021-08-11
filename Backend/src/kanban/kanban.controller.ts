@@ -26,4 +26,13 @@ export class KanbanController {
     ){
         return await this.kanbanService.deleteCard(jwt, officeID, cardID);
     }
+
+    //Get all cards in an office,
+    @Post('kanban/getAllCards')
+    async getAllCards(
+        @Body('jwt') jwt: string,
+        @Body('officeID') officeID: number
+    ){
+        return await this.kanbanService.getAllCards(jwt, officeID);
+    }
 }

@@ -55,4 +55,27 @@ export class KanbanService {
             throw new HttpException("Could not remove card from list.", 400);
         }
     }
+
+    async getAllCards(jwt: string, officeID: number) : Promise<any>{
+        //verify the office -> this includes verifying the user.
+        try{
+            const office = this.officeService.getOfficeFromOfficeID(jwt, officeID);
+        }catch(err){
+            throw new UnauthorizedException();
+        }
+
+        try{
+            const cards: Kanban[] = await this.kanbanRepository.find({where:{officeID:officeID}});
+            return {
+                Response: "Success",
+                Cards: cards
+            };
+
+        }catch(err){
+            throw new BadRequestException();
+        }
+    }
+
+    //TODO: getAllCards -> this is office exclusive
+    //Also, include the author of a message in entity so we can make use of it on the frontend.
 }
