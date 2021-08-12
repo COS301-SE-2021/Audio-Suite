@@ -13,14 +13,13 @@ export class AudioComponent {
   @Input() userId: number;
 
   title = 'AgoraDemo';
-  localStream: Stream // Add
-  remoteCalls: any = []; // Add
+  localStream: Stream;
+  remoteCalls: any = [];
   remoteStreams: Stream[] = [];
   remoteMediaStreams = [];
   audioContext = new AudioContext();
   UserID:number;
 
-  // Add
   constructor(
     private agoraService: AngularAgoraRtcService,
     private userService: UserService
@@ -29,16 +28,96 @@ export class AudioComponent {
     console.log("Does it even get here?");
   }
 
-  // Add
-  async startCall() {
+  join(): void{
     console.log(this.userId);
     // this.UserID=this.getUserDetails();
     // console.log(this.UserID);
-    console.log("Called startCall()");
-    await this.agoraService.client.join(null, '1000', this.userId);
+    console.log("Called join()");
+    this.agoraService.client.join(null, '1000', this.userId);
     this.localStream = this.agoraService.createStream(this.userId, true, null, null, false, false);
-    //setTimeout(() => this.subscribeToStreams(), 2000);
-    this.subscribeToStreams();
+    this.assignRemoteHandlers();
+  }
+
+  publish(): void{
+    this.assignLocalHandlers();
+    this.localStream.init(() => {
+      console.log("getUserMedia successfully");
+      console.log(this.localStream.play('agora_local'));
+      this.localStream.play('agora_local');
+      this.agoraService.client.publish(this.localStream, function (err) {
+        console.log("Publish local stream error: " + err);
+      });
+      this.agoraService.client.on('stream-published', function (evt) {
+        console.log("Publish local stream successfully");
+      });
+    }, function (err) {
+      console.log("getUserMedia failed", err);
+    });
+
+  }
+
+  assignLocalHandlers(): void{
+    this.localStream.on("accessAllowed", () => {
+      console.log("accessAllowed");
+    });
+    // The user has denied access to the camera and mic.
+    this.localStream.on("accessDenied", () => {
+      console.log("accessDenied");
+    });
+  }
+
+  assignRemoteHandlers(): void{
+    this.agoraService.client.on('error', (err) => {
+      console.log("Got error msg:", err.reason);
+      if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
+        this.agoraService.client.renewChannelKey("", () => {
+          console.log("Renew channel key successfully");
+        }, (err) => {
+          console.log("Renew channel key failed: ", err);
+        });
+      }
+    });
+
+    this.agoraService.client.on('stream-added', (evt) => {
+      const stream = evt.stream;
+      this.agoraService.client.subscribe(stream, (err) => {
+        console.log("Subscribe stream failed", err);
+      });
+    });
+
+    this.agoraService.client.on('stream-subscribed', (evt) => {
+      const stream = evt.stream as Stream;
+      const tmp = stream as any;
+      const mediaStream = tmp.stream as MediaStream;
+
+      if (!this.remoteCalls.includes(`agora_remote${stream.getId()}`)){
+        this.remoteCalls.push(`agora_remote${stream.getId()}`);
+      }
+
+      console.log("--------- MEDIA STREAM ---------");
+      console.log(mediaStream);
+      this.remoteStreams.push(stream);
+      this.remoteMediaStreams.push(mediaStream);
+      this.mixAudio();
+      console.log(`Remote stream is subscribed ${stream.getId()}`);
+      //setTimeout(() => stream.play(`agora_remote${stream.getId()}`), 2000);
+    });
+
+    this.agoraService.client.on('stream-removed', (evt) => {
+      const stream = evt.stream;
+      //stream.stop();
+      this.remoteCalls = this.remoteCalls.filter(call => call !== `#agora_remote${stream.getId()}`);
+      console.log(`Remote stream is removed ${stream.getId()}`);
+    });
+
+    this.agoraService.client.on('peer-leave', (evt) => {
+      const stream = evt.stream;
+      if (stream) {
+        //stream.stop();
+        this.remoteCalls = this.remoteCalls.filter(call => call === `#agora_remote${stream.getId()}`);
+        console.log(`${evt.uid} left from this channel`);
+      }
+    });
   }
 
   leave() {
@@ -94,88 +173,6 @@ export class AudioComponent {
     // ------------------------------------------------------
   }
   // --------------------------------------------------------------------
-
-  // Add
-  private subscribeToStreams() {
-    this.localStream.on("accessAllowed", () => {
-      console.log("accessAllowed");
-    });
-    // The user has denied access to the camera and mic.
-    this.localStream.on("accessDenied", () => {
-      console.log("accessDenied");
-    });
-
-    this.localStream.init(() => {
-      console.log("getUserMedia successfully");
-      console.log(this.localStream.play('agora_local'));
-      this.localStream.play('agora_local');
-      this.agoraService.client.publish(this.localStream, function (err) {
-        console.log("Publish local stream error: " + err);
-      });
-      this.agoraService.client.on('stream-published', function (evt) {
-        console.log("Publish local stream successfully");
-      });
-    }, function (err) {
-      console.log("getUserMedia failed", err);
-    });
-
-     // Add
-     this.agoraService.client.on('error', (err) => {
-      console.log("Got error msg:", err.reason);
-      if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
-        this.agoraService.client.renewChannelKey("", () => {
-          console.log("Renew channel key successfully");
-        }, (err) => {
-          console.log("Renew channel key failed: ", err);
-        });
-      }
-    });
-
-    // Add
-    this.agoraService.client.on('stream-added', (evt) => {
-      const stream = evt.stream;
-      this.agoraService.client.subscribe(stream, (err) => {
-        console.log("Subscribe stream failed", err);
-      });
-    });
-
-    // Add
-    this.agoraService.client.on('stream-subscribed', (evt) => {
-      const stream = evt.stream as Stream;
-      const tmp = stream as any;
-      const mediaStream = tmp.stream as MediaStream;
-
-      if (!this.remoteCalls.includes(`agora_remote${stream.getId()}`)){
-        this.remoteCalls.push(`agora_remote${stream.getId()}`);
-      }
-
-      console.log("--------- MEDIA STREAM ---------");
-      console.log(mediaStream);
-      this.remoteStreams.push(stream);
-      this.remoteMediaStreams.push(mediaStream);
-      this.mixAudio();
-      console.log(`Remote stream is subscribed ${stream.getId()}`);
-      //setTimeout(() => stream.play(`agora_remote${stream.getId()}`), 2000);
-    });
-
-    // Add
-    this.agoraService.client.on('stream-removed', (evt) => {
-      const stream = evt.stream;
-      //stream.stop();
-      this.remoteCalls = this.remoteCalls.filter(call => call !== `#agora_remote${stream.getId()}`);
-      console.log(`Remote stream is removed ${stream.getId()}`);
-    });
-
-    // Add
-    this.agoraService.client.on('peer-leave', (evt) => {
-      const stream = evt.stream;
-      if (stream) {
-        //stream.stop();
-        this.remoteCalls = this.remoteCalls.filter(call => call === `#agora_remote${stream.getId()}`);
-        console.log(`${evt.uid} left from this channel`);
-      }
-    });
-  }
 
   getUserDetails(): number{
     console.log("hereeeeeeee");

@@ -38,9 +38,12 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(KtdGridComponent, { static: true }) grid: KtdGridComponent;
   scrollContainer: any;
 
-  agoraConfig: AgoraConfig = new AgoraConfig(); 
+  agoraConfig: AgoraConfig = {
+    AppID: '023766436b244044ab85f65470dcbae2',
+  };
+  
   agoraService:AngularAgoraRtcService = new AngularAgoraRtcService(this.agoraConfig);
-  agora = new AudioComponent( this.agoraService, this.userService);
+  audioComponent: AudioComponent;
   
   sidebarOpened: boolean = true;
   showOfficeList: boolean = true;
@@ -233,6 +236,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     var body = document.getElementsByTagName("body")[0];
     body.classList.add("user-page");
+    this.audioComponent = new AudioComponent( this.agoraService, this.userService );
 
     this.getUserOfficeList();
 
@@ -316,6 +320,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         this.selectedOfficeInvite = officeInvite;
         this.officeSelected = true;
         this.textChannelsService.joinRoom(office + "-Text");
+        this.audioComponent.join();
       }
     }
     else{
@@ -324,6 +329,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.selectedOfficeInvite = officeInvite;
       this.officeSelected = true;
       this.textChannelsService.joinRoom(office + "-Text");
+      this.audioComponent.join();
     }
   }
 
@@ -334,12 +340,12 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
   leaveOffice(): void{
     this.textChannelsService.leaveRoom(this.selectedOffice + "-Text");
-
     this.selectedOffice = '';
     this.selectedOfficeID = '';
     this.selectedOfficeInvite = '';
     this.officeSelected = false;
     this.officeTextChannelMessages = [];
+    this.audioComponent.leave();
   }
 
   selectRoom(id: string, leaveRoom: boolean): void{
@@ -358,14 +364,14 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
           this.roomSelected = true;
           this.selectedRoom = id;
           this.textChannelsService.joinRoom(id + "-Text");
-          this.agora.startCall();
+          this.audioComponent.publish();
         }
       }
       else{
         this.roomSelected = true;
         this.selectedRoom = id;
         this.textChannelsService.joinRoom(id + "-Text");
-        this.agora.startCall();
+        this.audioComponent.publish();
       }
     }
   }
