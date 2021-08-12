@@ -6,8 +6,8 @@ import { debounceTime, filter } from 'rxjs/operators';
 import { OfficeRoomService } from 'src/app/services/office-room.service';
 import { TextChannelsService } from 'src/app/services/text-channels.service';
 import { UserService } from 'src/app/services/user.service';
-import { CardStore } from '../CardStore';
-import { ListSchema } from '../ListSchema';
+import { CardStore } from '../cardstore';
+import { ListSchema } from '../listschema';
 
 interface Office{
   id: string,

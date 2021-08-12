@@ -10,6 +10,9 @@ export class AudioComponent {
   title = 'AgoraDemo';
   localStream: Stream // Add
   remoteCalls: any = []; // Add
+  remoteStreams: Stream[] = [];
+  remoteMediaStreams = [];
+  audioContext = new AudioContext();
 
   // Add
   constructor(
@@ -34,6 +37,52 @@ export class AudioComponent {
       console.log("Leave channel failed");
     });
   }
+
+  // -------------- HANDLE REMOTE STREAMS AND OUTPUT AUDIO --------------
+  mixAudio(): void {
+    // Remote stream audio settings
+    let volume = 25; 
+    let pannerX = 0;
+    let pannerY = 0;
+    let pannerZ = 0;
+    console.log("------------------------ MIX AUDIO ------------------------");
+    console.log("REMOTE STREAMS: ");
+    console.log(this.remoteMediaStreams);
+    // --------- Loop through remote audio streams ----------
+    this.remoteMediaStreams.forEach( (stream) => {
+      // ---------- Work Around for Chrome Bugs -----------
+      var audioStreamTrack = stream;
+      let a = new Audio();
+      a.muted = true;
+      a.srcObject = audioStreamTrack;
+      a.addEventListener('canplaythrough', () => {
+        a = null;
+      });
+      // --------------------------------------------------
+      console.log("STREAM LOOP: "+stream);
+      // ------- Play Audio Stream in audioContext --------
+      // Create AudioNodes in AudioContext
+      let audioStream = this.audioContext.createMediaStreamSource(audioStreamTrack);
+      let volumeControl = this.audioContext.createGain();
+      let panner = this.audioContext.createPanner();
+      let compressor = this.audioContext.createDynamicsCompressor();
+
+      // Connect AudioNodes in Sequence (RemoteMediaStream -> VolumeController -> Panner -> Compressor -> Destination(Output))
+      audioStream.connect(volumeControl);
+      volumeControl.connect(panner);
+      panner.connect(compressor);
+      compressor.connect(this.audioContext.destination);
+
+      // Configure AudioNodes
+      volumeControl.gain.setValueAtTime( volume, this.audioContext.currentTime );
+      panner.positionX.setValueAtTime( pannerX, this.audioContext.currentTime );
+      panner.positionY.setValueAtTime( pannerY, this.audioContext.currentTime );
+      panner.positionZ.setValueAtTime( pannerZ, this.audioContext.currentTime );
+      // --------------------------------------------------
+    });
+    // ------------------------------------------------------
+  }
+  // --------------------------------------------------------------------
 
   // Add
   private subscribeToStreams() {
@@ -80,15 +129,27 @@ export class AudioComponent {
 
     // Add
     this.agoraService.client.on('stream-subscribed', (evt) => {
-      const stream = evt.stream;
-      if (!this.remoteCalls.includes(`agora_remote${stream.getId()}`)) this.remoteCalls.push(`agora_remote${stream.getId()}`);
-      setTimeout(() => stream.play(`agora_remote${stream.getId()}`), 2000);
+      const stream = evt.stream as Stream;
+      const tmp = stream as any;
+      const mediaStream = tmp.stream as MediaStream;
+
+      if (!this.remoteCalls.includes(`agora_remote${stream.getId()}`)){
+        this.remoteCalls.push(`agora_remote${stream.getId()}`);
+      }
+
+      console.log("--------- MEDIA STREAM ---------");
+      console.log(mediaStream);
+      this.remoteStreams.push(stream);
+      this.remoteMediaStreams.push(mediaStream);
+      this.mixAudio();
+      console.log(`Remote stream is subscribed ${stream.getId()}`);
+      //setTimeout(() => stream.play(`agora_remote${stream.getId()}`), 2000);
     });
 
     // Add
     this.agoraService.client.on('stream-removed', (evt) => {
       const stream = evt.stream;
-      stream.stop();
+      //stream.stop();
       this.remoteCalls = this.remoteCalls.filter(call => call !== `#agora_remote${stream.getId()}`);
       console.log(`Remote stream is removed ${stream.getId()}`);
     });
@@ -97,7 +158,7 @@ export class AudioComponent {
     this.agoraService.client.on('peer-leave', (evt) => {
       const stream = evt.stream;
       if (stream) {
-        stream.stop();
+        //stream.stop();
         this.remoteCalls = this.remoteCalls.filter(call => call === `#agora_remote${stream.getId()}`);
         console.log(`${evt.uid} left from this channel`);
       }
