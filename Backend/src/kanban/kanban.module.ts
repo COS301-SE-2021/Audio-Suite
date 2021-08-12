@@ -7,6 +7,7 @@ import { KanbanService } from './kanban.service';
 import { UserService } from 'src/user/user.service';
 import { User } from 'src/user/user.entity';
 import { Office } from 'src/office/office.entity';
+import { OfficeService } from 'src/office/office.service';
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import { Office } from 'src/office/office.entity';
     })
   ],
   controllers: [KanbanController],
-  providers: [KanbanService, UserService]
+  providers: [Kanban, KanbanService, UserService, OfficeService]
 })
 export class KanbanModule {}

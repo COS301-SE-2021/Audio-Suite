@@ -90,6 +90,8 @@ export class OfficeService {
             
             if(office!=null){
                 return office;
+            }else{
+                throw new BadRequestException();
             }
 
         }catch(err) {
