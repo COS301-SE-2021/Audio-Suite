@@ -590,4 +590,12 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.resizeSubscription.unsubscribe();
   }
+
+  //Account Settings Functionality
+
+  gotoAccountSettings(): void{
+    window.location.replace("http://www.w3schools.com");
+  }
+
+
 }
