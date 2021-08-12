@@ -182,6 +182,9 @@
         <div class="square square-7" id="square7"></div>
         <div class="square square-8" id="square8"></div>
     </div>
+                <div id="agora_local">
+                    here
+                </div>
 
 
     <div *ngIf="officeSelected">
@@ -219,13 +222,15 @@
                                             <button (click)="selectRoom(item.id, false)" class="grid-item-button">
                                                 <b>Enter Room:</b><br> {{ item.id }}
                                             </button>
+                                            <app-audio #joinAudio [userId]="userID"></app-audio>
                                         </div>
                                     </ng-template>
                                     <ng-template #leaveRoom>
                                         <div class="grid-item-content">
-                                            <button (click)="selectRoom(item.id, true)" class="grid-item-button">
+                                            <button (click)="selectRoom(item.id, true); leaveAudio.leave()" class="grid-item-button">
                                                 <b>Leave Room:</b><br> {{ item.id }}
                                             </button>
+                                            <app-audio #leaveAudio></app-audio>
                                         </div>
                                     </ng-template>
                                 </ng-template>
