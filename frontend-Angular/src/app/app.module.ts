@@ -27,6 +27,7 @@ import { ProfilepageComponent } from "./pages/examples/profilepage/profilepage.c
 import { RegisterpageComponent } from "./pages/examples/registerpage/registerpage.component";
 import { LandingpageComponent } from "./pages/examples/landingpage/landingpage.component";
 import { AudioComponent } from './audio/audio.component';
+import { UserComponent } from "./pages/user/user.component";
 
 const config: SocketIoConfig = { url: 'http://localhost:3001/serversocket', options: {} };
 
@@ -39,7 +40,7 @@ const agoraConfig: AgoraConfig = {
 @NgModule({
   declarations: [
     AppComponent,
-    AudioComponent,
+    //AudioComponent,
     //FormModalComponent
     // IndexComponent,
     // ProfilepageComponent,
@@ -64,8 +65,9 @@ const agoraConfig: AgoraConfig = {
     // BsDatepickerModule.forRoot(),
     // CarouselModule.forRoot(),
     // ModalModule.forRoot()
-    BrowserModule,
-    AngularAgoraRtcModule.forRoot(agoraConfig)
+    ////////////////////////////////////////////////////////////////////////
+    //BrowserModule,
+    //AngularAgoraRtcModule.forRoot(agoraConfig)
   ],
   providers: [],
   bootstrap: [AppComponent]
