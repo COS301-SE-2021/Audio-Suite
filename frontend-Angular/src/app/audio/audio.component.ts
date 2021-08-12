@@ -1,33 +1,44 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { AngularAgoraRtcService, Stream } from 'angular-agora-rtc';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-audio',
   templateUrl: './audio.component.html',
+  //templateUrl: '../pages/user/user.component.html',
   styleUrls: ['./audio.component.scss']
 })
 export class AudioComponent {
+
+  @Input() userId: number;
+
   title = 'AgoraDemo';
   localStream: Stream // Add
   remoteCalls: any = []; // Add
   remoteStreams: Stream[] = [];
   remoteMediaStreams = [];
   audioContext = new AudioContext();
+  UserID:number;
 
   // Add
   constructor(
-    private agoraService: AngularAgoraRtcService
+    private agoraService: AngularAgoraRtcService,
+    private userService: UserService
   ) {
-    this.agoraService.createClient();
+    this.agoraService.createClient('rtc');
+    console.log("Does it even get here?");
   }
 
   // Add
-  startCall() {
-    this.agoraService.client.join('0067afb53157f754f6f8023f31fb343404aIAABnQ2Ii89dpjFZFh7JUfSJE85IdCa76Ocww3NQt8gZ83MnRr0AAAAAEADVf7iLFzQVYQEAAQAWNBVh', 'TestOffice', null, (uid) => {
-      this.localStream = this.agoraService.createStream(uid, true, null, null, false, false);
-      this.localStream.setVideoProfile('720p_3');
-      this.subscribeToStreams();
-    });
+  async startCall() {
+    console.log(this.userId);
+    // this.UserID=this.getUserDetails();
+    // console.log(this.UserID);
+    console.log("Called startCall()");
+    await this.agoraService.client.join(null, '1000', this.userId);
+    this.localStream = this.agoraService.createStream(this.userId, true, null, null, false, false);
+    //setTimeout(() => this.subscribeToStreams(), 2000);
+    this.subscribeToStreams();
   }
 
   leave() {
@@ -96,6 +107,7 @@ export class AudioComponent {
 
     this.localStream.init(() => {
       console.log("getUserMedia successfully");
+      console.log(this.localStream.play('agora_local'));
       this.localStream.play('agora_local');
       this.agoraService.client.publish(this.localStream, function (err) {
         console.log("Publish local stream error: " + err);
@@ -163,5 +175,21 @@ export class AudioComponent {
         console.log(`${evt.uid} left from this channel`);
       }
     });
+  }
+
+  getUserDetails(): number{
+    console.log("hereeeeeeee");
+    var userID:number;
+    var jwt = sessionStorage.getItem('jwt');
+    this.userService.getUserDetails(jwt).subscribe((response) => {
+      userID = response.id;
+      console.log(userID);
+    },
+    (error) => {
+      console.log(error);
+    })
+    console.log("second");
+    console.log(userID);
+    return userID;
   }
 }
