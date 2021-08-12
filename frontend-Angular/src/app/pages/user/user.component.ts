@@ -8,6 +8,8 @@ import { TextChannelsService } from 'src/app/services/text-channels.service';
 import { UserService } from 'src/app/services/user.service';
 import { CardStore } from '../cardstore';
 import { ListSchema } from '../listschema';
+import { AudioComponent } from 'src/app/audio/audio.component';
+import { AngularAgoraRtcService, Stream, AgoraConfig } from 'angular-agora-rtc';
 
 interface Office{
   id: string,
@@ -29,10 +31,16 @@ interface textMessage{
 
 export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  parentMessage = "message from parent"
+
   @ViewChild('scrollframe', {static: false}) scrollFrame: ElementRef;
   @ViewChildren('messageitem') itemElements: QueryList<any>;
   @ViewChild(KtdGridComponent, { static: true }) grid: KtdGridComponent;
   scrollContainer: any;
+
+  agoraConfig: AgoraConfig = new AgoraConfig(); 
+  agoraService:AngularAgoraRtcService = new AngularAgoraRtcService(this.agoraConfig);
+  agora = new AudioComponent( this.agoraService, this.userService);
   
   sidebarOpened: boolean = true;
   showOfficeList: boolean = true;
@@ -256,6 +264,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(() => {
         this.grid.resize();
       });
+
   }
 
   ngAfterViewInit(): void {
@@ -334,6 +343,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   selectRoom(id: string, leaveRoom: boolean): void{
+  
     if(leaveRoom){
       this.textChannelsService.leaveRoom(id + "-Text");
       this.roomSelected = false;
@@ -341,18 +351,21 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.roomTextChannelMessages = [];
     }
     else{
+
       if(this.roomSelected){
         if(this.selectedRoom != id){
           this.leaveRoom();
           this.roomSelected = true;
           this.selectedRoom = id;
           this.textChannelsService.joinRoom(id + "-Text");
+          this.agora.startCall();
         }
       }
       else{
         this.roomSelected = true;
         this.selectedRoom = id;
         this.textChannelsService.joinRoom(id + "-Text");
+        this.agora.startCall();
       }
     }
   }
