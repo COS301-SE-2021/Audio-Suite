@@ -1,24 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
+
 using Photon.Pun;
 
-public class MouseMovement : MonoBehaviour
+public class MouseMovement : MonoBehaviourPunCallbacks
 {
-
     public float mouseSens = 100f;
 
     public Transform playerBody;
 
     float xRotation = 0f;
 
-    private PhotonView photonView;
-
     // Start is called before the first frame update
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        photonView = GetComponent<PhotonView>();
     }
 
     // Update is called once per frame

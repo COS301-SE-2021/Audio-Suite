@@ -31,7 +31,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// </summary>
     void Update()
     {
-        Connect();
+        //Connect();
     }
 
     /// <summary>
@@ -68,6 +68,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (isConnected)
         {            
             PhotonNetwork.JoinOrCreateRoom("placeHolder", new RoomOptions { MaxPlayers = 10 }, TypedLobby.Default);
+            isConnected = false;
         }
     }
 
@@ -93,11 +94,18 @@ public class Launcher : MonoBehaviourPunCallbacks
     }
 
     /// <summary>
-    /// When the user joins a room 
+    /// When the user joins a room load the first level
     /// </summary>
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
         Debug.Log("Joined the room");
+
+        // If we are the first people in the room load the level for that room
+        if(PhotonNetwork.CurrentRoom.PlayerCount == 1)
+        {
+            Debug.Log("Loading Small Office");
+            PhotonNetwork.LoadLevel("OfficeSmall");
+        }
     }
 }
