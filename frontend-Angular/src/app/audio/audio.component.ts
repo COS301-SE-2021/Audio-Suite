@@ -11,8 +11,8 @@ export class AudioComponent {
   localStream: Stream // Add
   remoteCalls: any = []; // Add
   remoteStreams: Stream[] = [];
-  remoteMediaStreams = [];
-  audioContext = new AudioContext();
+  remoteMediaStreams: MediaStream[] = [];
+  audioContext: AudioContext = new AudioContext();
 
   // Add
   constructor(
@@ -39,9 +39,10 @@ export class AudioComponent {
   }
 
   // -------------- HANDLE REMOTE STREAMS AND OUTPUT AUDIO --------------
+  // NOTE: This Web Audio API does NOT seem to work consistently on CHROME.
   mixAudio(): void {
     // Remote stream audio settings
-    let volume = 25; 
+    let volume = 1.0; 
     let pannerX = 0;
     let pannerY = 0;
     let pannerZ = 0;
@@ -50,35 +51,29 @@ export class AudioComponent {
     console.log(this.remoteMediaStreams);
     // --------- Loop through remote audio streams ----------
     this.remoteMediaStreams.forEach( (stream) => {
-      // ---------- Work Around for Chrome Bugs -----------
-      var audioStreamTrack = stream;
-      let a = new Audio();
-      a.muted = true;
-      a.srcObject = audioStreamTrack;
-      a.addEventListener('canplaythrough', () => {
-        a = null;
-      });
-      // --------------------------------------------------
+      var track = stream.getAudioTracks()[0];
+      var audioMediaStream = new MediaStream([track]);
+      
       console.log("STREAM LOOP: "+stream);
       // ------- Play Audio Stream in audioContext --------
       // Create AudioNodes in AudioContext
-      let audioStream = this.audioContext.createMediaStreamSource(audioStreamTrack);
+      let audioStream = this.audioContext.createMediaStreamSource(audioMediaStream);
       let volumeControl = this.audioContext.createGain();
       let panner = this.audioContext.createPanner();
       let compressor = this.audioContext.createDynamicsCompressor();
 
       // Connect AudioNodes in Sequence (RemoteMediaStream -> VolumeController -> Panner -> Compressor -> Destination(Output))
-      audioStream.connect(volumeControl);
+      audioStream.connect(this.audioContext.destination);
       volumeControl.connect(panner);
       panner.connect(compressor);
       compressor.connect(this.audioContext.destination);
-
+      
       // Configure AudioNodes
       volumeControl.gain.setValueAtTime( volume, this.audioContext.currentTime );
       panner.positionX.setValueAtTime( pannerX, this.audioContext.currentTime );
       panner.positionY.setValueAtTime( pannerY, this.audioContext.currentTime );
       panner.positionZ.setValueAtTime( pannerZ, this.audioContext.currentTime );
-      // --------------------------------------------------
+      
     });
     // ------------------------------------------------------
   }
