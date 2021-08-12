@@ -120,7 +120,8 @@ export class AudioComponent {
     });
   }
 
-  leave() {
+  leave(): void {
+    this.agoraService.client.unpublish(this.localStream);
     this.agoraService.client.leave(() => {
       console.log("Leavel channel successfully");
     }, (err) => {
