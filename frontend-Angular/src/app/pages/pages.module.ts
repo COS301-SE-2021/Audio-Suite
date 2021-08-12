@@ -17,6 +17,7 @@ import { ModalModule } from "ngx-bootstrap/modal";
 import { JwBootstrapSwitchNg2Module } from "jw-bootstrap-switch-ng2";
 import { PopoverModule } from "ngx-bootstrap/popover";
 import { KtdGridModule } from '@katoid/angular-grid-layout';
+import { AngularAgoraRtcModule, AgoraConfig } from 'angular-agora-rtc';
 
 import { IndexComponent } from "./index/index.component";
 import { ProfilepageComponent } from "./examples/profilepage/profilepage.component";
@@ -28,6 +29,13 @@ import { FormModalComponent } from './components/form-modal/form-modal.component
 import { UserComponent } from './user/user.component';
 import { ListComponent } from './list/list.component';
 import { CardComponent } from './card/card.component';
+import { AudioComponent } from "../audio/audio.component";
+
+const agoraConfig: AgoraConfig = {
+  AppID: '023766436b244044ab85f65470dcbae2',
+};
+//023766436b244044ab85f65470dcbae2
+//7afb53157f754f6f8023f31fb343404a
 
 @NgModule({
   imports: [
@@ -47,7 +55,8 @@ import { CardComponent } from './card/card.component';
     AlertModule.forRoot(),
     BsDatepickerModule.forRoot(),
     CarouselModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    AngularAgoraRtcModule.forRoot(agoraConfig)
   ],
   declarations: [
     IndexComponent,
@@ -59,7 +68,8 @@ import { CardComponent } from './card/card.component';
     FormModalComponent,
     UserComponent,
     ListComponent,
-    CardComponent
+    CardComponent,
+    AudioComponent
   ],
   exports: [
     IndexComponent,
