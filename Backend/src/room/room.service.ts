@@ -38,6 +38,16 @@ export class RoomService {
 
     async registerRoomAuth(officeID: number, roomName: string, xCoordinate: number, yCoordinate: number, width: number, height: number): Promise<any> {
         try{
+            const roomExists = await this.roomRepository.find({officeID, roomName});
+            if(roomExists.length > 0){
+                throw new BadRequestException("Room already exists in this office.");
+            }
+        }
+        catch(err){
+            throw new BadRequestException("Room already exists in this office.");
+        }
+        
+        try{
             const room = await this.roomRepository.create({officeID, roomName, xCoordinate, yCoordinate, width, height});
             const savedRoom = await this.roomRepository.save(room);
             return {
@@ -59,6 +69,16 @@ export class RoomService {
         }
         catch(err){
             throw new UnauthorizedException();
+        }
+
+        try{
+            const roomExists = await this.roomRepository.find({officeID, roomName});
+            if(roomExists.length > 0){
+                throw new BadRequestException("Room already exists in this office.");
+            }
+        }
+        catch(err){
+            throw new BadRequestException("Room already exists in this office.");
         }
 
         try{
