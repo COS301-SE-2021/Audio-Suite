@@ -398,7 +398,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7187667321348659397, guid: 54a1d0c6a36c59f4e82ca864177b5db9, type: 3}
       propertyPath: photonMicrophoneDeviceId
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 7187667321348659397, guid: 54a1d0c6a36c59f4e82ca864177b5db9, type: 3}
       propertyPath: useMicrophoneTypeFallback

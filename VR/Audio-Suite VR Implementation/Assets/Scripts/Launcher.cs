@@ -5,12 +5,21 @@ using UnityEngine;
 
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.UI;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
-    // Variables
+    /// <summary>
+    /// The game version 
+    /// </summary>
     private string gameVersion = "1";
+
+    /// <summary>
+    /// Flag to stop from reconnecting to the room just left.
+    /// </summary>
     private bool isConnected;
+
+    [SerializeField] InputField roomCode;
 
     // Method called before start
     void Awake()
@@ -23,15 +32,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// </summary>
     void Start()
     {
-        Connect();
-    }
 
-    /// <summary>
-    /// Serve as a reconnect function if the user suddently drops or gets disconnected
-    /// </summary>
-    void Update()
-    {
-        //Connect();
     }
 
     /// <summary>
@@ -39,14 +40,16 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// 
     /// TODO:
     /// Add allowed clients restraint
+    /// Check the code given to confirm it is a valid code
     /// </summary>
-    private void Connect()
+    public void Connect()
     {
+        Debug.Log(roomCode.text);
         // Check if we need to connect to the network
         if (isConnected)
         {
             // Create or join the room
-            PhotonNetwork.JoinOrCreateRoom("placeHolder", new RoomOptions{MaxPlayers = 10}, TypedLobby.Default);
+            PhotonNetwork.JoinOrCreateRoom(roomCode.text, new RoomOptions { MaxPlayers = 10 }, TypedLobby.Default);
         }
         else
         {
@@ -54,6 +57,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             isConnected = PhotonNetwork.ConnectUsingSettings();
             PhotonNetwork.GameVersion = gameVersion;
         }
+        
     }
 
     /// <summary>

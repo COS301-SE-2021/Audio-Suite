@@ -19,7 +19,10 @@ public class UserMovement : MonoBehaviourPunCallbacks
     /// </summary>
     public float speed = 12f;
 
-    [SerializeField] Camera camera;
+    /// <summary>
+    /// The camera of the user, it will be turned off during spawning.
+    /// </summary>
+    [SerializeField] new Camera camera;
 
     #endregion
 
@@ -27,6 +30,7 @@ public class UserMovement : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        // Turn off the camera of all presets that aren't ours
         if (!photonView.IsMine)
         {
             camera.enabled = false;

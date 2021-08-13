@@ -7,19 +7,32 @@ using Photon.Pun;
 
 public class MouseMovement : MonoBehaviourPunCallbacks
 {
+    /// <summary>
+    /// The mouse sense of the user 
+    /// </summary>
     public float mouseSens = 100f;
 
+    /// <summary>
+    /// The player body to be transformed when looking around
+    /// </summary>
     public Transform playerBody;
 
+    /// <summary>
+    /// The rotation of the camera
+    /// </summary>
     float xRotation = 0f;
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Lock the cursor on start.
+    /// </summary>
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Check each frame for mouse movements and move the camera
+    /// </summary>
     void Update()
     {
         if (photonView.IsMine)
