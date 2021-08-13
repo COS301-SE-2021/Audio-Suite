@@ -16,9 +16,10 @@ import { RoomModule } from './room/room.module';
 import { RoomusersModule } from './roomusers/roomusers.module';
 import { Room } from './room/room.entity';
 import { RoomUsers } from './roomusers/roomusers.entity';
-import { TextChannelsGateway } from './text-channels/text-channels.gateway';
+// import { TextChannelsGateway } from './text-channels/text-channels.gateway';
 import { KanbanModule } from './kanban/kanban.module';
 import { Kanban } from './kanban/kanban.entity';
+import { ServerSocketGateway } from './gateway/server-socket.gateway';
 
 @Module({
   imports: [
@@ -43,6 +44,6 @@ import { Kanban } from './kanban/kanban.entity';
     RoomusersModule, 
     KanbanModule],
   controllers: [AppController],
-  providers: [AppService, TextChannelsGateway],
+  providers: [AppService, ServerSocketGateway],
 })
 export class AppModule {}

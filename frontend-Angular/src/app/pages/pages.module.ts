@@ -16,6 +16,7 @@ import { CarouselModule } from "ngx-bootstrap/carousel";
 import { ModalModule } from "ngx-bootstrap/modal";
 import { JwBootstrapSwitchNg2Module } from "jw-bootstrap-switch-ng2";
 import { PopoverModule } from "ngx-bootstrap/popover";
+import { KtdGridModule } from '@katoid/angular-grid-layout';
 
 import { IndexComponent } from "./index/index.component";
 import { ProfilepageComponent } from "./examples/profilepage/profilepage.component";
@@ -34,6 +35,7 @@ import { CardComponent } from './card/card.component';
     BrowserModule,
     FormsModule,
     RouterModule,
+    KtdGridModule,
     BsDropdownModule.forRoot(),
     ProgressbarModule.forRoot(),
     TooltipModule.forRoot(),

@@ -25,7 +25,8 @@ export class UserService {
       emailAddress: email,
       userName: userName
     }
-    return this.http.post<any>('http://localhost:3001/api/notifications/sendVerification', body, httpOptions);
+    var sendOTPVerificationEmailURL = baseUrl + '/api/notifications/sendVerification';
+    return this.http.post<any>(sendOTPVerificationEmailURL, body, httpOptions);
   }
 
   registerUser(
@@ -42,7 +43,8 @@ export class UserService {
       email: emailAddress,
       password: password
     }
-    return this.http.post('http://localhost:3001/api/register', body, httpOptions);
+    var registerUserURL = baseUrl + '/api/register';
+    return this.http.post<any>(registerUserURL, body, httpOptions);
   }
 
   logUserIn(

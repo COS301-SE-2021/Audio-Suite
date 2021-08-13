@@ -32,7 +32,21 @@ export class RoomService {
         }
     }
 
-    async registerRoom(jwt: string, officeID: number, roomName: string): Promise<any> {
+    async registerRoomAuth(officeID: number, roomName: string, xCoordinate: number, yCoordinate: number, width: number, height: number): Promise<any> {
+        try{
+            const room = await this.roomRepository.create({officeID, roomName, xCoordinate, yCoordinate, width, height});
+            const savedRoom = await this.roomRepository.save(room);
+            return {
+                Response: "Success",
+                Room: savedRoom
+            };
+        }
+        catch(err){
+            throw new BadRequestException();
+        }
+    }
+
+    async registerRoom(jwt: string, officeID: number, roomName: string, xCoordinate: number, yCoordinate: number, width: number, height: number): Promise<any> {
         try{
             const user = await this.userService.validateUser(jwt);
             if(user == null){
@@ -44,7 +58,31 @@ export class RoomService {
         }
 
         try{
-            const room = await this.roomRepository.create({officeID, roomName});
+            const room = await this.roomRepository.create({officeID, roomName, xCoordinate, yCoordinate, width, height});
+            const savedRoom = await this.roomRepository.save(room);
+            return {
+                Response: "Success",
+                Room: savedRoom
+            };
+        }
+        catch(err){
+            throw new BadRequestException();
+        }
+    }
+
+    async updateRoomDetails(jwt: string, roomID: number, officeID: number, roomName: string, xCoordinate: number, yCoordinate: number, width: number, height: number): Promise<any> {
+        try{
+            const user = await this.userService.validateUser(jwt);
+            if(user == null){
+                throw new UnauthorizedException();
+            }
+        }
+        catch(err){
+            throw new UnauthorizedException();
+        }
+
+        try{
+            const room = await this.roomRepository.create({id: roomID, officeID, roomName, xCoordinate, yCoordinate, width, height});
             const savedRoom = await this.roomRepository.save(room);
             return {
                 Response: "Success",
