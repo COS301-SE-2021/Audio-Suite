@@ -353,12 +353,14 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.roomSelected = false;
       this.selectedRoom = '';
       this.roomTextChannelMessages = [];
+      this.audioComponent.leave();
     }
     else{
 
       if(this.roomSelected){
         if(this.selectedRoom != id){
           this.leaveRoom();
+          this.audioComponent.leave();
           this.roomSelected = true;
           this.selectedRoom = id;
           this.textChannelsService.joinRoom(id + "-Text");
