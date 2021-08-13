@@ -17,6 +17,11 @@ export class OfficeRoomService {
 
   constructor(private http: HttpClient) { }
 
+  //-------------------------------------------------------------------------------------------------------------
+  //                                             Office Functions
+  //-------------------------------------------------------------------------------------------------------------
+
+
   registerOffice(
     jwt: string,
     officeName: string
