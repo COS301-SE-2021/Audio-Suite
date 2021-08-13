@@ -239,6 +239,11 @@
                         </ktd-grid-item>
                     </ktd-grid>
                 </div>
+                <div *ngIf="!disableDrag" class="addRoomContainer">
+                    <button id="showAddRoomModalBtn" (click)="showAddRoomModal()">
+                        +
+                    </button>
+                </div>
             </div>
         </tab>
         <tab>
