@@ -362,14 +362,14 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
           this.roomSelected = true;
           this.selectedRoom = id;
           this.textChannelsService.joinRoom(id + "-Text");
-          this.audioComponent.join();
+          this.audioComponent.join(this.userID);
         }
       }
       else{
         this.roomSelected = true;
         this.selectedRoom = id;
         this.textChannelsService.joinRoom(id + "-Text");
-        this.audioComponent.join();
+        this.audioComponent.join(this.userID);
       }
     }
   }
