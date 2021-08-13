@@ -14,7 +14,7 @@ import { RegisterpageComponent } from "./pages/examples/registerpage/registerpag
 import { LandingpageComponent } from "./pages/examples/landingpage/landingpage.component";
 
 const routes: Routes = [
-  { path: "", redirectTo: "user", pathMatch: "full" },
+  { path: "", redirectTo: "login", pathMatch: "full" },
   { path: "home", component: IndexComponent },
   { path: "login", component: LoginComponent},
   { path: "register", component: RegisterComponent },
