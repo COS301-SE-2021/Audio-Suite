@@ -42,9 +42,11 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   roomSelected: boolean = false;
   sendNewOfficeAlert: boolean = false;
   sendJoinOfficeAlert: boolean = false;
-  sendOfficeInviteAlert: boolean = false;
+  sendFormModalAlert: boolean = false;
   officeListLoaded: boolean = false;
+  displayFormModal: boolean = false;
   showInviteModal: boolean = false;
+  showAddRoomModal: boolean = false;
   focus6: boolean = false;
   focus7: boolean = false;
 
@@ -58,7 +60,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   newMessageInput: string = '';
   newOfficeAlertMsg: string = '';
   joinOfficeAlertMsg: string = '';
-  officeInviteAlertMsg: string = '';
+  formModalAlertMsg: string = '';
 
   userID: string = '';
   userFirstName: string = '';
@@ -68,6 +70,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
   sendInviteToEmail: string = '';
   sendInviteToName: string = '';
+  newRoomName: string = '';
 
   officeList: Office[] = [];
 
@@ -221,6 +224,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     var body = document.getElementsByTagName("body")[0];
     body.classList.add("user-page");
 
+    this.getUserDetails();
     this.getUserOfficeList();
 
     this.textChannelsService.listen("joinedRoomText").subscribe(data => {
@@ -235,8 +239,6 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       console.log("Message to client: ", data);
       this.receivedMessage(data);
     }) 
-
-    this.getUserDetails();
 
     this.setMockData();
 
@@ -404,6 +406,10 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     this.roomTextChannelMessages = [];
   }
 
+  addRoom(): void{
+    console.log("add room: " + this.newRoomName)
+  }
+
   removeRoom(id: string): void{
     console.log("remove room: ", id)
     var jwt = sessionStorage.getItem('jwt');
@@ -558,13 +564,21 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   showSendInviteModal(): void{
+    this.displayFormModal = true;
     this.showInviteModal = true;
   }
 
-  hideSendInviteModal(): void{
+  showAddModal(): void{
+    this.displayFormModal = true;
+    this.showAddRoomModal = true;
+  }
+
+  hideDisplayFormModal(): void{
     this.showInviteModal = false;
-    this.officeInviteAlertMsg = "";
-    this.sendOfficeInviteAlert = false;
+    this.showAddRoomModal = false;
+    this.displayFormModal = false;
+    this.formModalAlertMsg = "";
+    this.sendFormModalAlert = false;
   }
 
   sendOfficeInvite(): void{
@@ -572,14 +586,14 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       console.log(response)
       if(response.Response == "Success"){
         console.log('invite sent')
-        this.officeInviteAlertMsg = "Invite send Successfully.";
-        this.sendOfficeInviteAlert = true;
+        this.formModalAlertMsg = "Invite send Successfully.";
+        this.sendFormModalAlert = true;
       }
     },
     (error) => {
       console.log(error);
-      this.officeInviteAlertMsg = "Error - Office Invite could not be sent. Please try again.";
-        this.sendOfficeInviteAlert = true;
+      this.formModalAlertMsg = "Error - Office Invite could not be sent. Please try again.";
+        this.sendFormModalAlert = true;
     })
 
     this.sendInviteToEmail = '';

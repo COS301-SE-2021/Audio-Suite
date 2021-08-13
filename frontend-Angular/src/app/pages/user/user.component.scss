@@ -195,9 +195,10 @@
     }
 
     .addRoomContainer{
+        display: flex;
 
         #showAddRoomModalBtn{
-            border-radius: 360;
+            justify-content: left;
         }
     }
 }
