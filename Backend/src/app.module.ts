@@ -17,6 +17,10 @@ import { RoomusersModule } from './roomusers/roomusers.module';
 import { Room } from './room/room.entity';
 import { RoomUsers } from './roomusers/roomusers.entity';
 import { ServerSocketGateway } from './gateway/server-socket.gateway';
+import { RoomUsersService } from './roomusers/roomusers.service';
+import { MessageModule } from './message/message.module';
+import { GatewayModule } from './gateway/gateway.module';
+import { Message } from './message/message.entity';
 
 @Module({
   imports: [
@@ -30,7 +34,7 @@ import { ServerSocketGateway } from './gateway/server-socket.gateway';
       username: 'AudioSuiteDev', // TODO change to env var
       password: '4uLrYf49J3W6az', // TODO change to env var
       database: 'AUDIO_SUITE', // TODO change to env var
-      entities: [User, Office, OfficeUsers, Notifications, Room, RoomUsers],
+      entities: [User, Office, OfficeUsers, Notifications, Room, RoomUsers, Message],
       synchronize: true,}), // TODO change to false for production
     UserModule, 
     OfficeModule, 
@@ -38,8 +42,10 @@ import { ServerSocketGateway } from './gateway/server-socket.gateway';
     NotificationModule, 
     MailModule, 
     RoomModule, 
-    RoomusersModule],
+    RoomusersModule, 
+    MessageModule,
+    GatewayModule],
   controllers: [AppController],
-  providers: [AppService, ServerSocketGateway],
+  providers: [AppService],
 })
 export class AppModule {}
