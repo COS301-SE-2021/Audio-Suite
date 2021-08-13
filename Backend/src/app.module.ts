@@ -17,7 +17,6 @@ import { RoomusersModule } from './roomusers/roomusers.module';
 import { Room } from './room/room.entity';
 import { RoomUsers } from './roomusers/roomusers.entity';
 import { TextChannelsGateway } from './text-channels/text-channels.gateway';
-import { KanbanController } from './kanban/kanban.controller';
 import { KanbanModule } from './kanban/kanban.module';
 import { Kanban } from './kanban/kanban.entity';
 
@@ -41,8 +40,9 @@ import { Kanban } from './kanban/kanban.entity';
     NotificationModule, 
     MailModule, 
     RoomModule, 
-    RoomusersModule, KanbanModule],
-  controllers: [AppController, KanbanController],
+    RoomusersModule, 
+    KanbanModule],
+  controllers: [AppController],
   providers: [AppService, TextChannelsGateway],
 })
 export class AppModule {}

@@ -53,6 +53,29 @@ export class UserService {
       email: email,
       password: password
     }
-    return this.http.post<any>('http://localhost:3001/api/login', body, httpOptions);
+    var logUserInURL = baseUrl + '/api/login'
+    return this.http.post<any>(logUserInURL, body, httpOptions);
+  }
+
+  updateUsername(
+    id: string,
+    newUsername: string
+  ): Observable<any>{
+    const body = {
+      id: id,
+      newUsername: newUsername
+    }
+    var updateUsernameURL = baseUrl + '/api/user/updateUsername'
+    return this.http.post<any>(updateUsernameURL, body, httpOptions);
+  }
+
+  getUserDetails(
+    jwt: string
+  ): Observable<any>{
+    const body = {
+      jwt: jwt
+    }
+    var getUserDetailsURL = baseUrl + '/api/user/details';
+    return this.http.post<any>(getUserDetailsURL, body, httpOptions);
   }
 }

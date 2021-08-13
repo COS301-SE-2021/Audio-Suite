@@ -46,4 +46,13 @@ export class UserController {
     {
         return await this.userService.getUsernameById(id);
     }
+
+    @Post('user/updateUsername')
+    async updateUsername(
+        @Body('id') id: string,
+        @Body('newUsername') newUsername: string
+    )
+    {
+        return await this.userService.updateUsername(id, newUsername);
+    }
 }
