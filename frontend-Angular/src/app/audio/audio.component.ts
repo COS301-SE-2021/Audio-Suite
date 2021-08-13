@@ -30,12 +30,11 @@ export class AudioComponent {
 
   join(): void{
     console.log(this.userId);
-    // this.UserID=this.getUserDetails();
-    // console.log(this.UserID);
     console.log("Called join()");
     this.agoraService.client.join(null, '1000', this.userId);
     this.localStream = this.agoraService.createStream(this.userId, true, null, null, false, false);
     this.assignRemoteHandlers();
+    this.publish();
   }
 
   publish(): void{
@@ -132,7 +131,7 @@ export class AudioComponent {
   // -------------- HANDLE REMOTE STREAMS AND OUTPUT AUDIO --------------
   mixAudio(): void {
     // Remote stream audio settings
-    let volume = 25; 
+    let volume = 3; 
     let pannerX = 0;
     let pannerY = 0;
     let pannerZ = 0;
@@ -159,10 +158,10 @@ export class AudioComponent {
       let compressor = this.audioContext.createDynamicsCompressor();
 
       // Connect AudioNodes in Sequence (RemoteMediaStream -> VolumeController -> Panner -> Compressor -> Destination(Output))
-      audioStream.connect(volumeControl);
+      audioStream.connect(this.audioContext.destination);
       volumeControl.connect(panner);
       panner.connect(compressor);
-      compressor.connect(this.audioContext.destination);
+      //compressor.connect(this.audioContext.destination);
 
       // Configure AudioNodes
       volumeControl.gain.setValueAtTime( volume, this.audioContext.currentTime );

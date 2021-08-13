@@ -320,7 +320,6 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         this.selectedOfficeInvite = officeInvite;
         this.officeSelected = true;
         this.textChannelsService.joinRoom(office + "-Text");
-        this.audioComponent.join();
       }
     }
     else{
@@ -329,7 +328,6 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.selectedOfficeInvite = officeInvite;
       this.officeSelected = true;
       this.textChannelsService.joinRoom(office + "-Text");
-      this.audioComponent.join();
     }
   }
 
@@ -364,14 +362,14 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
           this.roomSelected = true;
           this.selectedRoom = id;
           this.textChannelsService.joinRoom(id + "-Text");
-          this.audioComponent.publish();
+          this.audioComponent.join();
         }
       }
       else{
         this.roomSelected = true;
         this.selectedRoom = id;
         this.textChannelsService.joinRoom(id + "-Text");
-        this.audioComponent.publish();
+        this.audioComponent.join();
       }
     }
   }
