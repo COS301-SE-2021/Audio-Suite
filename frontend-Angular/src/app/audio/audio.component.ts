@@ -25,14 +25,12 @@ export class AudioComponent {
     private userService: UserService
   ) {
     this.agoraService.createClient('rtc');
-    console.log("Does it even get here?");
   }
 
-  join(): void{
-    console.log(this.userId);
-    console.log("Called join()");
-    this.agoraService.client.join(null, '1000', this.userId);
-    this.localStream = this.agoraService.createStream(this.userId, true, null, null, false, false);
+  join(userID:string): void{
+    console.log("Entered room")
+    this.agoraService.client.join(null, '1000', userID);
+    this.localStream = this.agoraService.createStream(userID, true, null, null, false, false);
     this.assignRemoteHandlers();
     this.publish();
   }
@@ -41,7 +39,6 @@ export class AudioComponent {
     this.assignLocalHandlers();
     this.localStream.init(() => {
       console.log("getUserMedia successfully");
-      console.log(this.localStream.play('agora_local'));
       this.localStream.play('agora_local');
       this.agoraService.client.publish(this.localStream, function (err) {
         console.log("Publish local stream error: " + err);
