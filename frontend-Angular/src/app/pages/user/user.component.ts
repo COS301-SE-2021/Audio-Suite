@@ -49,7 +49,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   focus7: boolean = false;
 
   selectedOffice: string = '';
-  selectedOfficeID: string = '';
+  selectedOfficeID: number = null;
   selectedOfficeInvite: string = '';
   selectedRoom: string = '';
   selectedRoomID: string = '';
@@ -80,7 +80,6 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   cols = 12;
   rowHeight = 50;
   compactType: 'vertical' | 'horizontal' | null = null;
-  officeRooms = [];
   layout: KtdGridLayout = [];
   transitions: { name: string; value: string }[] = [
     {
@@ -368,7 +367,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     this.textChannelsService.leaveRoom(this.selectedOffice + "-Text");
 
     this.selectedOffice = '';
-    this.selectedOfficeID = '';
+    this.selectedOfficeID = null;
     this.selectedOfficeInvite = '';
     this.officeSelected = false;
     this.officeTextChannelMessages = [];
@@ -407,19 +406,43 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
   removeRoom(id: string): void{
     console.log("remove room: ", id)
-    var newLayout: KtdGridLayout = []
-    this.layout.forEach(item => {
-      if(item.id != id){
-        var newItem: KtdGridLayoutItem = {id: item.id, x: item.x, y: item.y, w: item.w, h: item.h};
-        newLayout.push(newItem)
+    var jwt = sessionStorage.getItem('jwt');
+    this.officeRoomService.deleteRoom(jwt, this.selectedOfficeID, id).subscribe((response) => {
+      console.log(response)
+      if(response.Response == "Success"){
+        var newLayout: KtdGridLayout = [];
+        response.Rooms.forEach(room => {
+          var newRoom: KtdGridLayoutItem = { id: room.id, x: room.xCoordinate, y: room.yCoordinate, w: room.width, h: room.height };
+          newLayout.push(newRoom);
+        })
+        this.layout = newLayout;
       }
+    },
+    (error) => {
+      console.log("error")
     })
-    this.layout = newLayout;
   }
 
   onLayoutUpdated(layout: KtdGridLayout): void{
     console.log("Layout updated", layout)
     this.layout = layout;
+    var jwt = sessionStorage.getItem('jwt');
+    this.layout.forEach(room => {
+      this.officeRoomService.updateRoom(
+        jwt, 
+        this.selectedOfficeID, 
+        room.id, 
+        room.x, 
+        room.y, 
+        room.w, 
+        room.h
+        ).subscribe((response) => {
+          console.log(response);
+      },
+      (error) => {
+        console.log(error)
+      })
+    })
   }
 
   toggleOfficeListView(): void{
