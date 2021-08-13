@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RoomUsersService } from '../roomusers/roomusers.service';
 import { UserService } from '../user/user.service';
@@ -7,13 +7,17 @@ import { Room } from './room.entity';
 
 @Injectable()
 export class RoomService {
+    private logger: Logger = new Logger('RoomService');
+
     constructor(
         @InjectRepository(Room)
         private roomRepository: Repository<Room>,
         private userService: UserService,
         private roomUserService: RoomUsersService
     )
-    {}
+    {
+        this.logger.log("Initialised")
+    }
 
     async getOfficeRooms(jwt: string, officeID: number): Promise<any>{
         try{
@@ -70,7 +74,7 @@ export class RoomService {
         }
     }
 
-    async updateRoomDetails(jwt: string, roomID: number, officeID: number, roomName: string, xCoordinate: number, yCoordinate: number, width: number, height: number): Promise<any> {
+    async updateRoomDetails(jwt: string, officeID: number, roomName: string, xCoordinate: number, yCoordinate: number, width: number, height: number): Promise<any> {
         try{
             const user = await this.userService.validateUser(jwt);
             if(user == null){
@@ -82,15 +86,44 @@ export class RoomService {
         }
 
         try{
-            const room = await this.roomRepository.create({id: roomID, officeID, roomName, xCoordinate, yCoordinate, width, height});
-            const savedRoom = await this.roomRepository.save(room);
+            const oldRoom = await this.roomRepository.findOne({officeID, roomName});
+            var id = oldRoom.id;
+            const newRoom = await this.roomRepository.create({id, officeID, roomName, xCoordinate, yCoordinate, width, height});
+            const savedRoom = await this.roomRepository.save(newRoom);
+            this.logger.log("Updating Room with ID: " + id);
             return {
                 Response: "Success",
-                Room: savedRoom
+                UpdatedRoom: savedRoom
             };
         }
         catch(err){
-            throw new BadRequestException();
+            throw new BadRequestException(err.message);
+        }
+    }
+
+    async deleteRoom(jwt: string, officeID: number, roomName: string): Promise<any>{
+        try{
+            const user = await this.userService.validateUser(jwt);
+            if(user == null){
+                throw new UnauthorizedException();
+            }
+        }
+        catch(err){
+            throw new UnauthorizedException();
+        }
+
+        try{
+            const room = await this.roomRepository.findOne({officeID, roomName});
+            const id = room.id;
+            const deletedRoom = await this.roomRepository.delete({id});
+            return {
+                Response: "Success",
+                DeletedRoom: deletedRoom,
+                Rooms: await this.roomRepository.find({officeID: officeID})
+            }
+        }
+        catch(err){
+            throw new BadRequestException(err.message);
         }
     }
 
