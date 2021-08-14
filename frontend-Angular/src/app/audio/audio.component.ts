@@ -145,7 +145,6 @@ export class AudioComponent {
     // Remote stream audio settings
     let volume = 1; 
     let pannerX = 0;
-    let pannerY = 0;
     let pannerZ = 0;
     console.log("------------------------ MIX AUDIO ------------------------");
     console.log("REMOTE STREAMS: ");
@@ -168,14 +167,21 @@ export class AudioComponent {
           // --------------------------------------------------
           // --------------- Calculate Distance ---------------
           var euclideanDistance = Math.sqrt(Math.pow((remoteRoomCenter[0]-this.currentRoomCenter[0]),2)+Math.pow((remoteRoomCenter[1]-this.currentRoomCenter[1]),2));
+          const distConst = 10;
           // --------------------------------------------------
           // -------------- Calculate Direction ---------------
-          var xDiff = remoteRoomCenter[0] - this.currentRoomCenter[0];
-          var yDiff = remoteRoomCenter[1] - this.currentRoomCenter[1];
-          var standardDist = 10;
+          //var xDiff = remoteRoomCenter[0] - this.currentRoomCenter[0];
+          //var yDiff = remoteRoomCenter[1] - this.currentRoomCenter[1];
+          
+          var standardDistx = remoteRoomCenter[0] - this.currentRoomCenter[0];
+          var standardDistz = remoteRoomCenter[1] - this.currentRoomCenter[1];
+
+          pannerX = standardDistx * distConst;
+          pannerZ = standardDistz * distConst;
           // Orientation of listener: Facing toward the top floorplan
-          if( xDiff < 0){
-            if( yDiff < 0){
+          //var standardDist = 10 * euclideanDistance;
+          /*if(xDiff < 0){
+            if(yDiff < 0){
               // LEFT FORWARD
               pannerX = -standardDist;
               pannerZ = standardDist;
@@ -212,7 +218,7 @@ export class AudioComponent {
               pannerX = 0;
               pannerZ = -standardDist;
             }
-          }
+          }*/
           // --------------------------------------------------
         }
         // ---------- Work Around for Chrome Bugs -----------
@@ -240,7 +246,6 @@ export class AudioComponent {
         // Configure AudioNodes
         volumeControl.gain.setValueAtTime( volume, this.audioContext.currentTime );
         panner.positionX.setValueAtTime( pannerX, this.audioContext.currentTime );
-        panner.positionY.setValueAtTime( pannerY, this.audioContext.currentTime );
         panner.positionZ.setValueAtTime( pannerZ, this.audioContext.currentTime );
         // --------------------------------------------------
         stream[1] = true;
