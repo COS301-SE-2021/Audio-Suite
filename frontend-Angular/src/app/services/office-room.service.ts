@@ -140,4 +140,16 @@ export class OfficeRoomService {
       var deleteRoomURL = baseUrl + '/api/room/delete';
       return this.http.post<any>(deleteRoomURL, body, httpOptions);
   }
+
+  getUserRoomByID(
+    jwt: string,
+    userID: number
+    ): Observable<any>{
+      const body = {
+        jwt: jwt,
+        userID: userID
+      }
+      var userRoom = baseUrl + '/api/room/findUser';
+      return this.http.post<any>(userRoom, body, httpOptions);
+  }
 }
