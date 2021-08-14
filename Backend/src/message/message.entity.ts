@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Room{
+export class Message{
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -9,17 +9,11 @@ export class Room{
     officeID: number;
 
     @Column()
-    roomName: string;
+    textChannel: string;
 
     @Column()
-    xCoordinate: number;
+    sender: string;
 
     @Column()
-    yCoordinate: number;
-
-    @Column()
-    width: number;
-
-    @Column()
-    height: number;
+    message: string;
 }

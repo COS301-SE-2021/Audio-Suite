@@ -7,6 +7,7 @@ import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
 import { OfficeUsers } from '../officeusers/officeusers.entity';
 import { OfficeusersService } from '../officeusers/officeusers.service';
+import { RoomService } from 'src/room/room.service';
 
 @Injectable()
 export class OfficeService {
@@ -14,7 +15,8 @@ export class OfficeService {
         @InjectRepository(Office)
         private officesRepository: Repository<Office>,
         private userService: UserService,
-        private officeUserService: OfficeusersService
+        private officeUserService: OfficeusersService,
+        private roomService: RoomService,
         ) {}
 
     getOffice(): string {
@@ -36,9 +38,20 @@ export class OfficeService {
             const office = await this.officesRepository.create({name, invite});
             const savedOffice = await this.officesRepository.save(office);
             const addUserToOffice = await this.officeUserService.addUserToOffice(user.id,name, "Manager");
+            
+            const room1 = await this.roomService.registerRoomAuth(savedOffice.id, 'Coffee Station', 3, 9, 3, 3);
+            const room2 = await this.roomService.registerRoomAuth(savedOffice.id, 'Conference Room 1', 5, 1, 2, 4);
+            const room3 = await this.roomService.registerRoomAuth(savedOffice.id, 'Conference Room 2', 5, 5, 2, 4);
+            const room4 = await this.roomService.registerRoomAuth(savedOffice.id, 'Open Plan Office', 2, 5, 3, 4);
             return{
                 Response: "Success",
-                Office: savedOffice
+                Office: savedOffice,
+                Rooms: [
+                    room1, 
+                    room2, 
+                    room3, 
+                    room4
+                ]
             };
         }
         catch(err) {

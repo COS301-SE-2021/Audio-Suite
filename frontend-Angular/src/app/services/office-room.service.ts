@@ -17,6 +17,11 @@ export class OfficeRoomService {
 
   constructor(private http: HttpClient) { }
 
+  //-------------------------------------------------------------------------------------------------------------
+  //                                             Office Functions
+  //-------------------------------------------------------------------------------------------------------------
+
+
   registerOffice(
     jwt: string,
     officeName: string
@@ -51,6 +56,15 @@ export class OfficeRoomService {
     return this.http.post<any>(getUserOfficesURL, body, httpOptions);
   }
 
+  getOfficeRoomList(jwt: string, officeID: number): Observable<any>{
+    const body = {
+      jwt: jwt,
+      officeID: officeID
+    }
+    var getRoomListURL = baseUrl + '/api/room/getOfficeRooms';
+    return this.http.post<any>(getRoomListURL, body, httpOptions);
+  }
+
   sendOfficeInvite(
     email: string,
     name: string, 
@@ -63,5 +77,67 @@ export class OfficeRoomService {
     }
     var sendInviteCodeURL = baseUrl + '/api/notifications/sendInviteCode';
     return this.http.post<any>(sendInviteCodeURL, body, httpOptions);
+  }
+
+  //-------------------------------------------------------------------------------------------------------------
+  //                                             Room Functions
+  //-------------------------------------------------------------------------------------------------------------
+
+  registerRoom(
+    jwt: string,
+    officeID: number,
+    roomName: string,
+    xCoordinate: number,
+    yCoordinate: number,
+    width: number, 
+    height: number
+  ): Observable<any>{
+    const body = {
+      jwt: jwt,
+      officeID: officeID,
+      roomName: roomName,
+      xCoordinate: xCoordinate,
+      yCoordinate: yCoordinate,
+      width: width,
+      height: height
+    }
+    var registerRoomURL = baseUrl + '/api/room/register';
+    return this.http.post<any>(registerRoomURL, body, httpOptions);
+  }
+
+  updateRoom(
+    jwt: string,
+    officeID: number,
+    roomName: string,
+    xCoordinate: number,
+    yCoordinate: number,
+    width: number, 
+    height: number
+  ): Observable<any>{
+    const body = {
+      jwt: jwt,
+      officeID: officeID,
+      roomName: roomName,
+      xCoordinate: xCoordinate,
+      yCoordinate: yCoordinate,
+      width: width,
+      height: height
+    }
+    var registerRoomURL = baseUrl + '/api/room/updateDetails';
+    return this.http.post<any>(registerRoomURL, body, httpOptions);
+  }
+
+  deleteRoom(
+    jwt: string,
+    officeID: number,
+    roomName: string
+    ): Observable<any>{
+      const body = {
+        jwt: jwt,
+        officeID: officeID,
+        roomName: roomName
+      }
+      var deleteRoomURL = baseUrl + '/api/room/delete';
+      return this.http.post<any>(deleteRoomURL, body, httpOptions);
   }
 }

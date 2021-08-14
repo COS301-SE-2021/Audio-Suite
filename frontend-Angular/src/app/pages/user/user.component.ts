@@ -53,14 +53,16 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   roomSelected: boolean = false;
   sendNewOfficeAlert: boolean = false;
   sendJoinOfficeAlert: boolean = false;
-  sendOfficeInviteAlert: boolean = false;
+  sendFormModalAlert: boolean = false;
   officeListLoaded: boolean = false;
+  displayFormModal: boolean = false;
   showInviteModal: boolean = false;
+  showAddRoomModal: boolean = false;
   focus6: boolean = false;
   focus7: boolean = false;
 
   selectedOffice: string = '';
-  selectedOfficeID: string = '';
+  selectedOfficeID: number = null;
   selectedOfficeInvite: string = '';
   selectedRoom: string = '';
   selectedRoomID: string = '';
@@ -69,7 +71,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   newMessageInput: string = '';
   newOfficeAlertMsg: string = '';
   joinOfficeAlertMsg: string = '';
-  officeInviteAlertMsg: string = '';
+  formModalAlertMsg: string = '';
 
   userID: string = '';
   userFirstName: string = '';
@@ -79,6 +81,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
   sendInviteToEmail: string = '';
   sendInviteToName: string = '';
+  newRoomName: string = '';
 
   officeList: Office[] = [];
 
@@ -91,12 +94,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   cols = 12;
   rowHeight = 50;
   compactType: 'vertical' | 'horizontal' | null = null;
-  layout: KtdGridLayout = [
-    { id: 'Coffee Station', x: 3, y: 9, w: 3, h: 3 },
-    { id: 'Conference Room 1', x: 5, y: 1, w: 2, h: 4 },
-    { id: 'Conference Room 2', x: 5, y: 5, w: 2, h: 4 },
-    { id: 'Open Plan Office', x: 2, y: 5, w: 3, h: 4 }
-  ];
+  layout: KtdGridLayout = [];
   transitions: { name: string; value: string }[] = [
     {
       name: 'ease',
@@ -238,10 +236,33 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     body.classList.add("user-page");
     this.audioComponent = new AudioComponent( this.agoraService, this.userService );
 
+    this.getUserDetails();
     this.getUserOfficeList();
 
     this.textChannelsService.listen("joinedRoomText").subscribe(data => {
       console.log("Joined room: ", data);
+      if(data.Room == this.selectedOffice + '-Text'){
+        this.officeTextChannelMessages = [];
+        data.MessageList.forEach(message => {
+          var newMessage = {
+            sender: message.sender,
+            room: message.room,
+            message: message.message
+          }
+          this.officeTextChannelMessages.push(newMessage);
+        })
+      }
+      else{
+        this.roomTextChannelMessages = [];
+        data.MessageList.forEach(message => {
+          var newMessage = {
+            sender: message.sender,
+            room: message.room,
+            message: message.message
+          }
+          this.roomTextChannelMessages.push(newMessage);
+        })
+      }
     })
 
     this.textChannelsService.listen("leftRoomText").subscribe(data => {
@@ -249,11 +270,8 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     })
 
     this.textChannelsService.listen("msgToClient").subscribe(data => {
-      console.log("Message to client: ", data);
       this.receivedMessage(data);
     }) 
-
-    this.getUserDetails();
 
     this.setMockData();
 
@@ -315,19 +333,67 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     if(this.officeSelected){
       if(this.selectedOffice != office){
         this.leaveOffice();
+        this.layout = [];
+
+        var jwt = sessionStorage.getItem('jwt');
+        this.officeRoomService.getOfficeRoomList(jwt, officeID).subscribe((response) => {
+          console.log(response);
+          if(response.Response == "Success"){
+            var newLayout: KtdGridLayout = [];
+            for(let room of response.Rooms){
+              var newRoom: KtdGridLayoutItem = { 
+                id: room.roomName, 
+                x: room.xCoordinate, 
+                y: room.yCoordinate, 
+                w: room.width, 
+                h: room.height 
+              };
+              newLayout.push(newRoom);
+            }
+            this.layout = newLayout;
+          }
+        },
+        (error) => {
+          console.log(error);
+        });
+
         this.selectedOffice = office;
         this.selectedOfficeID = officeID;
         this.selectedOfficeInvite = officeInvite;
         this.officeSelected = true;
-        this.textChannelsService.joinRoom(office + "-Text");
+        var jwt = sessionStorage.getItem('jwt');
+        this.textChannelsService.joinRoom(jwt, office + "-Text");
       }
     }
     else{
+      var jwt = sessionStorage.getItem('jwt');
+      this.officeRoomService.getOfficeRoomList(jwt, officeID).subscribe((response) => {
+        console.log(response);
+        if(response.Response == "Success"){
+          var newLayout: KtdGridLayout = [];
+          for(let room of response.Rooms){
+            var newRoom: KtdGridLayoutItem = { 
+              id: room.roomName, 
+              x: room.xCoordinate, 
+              y: room.yCoordinate, 
+              w: room.width, 
+              h: room.height 
+            };
+            newLayout.push(newRoom);
+          }
+          this.layout = newLayout;
+        }
+      },
+      (error) => {
+        console.log(error);
+      });
+
       this.selectedOffice = office;
       this.selectedOfficeID = officeID;
       this.selectedOfficeInvite = officeInvite;
       this.officeSelected = true;
-      this.textChannelsService.joinRoom(office + "-Text");
+      var jwt = sessionStorage.getItem('jwt');
+      this.textChannelsService.joinRoom(jwt, office + "-Text");
     }
   }
 
@@ -339,7 +405,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   leaveOffice(): void{
     this.textChannelsService.leaveRoom(this.selectedOffice + "-Text");
     this.selectedOffice = '';
-    this.selectedOfficeID = '';
+    this.selectedOfficeID = null;
     this.selectedOfficeInvite = '';
     this.officeSelected = false;
     this.officeTextChannelMessages = [];
@@ -363,14 +429,16 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
           this.audioComponent.leave();
           this.roomSelected = true;
           this.selectedRoom = id;
-          this.textChannelsService.joinRoom(id + "-Text");
+          var jwt = sessionStorage.getItem('jwt');
+          this.textChannelsService.joinRoom(jwt, id + "-Text");
           this.audioComponent.join(this.userID);
         }
       }
       else{
         this.roomSelected = true;
         this.selectedRoom = id;
-        this.textChannelsService.joinRoom(id + "-Text");
+        var jwt = sessionStorage.getItem('jwt');
+        this.textChannelsService.joinRoom(jwt, id + "-Text");
         this.audioComponent.join(this.userID);
       }
     }
@@ -383,21 +451,96 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     this.roomTextChannelMessages = [];
   }
 
+  addRoom(): void{
+    console.log("add room: " + this.newRoomName)
+    var newRoom: KtdGridLayoutItem = {
+      id: this.newRoomName,
+      x: 0,
+      y: 0,
+      w: 1,
+      h: 1
+    };
+
+    var newLayout: KtdGridLayout = [];
+    this.layout.forEach(room => {
+      var oldRoom: KtdGridLayoutItem = {
+        id: room.id,
+        x: room.x,
+        y: room.y,
+        w: room.w,
+        h: room.h
+      };
+      newLayout.push(oldRoom);
+    })
+    newLayout.push(newRoom);
+
+    var jwt = sessionStorage.getItem('jwt');
+    this.officeRoomService.registerRoom(
+      jwt, 
+      this.selectedOfficeID, 
+      this.newRoomName, 
+      0, 
+      0, 
+      1, 
+      1).subscribe((response) => {
+        console.log(response);
+        if(response.Response == "Success"){
+          this.layout = newLayout;
+          this.hideDisplayFormModal();
+        }
+    },
+    (error) => {
+      console.log(error.error);
+      this.sendFormModalAlert = true;
+      this.formModalAlertMsg = error.error.message;
+      this.newRoomName = '';
+    })
+  }
+
   removeRoom(id: string): void{
     console.log("remove room: ", id)
-    var newLayout: KtdGridLayout = []
-    this.layout.forEach(item => {
-      if(item.id != id){
-        var newItem: KtdGridLayoutItem = {id: item.id, x: item.x, y: item.y, w: item.w, h: item.h};
-        newLayout.push(newItem)
+    var jwt = sessionStorage.getItem('jwt');
+    this.officeRoomService.deleteRoom(jwt, this.selectedOfficeID, id).subscribe((response) => {
+      console.log(response)
+      if(response.Response == "Success"){
+        var newLayout: KtdGridLayout = [];
+        response.Rooms.forEach(room => {
+          var newRoom: KtdGridLayoutItem = { 
+            id: room.roomName, 
+            x: room.xCoordinate, 
+            y: room.yCoordinate, 
+            w: room.width, 
+            h: room.height };
+          newLayout.push(newRoom);
+        })
+        this.layout = newLayout;
       }
+    },
+    (error) => {
+      console.log("error")
     })
-    this.layout = newLayout;
   }
 
   onLayoutUpdated(layout: KtdGridLayout): void{
     console.log("Layout updated", layout)
     this.layout = layout;
+    var jwt = sessionStorage.getItem('jwt');
+    this.layout.forEach(room => {
+      this.officeRoomService.updateRoom(
+        jwt, 
+        this.selectedOfficeID, 
+        room.id, 
+        room.x, 
+        room.y, 
+        room.w, 
+        room.h
+        ).subscribe((response) => {
+          console.log(response);
+      },
+      (error) => {
+        console.log(error)
+      })
+    })
   }
 
   toggleOfficeListView(): void{
@@ -448,7 +591,8 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log("send message room: " + room);
     if(this.newMessageInput != "")
     {
-      this.textChannelsService.sendMsgToServer(this.userUsername, room + "-Text", this.newMessageInput);
+      var jwt = sessionStorage.getItem('jwt');
+      this.textChannelsService.sendMsgToServer(jwt, this.selectedOfficeID, this.userUsername, room + "-Text", this.newMessageInput);
       this.newMessageInput = "";
     }
   }
@@ -513,13 +657,24 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   showSendInviteModal(): void{
+    this.displayFormModal = true;
     this.showInviteModal = true;
   }
 
-  hideSendInviteModal(): void{
+  showAddModal(): void{
+    this.displayFormModal = true;
+    this.showAddRoomModal = true;
+  }
+
+  hideDisplayFormModal(): void{
     this.showInviteModal = false;
-    this.officeInviteAlertMsg = "";
-    this.sendOfficeInviteAlert = false;
+    this.showAddRoomModal = false;
+    this.displayFormModal = false;
+    this.formModalAlertMsg = '';
+    this.sendFormModalAlert = false;
+    this.newRoomName = '';
+    this.sendInviteToName = '';
+    this.sendInviteToEmail = '';
   }
 
   sendOfficeInvite(): void{
@@ -527,14 +682,14 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       console.log(response)
       if(response.Response == "Success"){
         console.log('invite sent')
-        this.officeInviteAlertMsg = "Invite send Successfully.";
-        this.sendOfficeInviteAlert = true;
+        this.formModalAlertMsg = "Invite send Successfully.";
+        this.sendFormModalAlert = true;
       }
     },
     (error) => {
       console.log(error);
-      this.officeInviteAlertMsg = "Error - Office Invite could not be sent. Please try again.";
-        this.sendOfficeInviteAlert = true;
+      this.formModalAlertMsg = "Error - Office Invite could not be sent. Please try again.";
+        this.sendFormModalAlert = true;
     })
 
     this.sendInviteToEmail = '';

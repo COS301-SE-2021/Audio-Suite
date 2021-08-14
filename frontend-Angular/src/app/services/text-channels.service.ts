@@ -8,16 +8,16 @@ export class TextChannelsService {
 
   constructor(private socket: Socket) { }
 
-  joinRoom(room: string){
-    this.socket.emit('joinRoomText', room);
+  joinRoom(jwt: string, room: string){
+    this.socket.emit('joinRoomText', {jwt: jwt, room: room});
   }
 
   leaveRoom(room: string){
     this.socket.emit('leaveRoomText', room);
   }
 
-  sendMsgToServer(sender: string, room: string, message: string){
-    this.socket.emit('msgToServer', {sender: sender, room: room, message: message});
+  sendMsgToServer(jwt: string, officeID: number, sender: string, room: string, message: string){
+    this.socket.emit('msgToServer', {jwt: jwt, officeID: officeID, sender: sender, room: room, message: message});
   }
 
   listen(eventName: string){

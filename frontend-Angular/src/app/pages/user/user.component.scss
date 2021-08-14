@@ -193,6 +193,14 @@
             }
         }
     }
+
+    .addRoomContainer{
+        display: flex;
+
+        #showAddRoomModalBtn{
+            justify-content: left;
+        }
+    }
 }
 
 .TextChannelContent{
