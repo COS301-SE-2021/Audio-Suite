@@ -234,7 +234,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     var body = document.getElementsByTagName("body")[0];
     body.classList.add("user-page");
-    this.audioComponent = new AudioComponent( this.agoraService, this.userService );
+    this.audioComponent = new AudioComponent( this.agoraService, this.officeRoomService );
 
     this.getUserDetails();
     this.getUserOfficeList();
@@ -357,6 +357,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
           console.log(error);
         });
 
+        this.audioComponent.join(this.userID, officeID);
         this.selectedOffice = office;
         this.selectedOfficeID = officeID;
         this.selectedOfficeInvite = officeInvite;
@@ -388,6 +389,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log(error);
       });
 
+      this.audioComponent.join(this.userID, officeID);
       this.selectedOffice = office;
       this.selectedOfficeID = officeID;
       this.selectedOfficeInvite = officeInvite;
@@ -431,7 +433,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
           this.selectedRoom = id;
           var jwt = sessionStorage.getItem('jwt');
           this.textChannelsService.joinRoom(jwt, id + "-Text");
-          this.audioComponent.join(this.userID);
+          this.audioComponent.publish(this.selectedRoom);
         }
       }
       else{
@@ -439,7 +441,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         this.selectedRoom = id;
         var jwt = sessionStorage.getItem('jwt');
         this.textChannelsService.joinRoom(jwt, id + "-Text");
-        this.audioComponent.join(this.userID);
+        this.audioComponent.publish(this.selectedRoom);
       }
     }
   }
