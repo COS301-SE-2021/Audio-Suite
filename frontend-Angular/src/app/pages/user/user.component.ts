@@ -295,6 +295,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   selectOffice(officeID, office, officeInvite): void{
+    var officeId = sessionStorage.setItem('officeID', officeID);
     if(this.officeSelected){
       if(this.selectedOffice != office){
         this.leaveOffice();

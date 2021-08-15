@@ -6,7 +6,7 @@ export class KanbanController {
     constructor(private readonly kanbanService: KanbanService){}
 
     //Creating a card and assigning it to a list in the kanban.
-    @Post('kanban/createCard')
+    @Post('user')
     async createCard(
         @Body('jwt') jwt: string,
         @Body('officeID')officeID: number, 
@@ -14,11 +14,12 @@ export class KanbanController {
         @Body('cardID')cardID: string, 
         @Body('cardMessage')cardMessage: string
     ){
+        console.log("HERE");
         return await this.kanbanService.createCard(jwt, officeID, listName, cardID, cardMessage);
     }
 
     //Deleting a card from a list.
-    @Post('kanban/deleteCard')
+    @Post('user')
     async deleteCard(
         @Body('jwt') jwt: string,
         @Body('officeID')officeID: number,

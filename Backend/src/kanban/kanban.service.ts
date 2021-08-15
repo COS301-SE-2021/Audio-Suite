@@ -25,6 +25,7 @@ export class KanbanService {
         try{
             const card = await this.kanbanRepository.create({officeID, listName, cardID, cardMessage});
             const savedCard = await this.kanbanRepository.save(card);
+            console.log(savedCard);
             return{
                 Response: "Success",
                 Card: savedCard

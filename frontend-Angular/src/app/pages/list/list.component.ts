@@ -1,6 +1,9 @@
 import { Component, HostListener, Input, OnInit } from "@angular/core";
 import { ListSchema } from "../ListSchema";
 import { CardStore } from "../CardStore";
+import { UserService } from "src/app/services/user.service";
+import { OfficeRoomService } from "src/app/services/office-room.service";
+import { KanbanService } from "src/app/services/kanban.service";
 @Component({
   selector: "app-list",
   templateUrl: "./list.component.html",
@@ -11,7 +14,16 @@ export class ListComponent implements OnInit {
   @Input() cardStore: CardStore;
   displayAddCard = false;
 
-  constructor() {}
+  userID: string = '';
+  userFirstName: string = '';
+  userLastName: string = '';
+  userUsername: string = '';
+  userEmail: string = '';
+
+  constructor(
+    private userService: UserService,
+    private officeRoomService: OfficeRoomService,
+    private kanbanService: KanbanService) {}
 
   toggleDisplayAddCard() {
     this.displayAddCard = !this.displayAddCard;
@@ -64,7 +76,19 @@ export class ListComponent implements OnInit {
   }
 
   onEnter(value: string, listName: string) {
-    const cardId = this.cardStore.newCard(value, listName);
+    console.log(sessionStorage.getItem('jwt'));
+    console.log(sessionStorage.getItem('officeID'));
+    console.log(listName);
+    console.log(value);
+    const cardId = this.cardStore.newCard(value, listName); 
+    console.log(cardId);
+    this.kanbanService.createCard(
+      sessionStorage.getItem('jwt'), 
+      parseInt(sessionStorage.getItem('officeID')),
+      listName,
+      cardId,
+      value);
+    console.log("here??")
     this.list.cards.push(cardId);
   }
 }
