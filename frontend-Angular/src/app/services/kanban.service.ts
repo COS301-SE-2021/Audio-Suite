@@ -25,13 +25,14 @@ export class KanbanService {
     cardMessage: string
   ): Observable<any>{
       const body = {
-          jwt: jwt,
-          officeID: officeID,
-          listName: listName,
-          cardID: cardID,
-          cardMessage: cardMessage
+          "jwt": jwt,
+          "officeID": officeID,
+          "listName": listName,
+          "cardID": cardID,
+          "cardMessage": cardMessage
       }
-      var createCardURL = baseUrl + '/api/user';
+      var createCardURL = baseUrl + '/api/kanban/createCard';
+      console.log(body);
       return this.http.post<any>(createCardURL, body, httpOptions);
   }
 

@@ -95,8 +95,9 @@ export class OfficeService {
         }
     }
 
-    async getOfficeFromOfficeID(jwt: string, officeID) : Promise<any> {
+    async getOfficeFromOfficeID(jwt: string, officeID: number) : Promise<any> {
         //verify the user
+        console.log("office??")
         try{
             const user = await this.userService.validateUser(jwt);
         }catch(err){

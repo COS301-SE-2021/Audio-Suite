@@ -87,7 +87,14 @@ export class ListComponent implements OnInit {
       parseInt(sessionStorage.getItem('officeID')),
       listName,
       cardId,
-      value);
+      value).subscribe((response) =>{
+        if(response.Response == "Success"){
+          console.log("card added successfully");
+        }
+      },
+      (error) => {
+        console.log(error)
+      });
     console.log("here??")
     this.list.cards.push(cardId);
   }
