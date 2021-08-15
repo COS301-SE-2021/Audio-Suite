@@ -7,7 +7,7 @@ import { RoomService } from 'src/room/room.service';
 interface ClientList{
   client: Socket,
   jwt: string,
-  officeID: number,
+  office: string,
   roomName: string,
 }
 
@@ -36,6 +36,7 @@ export class ServerSocketGateway implements OnGatewayInit, OnGatewayDisconnect{
     if(index > -1){
       await this.roomService.removeUserFromAllRooms(this.clientList[index].jwt);
       this.clientList.splice(index, 1);
+      this.wss.to(this.clientList[index].office).emit('updateRoomAttendance');
       this.logger.log('Clean up before disconnecting')
     }
     this.logger.log('Client: ' + client.id + ' disconnected');
@@ -65,7 +66,7 @@ export class ServerSocketGateway implements OnGatewayInit, OnGatewayDisconnect{
       var newClient: ClientList = {
         client: client,
         jwt: data.jwt,
-        officeID: data.officeID,
+        office: data.office,
         roomName: data.channel
       };
       this.clientList.push(newClient);
