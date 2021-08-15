@@ -34,9 +34,10 @@ export class ServerSocketGateway implements OnGatewayInit, OnGatewayDisconnect{
       return item.client.id == client.id;
     })
     if(index > -1){
+      var tmpOffice = this.clientList[index].office;
       await this.roomService.removeUserFromAllRooms(this.clientList[index].jwt);
       this.clientList.splice(index, 1);
-      this.wss.to(this.clientList[index].office).emit('updateRoomAttendance');
+      this.wss.to(tmpOffice).emit('updateRoomAttendance');
       this.logger.log('Clean up before disconnecting')
     }
     this.logger.log('Client: ' + client.id + ' disconnected');
