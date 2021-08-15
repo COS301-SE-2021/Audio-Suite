@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { KtdDragEnd, KtdDragStart, KtdGridComponent, KtdGridLayout, KtdGridLayoutItem, KtdResizeEnd, KtdResizeStart, ktdTrackById} from '@katoid/angular-grid-layout';
 import { fromEvent, merge, Subscription } from 'rxjs';
 import { debounceTime, filter } from 'rxjs/operators';
+import { KanbanService } from 'src/app/services/kanban.service';
 import { OfficeRoomService } from 'src/app/services/office-room.service';
 import { TextChannelsService } from 'src/app/services/text-channels.service';
 import { UserService } from 'src/app/services/user.service';
@@ -130,9 +131,10 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     private textChannelsService: TextChannelsService,
     private officeRoomService: OfficeRoomService,
     private userService: UserService,
+    private kanbanService: KanbanService,
     private router: Router) { }
 
-  setMockData(): void {
+  setListData(): void {
     this.cardStore = new CardStore();
     const lists: ListSchema[] = [
       {
@@ -148,6 +150,40 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         cards: []
       }
     ]
+    //cards need id, description and list name.
+
+    var jwt = sessionStorage.getItem('jwt');
+    var officeID = sessionStorage.getItem('officeID');
+    console.log(parseInt(officeID));
+    this.kanbanService.getAllCards(jwt, parseInt(officeID)).subscribe((response) => {
+      var cards = response.Cards;
+      console.log("below is 'cards'");
+      console.log(cards);
+      console.log(cards[0].cardID);
+      // if(cards[0].listName == "To Do"){
+      //   console.log("hello");
+      //   console.log(lists[0].name);
+      // }
+      for(var i=0; i<cards.length; i++){
+        var cardID =  cards[i].cardID;
+        console.log(cardID);
+        var retCard = this.cardStore.retrieveCard(cards[i].cardID, cards[i].cardMessage, cards[i].listName);
+        if(cards[i].listName == "To Do"){
+          // var retCard = this.cardStore.retrieveCard(cards[i].cardID, cards[i].cardMessage, cards[i].listName);
+          // console.log(retCard);
+          lists[0].cards.push(cardID);
+          // console.log(lists[0].cards);
+        }else if(cards[i].listName == "In Progress"){
+          lists[1].cards.push(cardID);
+        }else if(cards[i].listName == "Done"){
+          lists[2].cards.push(cardID);
+        }
+      }
+    },
+    (error) => {
+      console.log(error);
+    })
+
     this.lists = lists;
   }
 
@@ -239,7 +275,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.getUserDetails();
 
-    this.setMockData();
+    // this.setListData();
 
     this.resizeSubscription = merge(
       fromEvent(window, 'resize'),
@@ -397,6 +433,10 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         this.textChannelsService.joinRoom(id + "-Text");
       }
     }
+  }
+
+  testFunc(): void{
+    this.setListData();
   }
 
   leaveRoom(): void{

@@ -98,6 +98,7 @@ export class OfficeService {
     async getOfficeFromOfficeID(jwt: string, officeID: number) : Promise<any> {
         //verify the user
         console.log("office??")
+        console.log(officeID);
         try{
             const user = await this.userService.validateUser(jwt);
         }catch(err){
@@ -114,6 +115,7 @@ export class OfficeService {
             }
 
         }catch(err) {
+            // console.log(officeID);
             throw new BadRequestException("Office does not exist.");
         }
     }

@@ -45,8 +45,20 @@ export class KanbanService {
           officeID: officeID,
           cardID: cardID,
       }
-      var createCardURL = baseUrl + '/api/kanban/deleteCard';
-      return this.http.post<any>(createCardURL, body, httpOptions);
+      var deleteCardURL = baseUrl + '/api/kanban/deleteCard';
+      return this.http.post<any>(deleteCardURL, body, httpOptions);
+  }
+
+  getAllCards(
+    jwt: string, 
+    officeID: number
+  ): Observable<any>{
+      const body = {
+          jwt: jwt,
+          officeID: officeID
+      }
+      var deleteCardURL = baseUrl + '/api/kanban/getAllCards';
+      return this.http.post<any>(deleteCardURL, body, httpOptions);
   }
 
 }

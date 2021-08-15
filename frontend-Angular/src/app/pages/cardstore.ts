@@ -9,7 +9,25 @@ export class CardStore {
     return card.id;
   }
 
+  retrieveCard(cardId: string, description: string, listName:string){
+    const card = new CardSchema();
+    card.description = description;
+    card.listName = listName;
+    card.id = cardId;
+    this.cards[cardId]=card;
+    if(parseInt(cardId)>=this.lastid){
+      this.lastid=parseInt(cardId);
+    }
+    return this.cards[cardId];
+  }
+
   getCard(cardId: string) {
+    console.log("right track");
+    console.log(cardId);
+    console.log(this.cards);
+    // if(this.cards[cardId] == null){
+    //   this.retrieveCard(cardId, description, listName);
+    // }
     return this.cards[cardId];
   }
   
