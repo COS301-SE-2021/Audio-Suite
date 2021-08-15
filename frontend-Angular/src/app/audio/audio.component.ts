@@ -189,89 +189,18 @@ export class AudioComponent {
           // --------------------------------------------------
           // --------------- Calculate Centers ----------------
           var remoteRoomCenter = [((remoteRoomDetails.width/2)+remoteRoomDetails.xCoordinate), ((remoteRoomDetails.height/2)+remoteRoomDetails.yCoordinate)];
-          console.log("remoteRoomDetails 5: ");
-          console.log(remoteRoomDetails.width);
-          console.log("remoteRoomDetails 3: ");
-          console.log(remoteRoomDetails.xCoordinate);
-          console.log("remoteRoomDetails 6: ");
-          console.log(remoteRoomDetails.height);
-          console.log("remoteRoomDetails 4: ");
-          console.log(remoteRoomDetails.yCoordinate);
           // --------------------------------------------------
           // --------------- Calculate Distance ---------------
           var euclideanDistance = Math.sqrt(Math.pow((remoteRoomCenter[0]-this.currentRoomCenter[0]),2)+Math.pow((remoteRoomCenter[1]-this.currentRoomCenter[1]),2));
           const distConst = 10;
           // --------------------------------------------------
           // -------------- Calculate Direction ---------------
-          //var xDiff = remoteRoomCenter[0] - this.currentRoomCenter[0];
-          //var yDiff = remoteRoomCenter[1] - this.currentRoomCenter[1];
-          
+          // Orientation of listener: Facing toward the top floorplan
           var standardDistx = Number(remoteRoomCenter[0]) - Number(this.currentRoomCenter[0]);
           var standardDistz = Number(remoteRoomCenter[1]) - Number(this.currentRoomCenter[1]);
 
-          console.log("RemoteRoomCenter X: ");
-          console.log(remoteRoomCenter[0]);
-          console.log("RemoteRoomCenter Z: ");
-          console.log(remoteRoomCenter[1]);
-
-          console.log("CurrentRoomCenter X: ");
-          console.log(this.currentRoomCenter[0]);
-          console.log("CurrentRoomCenter Z: ");
-          console.log(this.currentRoomCenter[1]);
-
-          console.log("StandardDist X: ");
-          console.log(standardDistx);
-          console.log("StandardDist Z: ");
-          console.log(standardDistz);
-
           pannerX = standardDistx * distConst;
           pannerZ = standardDistz * distConst;
-
-          console.log("PANNER X: ");
-          console.log(pannerX);
-          console.log("PANNER Z: ");
-          console.log(pannerZ);
-          // Orientation of listener: Facing toward the top floorplan
-          //var standardDist = 10 * euclideanDistance;
-          /*if(xDiff < 0){
-            if(yDiff < 0){
-              // LEFT FORWARD
-              pannerX = -standardDist;
-              pannerZ = standardDist;
-            }else if(yDiff > 0){
-              // LEFT BACK
-              pannerX = -standardDist;
-              pannerZ = -standardDist;
-            }else{
-              // LEFT
-              pannerX = -standardDist;
-              pannerZ = 0;
-            }
-          }else if(xDiff > 0){
-            if(yDiff < 0){
-              // RIGHT FORWARD
-              pannerX = standardDist;
-              pannerZ = standardDist;
-            }else if(yDiff > 0){
-              // RIGHT BACK
-              pannerX = standardDist;
-              pannerZ = -standardDist;
-            }else{
-              // RIGHT
-              pannerX = standardDist;
-              pannerZ = 0;
-            }
-          }else{
-            if(yDiff < 0){
-              // FORWARD
-              pannerX = 0;
-              pannerZ = standardDist;
-            }else if(yDiff > 0){
-              // BACK
-              pannerX = 0;
-              pannerZ = -standardDist;
-            }
-          }*/
           // --------------------------------------------------
         }
         // ---------- Work Around for Chrome Bugs -----------
