@@ -17,7 +17,6 @@ export class KanbanService {
     async createCard(jwt: string, officeID: number, listName:string, cardID: string, cardMessage: string) : Promise<any>{
         //verify the office -> this includes verifying the user.
         try{
-            console.log("authorized??");
             const office = this.officeService.getOfficeFromOfficeID(jwt, officeID);
         }catch{
             throw new UnauthorizedException();
@@ -26,7 +25,6 @@ export class KanbanService {
         try{
             const card = await this.kanbanRepository.create({officeID, listName, cardID, cardMessage});
             const savedCard = await this.kanbanRepository.save(card);
-            console.log(savedCard);
             return{
                 Response: "Success",
                 Card: savedCard

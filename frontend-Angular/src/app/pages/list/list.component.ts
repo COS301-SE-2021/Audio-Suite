@@ -89,7 +89,7 @@ export class ListComponent implements OnInit {
       cardId,
       value).subscribe((response) =>{
         if(response.Response == "Success"){
-          console.log("card added successfully");
+          console.log("Card added successfully");
         }
       },
       (error) => {

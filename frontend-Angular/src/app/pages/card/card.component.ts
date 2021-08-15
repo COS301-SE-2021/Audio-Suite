@@ -23,7 +23,18 @@ export class CardComponent implements OnInit {
     console.log(id);
     console.log(sessionStorage.getItem('jwt'));
     console.log(sessionStorage.getItem('officeID'));
-    this.kanbanService.deleteCard(sessionStorage.getItem('jwt'), parseInt(sessionStorage.getItem('officeID')), id);
+
+    this.kanbanService.deleteCard(sessionStorage.getItem('jwt'), 
+    parseInt(sessionStorage.getItem('officeID')), 
+    id).subscribe((response) =>{
+      if(response.Response == "Success"){
+        console.log("Card deleted successfully");
+      }
+    },
+    (error) => {
+      console.log(error)
+    });
+    
     var element = document.getElementById(id);
     element.parentNode.removeChild(element);
   }
