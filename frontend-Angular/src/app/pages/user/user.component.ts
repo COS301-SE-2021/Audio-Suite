@@ -241,7 +241,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.textChannelsService.listen("joinedRoomText").subscribe(data => {
       console.log("Joined room: ", data);
-      if(data.Room == this.selectedOffice + '-Text'){
+      if(data.Room == this.selectedOffice){
         this.officeTextChannelMessages = [];
         data.MessageList.forEach(message => {
           var newMessage = {
@@ -363,7 +363,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         this.selectedOfficeInvite = officeInvite;
         this.officeSelected = true;
         var jwt = sessionStorage.getItem('jwt');
-        this.textChannelsService.joinRoom(jwt, office + "-Text");
+        this.textChannelsService.joinRoom(jwt, officeID, office, office, false);
       }
     }
     else{
@@ -395,7 +395,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.selectedOfficeInvite = officeInvite;
       this.officeSelected = true;
       var jwt = sessionStorage.getItem('jwt');
-      this.textChannelsService.joinRoom(jwt, office + "-Text");
+      this.textChannelsService.joinRoom(jwt, officeID, office, office, false);
     }
   }
 
@@ -405,7 +405,8 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   leaveOffice(): void{
-    this.textChannelsService.leaveRoom(this.selectedOffice + "-Text");
+    var jwt = sessionStorage.getItem('jwt');
+    this.textChannelsService.leaveRoom(jwt, this.selectedOfficeID, this.selectedOffice, this.selectedOffice);
     this.selectedOffice = '';
     this.selectedOfficeID = null;
     this.selectedOfficeInvite = '';
@@ -417,7 +418,8 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   selectRoom(id: string, leaveRoom: boolean): void{
   
     if(leaveRoom){
-      this.textChannelsService.leaveRoom(id + "-Text");
+      var jwt = sessionStorage.getItem('jwt');
+      this.textChannelsService.leaveRoom(jwt, this.selectedOfficeID, this.selectedOffice, id);
       this.roomSelected = false;
       this.selectedRoom = '';
       this.roomTextChannelMessages = [];
@@ -432,7 +434,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
           this.roomSelected = true;
           this.selectedRoom = id;
           var jwt = sessionStorage.getItem('jwt');
-          this.textChannelsService.joinRoom(jwt, id + "-Text");
+          this.textChannelsService.joinRoom(jwt, this.selectedOfficeID, this.selectedOffice, id, true);
           this.audioComponent.publish(this.selectedRoom);
         }
       }
@@ -440,14 +442,15 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         this.roomSelected = true;
         this.selectedRoom = id;
         var jwt = sessionStorage.getItem('jwt');
-        this.textChannelsService.joinRoom(jwt, id + "-Text");
+        this.textChannelsService.joinRoom(jwt, this.selectedOfficeID, this.selectedOffice, id, true);
         this.audioComponent.publish(this.selectedRoom);
       }
     }
   }
 
   leaveRoom(): void{
-    this.textChannelsService.leaveRoom(this.selectedRoom + "-Text");
+    var jwt = sessionStorage.getItem('jwt');
+    this.textChannelsService.leaveRoom(jwt, this.selectedOfficeID, this.selectedOffice, this.selectedRoom);
     this.roomSelected = false;
     this.selectedRoom = '';
     this.roomTextChannelMessages = [];
@@ -594,7 +597,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     if(this.newMessageInput != "")
     {
       var jwt = sessionStorage.getItem('jwt');
-      this.textChannelsService.sendMsgToServer(jwt, this.selectedOfficeID, this.userUsername, room + "-Text", this.newMessageInput);
+      this.textChannelsService.sendMsgToServer(jwt, this.selectedOfficeID, this.userUsername, room, this.newMessageInput);
       this.newMessageInput = "";
     }
   }
@@ -602,10 +605,10 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   receivedMessage(data: any): void{
     var message = {
       sender: data.sender,
-      room: data.room,
+      room: data.channel,
       message: data.message
     }
-    if(data.room == this.selectedOffice + "-Text"){
+    if(data.channel == this.selectedOffice){
       this.officeTextChannelMessages.push(message);
     }
     else{
