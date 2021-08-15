@@ -12,5 +12,11 @@ export class RoomUsers{
     roomID: number;
 
     @Column()
+    roomName: string;
+
+    @Column()
     userID: number;
+
+    @Column()
+    userName: string;
 }
