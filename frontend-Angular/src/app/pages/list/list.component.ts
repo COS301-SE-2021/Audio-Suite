@@ -32,7 +32,9 @@ export class ListComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log("The List of cards: ", this.list)
+  }
 
   allowDrop($event) {
     $event.preventDefault();
