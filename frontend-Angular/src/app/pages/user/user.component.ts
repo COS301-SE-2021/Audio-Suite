@@ -469,14 +469,14 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.roomSelected = false;
       this.selectedRoom = '';
       this.roomTextChannelMessages = [];
-      this.audioComponent.leave();
+      this.audioComponent.unpublish();
     }
     else{
 
       if(this.roomSelected){
         if(this.selectedRoom != id){
           this.leaveRoom();
-          this.audioComponent.leave();
+          this.audioComponent.unpublish();
           this.roomSelected = true;
           this.selectedRoom = id;
           var jwt = sessionStorage.getItem('jwt');

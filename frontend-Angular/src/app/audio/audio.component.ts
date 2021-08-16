@@ -49,10 +49,10 @@ export class AudioComponent {
       console.log(res.Rooms);
       this.rooms = res.Rooms;
       console.log("Entered room");
-      this.agoraService.client.join(null, '1000', userID);
       this.localStream = this.agoraService.createStream(userID, true, null, null, false, false);
-      this.assignRemoteHandlers();
     });
+    this.agoraService.client.join(null, '1000', userID);
+    this.assignRemoteHandlers();
   }
 
   publish(room: string): void{
@@ -151,6 +151,19 @@ export class AudioComponent {
         this.remoteCalls = this.remoteCalls.filter(call => call === `#agora_remote${stream.getId()}`);
         console.log(`${evt.uid} left from this channel`);
       }
+    });
+  }
+
+  unpublish(): void{
+    this.agoraService.client.unpublish(this.localStream);
+    console.log("Stream unpublished");
+  }
+
+  justLeave(): void{
+    this.agoraService.client.leave(() => {
+      console.log("Leavel channel successfully");
+    }, (err) => {
+      console.log("Leave channel failed");
     });
   }
 
