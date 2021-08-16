@@ -166,7 +166,8 @@ export class RoomService {
         }
 
         const user = await this.userService.validateUser(jwt);
-        return await this.roomUserService.addUserToRoom(officeID, roomId, user.id);
+        const room = await this.roomRepository.findOne({id: roomId});
+        return await this.roomUserService.addUserToRoom(officeID, roomId, room.roomName, user.id, user.userName);
     }
 
     async leaveRoom(jwt: string, officeID: number, roomId: number): Promise<any> {
@@ -188,7 +189,8 @@ export class RoomService {
         }
 
         const user = await this.userService.validateUser(jwt);
-        return await this.roomUserService.removeUserFromRoom(officeID, roomId, user.id);
+        const room = await this.roomRepository.findOne({id: roomId});
+        return await this.roomUserService.removeUserFromRoom(officeID, roomId, room.roomName, user.id, user.userName);
     }
 
     //Find what room a user is in
@@ -206,5 +208,93 @@ export class RoomService {
         return await this.roomUserService.findWhatRoomAUserIsIn(userID);
     }
 
-    //TODO delete a room
+    async addUserToRoomUsersFromRoomName(jwt: string, officeID: number, roomName: string): Promise<any>{
+        try{
+            const user = await this.userService.validateUser(jwt);
+            if(user == null){
+                throw new UnauthorizedException();
+            }
+        }
+        catch(err){
+            throw new UnauthorizedException();
+        }
+
+        try{
+            await this.roomRepository.findOneOrFail({officeID, roomName});
+        }
+        catch(err){
+            return {
+                Response: "Unsuccessfull",
+                Message: "No room exits with the name: " + roomName
+            }
+        }
+
+        try{
+            const user = await this.userService.validateUser(jwt);
+            const room = await this.roomRepository.findOne({officeID, roomName});
+            const savedInRoomUsers = await this.roomUserService.addUserToRoom(officeID, room.id, roomName, user.id, user.userName);
+            return {
+                Response: "Success",
+                RoomUser: savedInRoomUsers
+            }
+        }
+        catch(err) {
+            throw new BadRequestException("Could not add user to RoomUsers Database");
+        }
+    }
+
+    async removeUserFromRoomUsersFromRoomName(jwt: string, officeID: number, roomName: string): Promise<any>{
+        try{
+            const user = await this.userService.validateUser(jwt);
+            if(user == null){
+                throw new UnauthorizedException();
+            }
+        }
+        catch(err){
+            throw new UnauthorizedException();
+        }
+
+        try{
+            await this.roomRepository.findOneOrFail({officeID, roomName});
+        }
+        catch(err){
+            return {
+                Response: "Unsuccessfull",
+                Message: "No room exits with the name: " + roomName
+            }
+        }
+
+        try{
+            const user = await this.userService.validateUser(jwt);
+            const room = await this.roomRepository.findOne({officeID, roomName});
+            const removedInRoomUsers = await this.roomUserService.removeUserFromRoom(officeID, room.id, roomName, user.id, user.userName);
+            return {
+                Response: "Success",
+                RoomUser: removedInRoomUsers
+            }
+        }
+        catch(err) {
+            throw new BadRequestException("Could not remove user to RoomUsers Database");
+        }
+    }
+
+    async removeUserFromAllRooms(jwt: string): Promise<any>{
+        try{
+            const user = await this.userService.validateUser(jwt);
+            if(user == null){
+                throw new UnauthorizedException();
+            }
+        }
+        catch(err){
+            throw new UnauthorizedException();
+        }
+
+        try{
+            const user = await this.userService.validateUser(jwt);
+            return await this.roomUserService.removeUserFromAllRooms(user.id);
+        }
+        catch(err){
+            throw new BadRequestException("Could not remove records with the given user ID.")
+        }
+    }
 }

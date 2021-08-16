@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class RoomUsers{
+export class Kanban{
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -9,14 +9,11 @@ export class RoomUsers{
     officeID: number;
 
     @Column()
-    roomID: number;
+    listName: string;
 
     @Column()
-    roomName: string;
+    cardID: string;
 
     @Column()
-    userID: number;
-
-    @Column()
-    userName: string;
+    cardMessage: string;
 }

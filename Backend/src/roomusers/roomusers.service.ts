@@ -10,10 +10,10 @@ export class RoomUsersService {
         private roomUsersRepository: Repository<RoomUsers>
     ){}
 
-    async addUserToRoom(officeID: number, roomID: number, userID: number): Promise<any>
+    async addUserToRoom(officeID: number, roomID: number, roomName: string, userID: number, userName: string): Promise<any>
     {
         try{
-            const roomUser = await this.roomUsersRepository.create({officeID, roomID, userID});
+            const roomUser = await this.roomUsersRepository.create({officeID, roomID, roomName, userID, userName});
             const savedRoomUser = await this.roomUsersRepository.save(roomUser);
             return{
                 Response: "Success",
@@ -25,10 +25,10 @@ export class RoomUsersService {
         }
     }
 
-    async removeUserFromRoom(officeID: number, roomID: number,  userID: number): Promise<any>
+    async removeUserFromRoom(officeID: number, roomID: number, roomName: string, userID: number, userName: string): Promise<any>
     {
         try{
-            const roomUser = await this.roomUsersRepository.findOne({officeID, roomID, userID});
+            const roomUser = await this.roomUsersRepository.findOne({officeID, roomID, roomName, userID, userName});
             const removedRoomUser = await this.roomUsersRepository.remove(roomUser);
             return{
                 Response: "Success",
@@ -37,6 +37,19 @@ export class RoomUsersService {
         }
         catch(err) {
             throw new HttpException("Could not remove user from room.", 400);
+        }
+    }
+
+    async removeUserFromAllRooms(userID: number): Promise<any>{
+        try{
+            const removedRoomUsers = await this.roomUsersRepository.delete({userID});
+            return {
+                Response: "Success",
+                RoomUsersList: removedRoomUsers
+            }
+        }
+        catch(err) {
+            throw new BadRequestException("Could not remove records with the given user ID.",)
         }
     }
 
