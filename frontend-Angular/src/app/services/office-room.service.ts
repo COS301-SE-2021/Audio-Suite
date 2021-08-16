@@ -8,7 +8,7 @@ const httpOptions = {
     }),
 }
 
-const baseUrl = 'http://api.audiosuite.xyz'
+const baseUrl = 'https://api.audiosuite.xyz'
 
 @Injectable({
   providedIn: 'root'

@@ -29,7 +29,7 @@ import { LandingpageComponent } from "./pages/examples/landingpage/landingpage.c
 import { AudioComponent } from './audio/audio.component';
 import { UserComponent } from "./pages/user/user.component";
 
-const config: SocketIoConfig = { url: 'http://api.audiosuite.xyz/serversocket', options: {} };
+const config: SocketIoConfig = { url: 'https://api.audiosuite.xyz/serversocket', options: {} };
 
 const agoraConfig: AgoraConfig = {
   AppID: '7afb53157f754f6f8023f31fb343404a',
