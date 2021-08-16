@@ -43,20 +43,22 @@ export class AudioComponent {
     this.agoraService.createClient('rtc');
   }
 
-  join(userID:string, officeID:number): void{
+  join(userID:string, officeID:number, room:string): void{
     this.officeRoomService.getOfficeRoomList(this.jwt, officeID).subscribe((res) => {
       console.log("------ ROOMS ------");
       console.log(res.Rooms);
       this.rooms = res.Rooms;
       console.log("Entered room");
+      this.agoraService.client.join(null, '1000', userID);
       this.localStream = this.agoraService.createStream(userID, true, null, null, false, false);
+      setTimeout(() => {this.assignRemoteHandlers()},1000);
+      setTimeout(() => {this.publish(room)},3000);
     });
-    this.agoraService.client.join(null, '1000', userID);
-    this.assignRemoteHandlers();
   }
 
-  publish(room: string): void{
-    this.currentRoom = room;
+  publish(roomName: string): void{
+    console.log("-------------- PUBLISH --------------");
+    this.currentRoom = roomName;
     var tempRooms = this.rooms;
     this.assignLocalHandlers();
 
@@ -75,7 +77,6 @@ export class AudioComponent {
     
     // ---------------------------------------------------
     // NEEDS TO BE RUN AFTER PUBLISH IS COMPLETE
-    console.log(tempRooms);
     tempRooms.forEach((room) => {
       if(room.roomName === this.currentRoom){
         this.currentRoomDetails = room;

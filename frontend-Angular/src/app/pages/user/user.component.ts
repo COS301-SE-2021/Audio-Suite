@@ -403,7 +403,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
           console.log(error);
         });
 
-        this.audioComponent.join(this.userID, officeID);
+        //this.audioComponent.join(this.userID, officeID);
         this.selectedOffice = office;
         this.selectedOfficeID = officeID;
         this.selectedOfficeInvite = officeInvite;
@@ -435,7 +435,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log(error);
       });
 
-      this.audioComponent.join(this.userID, officeID);
+      //this.audioComponent.join(this.userID, officeID);
       this.selectedOffice = office;
       this.selectedOfficeID = officeID;
       this.selectedOfficeInvite = officeInvite;
@@ -472,19 +472,19 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.roomSelected = false;
       this.selectedRoom = '';
       this.roomTextChannelMessages = [];
-      this.audioComponent.unpublish();
+      this.audioComponent.leave();
     }
     else{
 
       if(this.roomSelected){
         if(this.selectedRoom != id){
           this.leaveRoom();
-          this.audioComponent.unpublish();
+          this.audioComponent.leave();
           this.roomSelected = true;
           this.selectedRoom = id;
           var jwt = sessionStorage.getItem('jwt');
           this.textChannelsService.joinRoom(jwt, this.selectedOfficeID, this.selectedOffice, id, true);
-          this.audioComponent.publish(this.selectedRoom);
+          this.audioComponent.join(this.userID, this.selectedOfficeID, this.selectedRoom);
         }
       }
       else{
@@ -492,7 +492,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         this.selectedRoom = id;
         var jwt = sessionStorage.getItem('jwt');
         this.textChannelsService.joinRoom(jwt, this.selectedOfficeID, this.selectedOffice, id, true);
-        this.audioComponent.publish(this.selectedRoom);
+        this.audioComponent.join(this.userID, this.selectedOfficeID, this.selectedRoom);
       }
     }
   }
