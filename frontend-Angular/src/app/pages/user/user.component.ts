@@ -10,6 +10,19 @@ import { CardStore } from '../cardstore';
 import { ListSchema } from '../listschema';
 import { AudioComponent } from 'src/app/audio/audio.component';
 import { AngularAgoraRtcService, Stream, AgoraConfig } from 'angular-agora-rtc';
+import { KanbanService } from 'src/app/services/kanban.service';
+
+interface Office{
+  id: string,
+  name: string,
+  invite: string
+}
+
+interface textMessage{
+  sender: string,
+  room: string,
+  message: string
+}
 
 interface Office{
   id: string,
@@ -143,9 +156,10 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     private textChannelsService: TextChannelsService,
     private officeRoomService: OfficeRoomService,
     private userService: UserService,
+    private kanbanService: KanbanService,
     private router: Router) { }
 
-  setMockData(): void {
+  setListData(): void {
     this.cardStore = new CardStore();
     const lists: ListSchema[] = [
       {
@@ -153,7 +167,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         cards: []
       },
       {
-        name: 'Doing',
+        name: 'In Progress',
         cards: []
       },
       {
@@ -161,6 +175,40 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         cards: []
       }
     ]
+    //cards need id, description and list name.
+
+    var jwt = sessionStorage.getItem('jwt');
+    var officeID = sessionStorage.getItem('officeID');
+    console.log(parseInt(officeID));
+    this.kanbanService.getAllCards(jwt, parseInt(officeID)).subscribe((response) => {
+      var cards = response.Cards;
+      console.log("below is 'cards'");
+      console.log(cards);
+      console.log(cards[0].cardID);
+      // if(cards[0].listName == "To Do"){
+      //   console.log("hello");
+      //   console.log(lists[0].name);
+      // }
+      for(var i=0; i<cards.length; i++){
+        var cardID =  cards[i].cardID;
+        console.log(cardID);
+        var retCard = this.cardStore.retrieveCard(cards[i].cardID, cards[i].cardMessage, cards[i].listName);
+        if(cards[i].listName == "To Do"){
+          // var retCard = this.cardStore.retrieveCard(cards[i].cardID, cards[i].cardMessage, cards[i].listName);
+          // console.log(retCard);
+          lists[0].cards.push(cardID);
+          // console.log(lists[0].cards);
+        }else if(cards[i].listName == "In Progress"){
+          lists[1].cards.push(cardID);
+        }else if(cards[i].listName == "Done"){
+          lists[2].cards.push(cardID);
+        }
+      }
+    },
+    (error) => {
+      console.log(error);
+    })
+
     this.lists = lists;
   }
 
@@ -273,8 +321,6 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.receivedMessage(data);
     }) 
 
-    this.setMockData();
-
     this.resizeSubscription = merge(
       fromEvent(window, 'resize'),
       fromEvent(window, 'orientationchange')
@@ -330,11 +376,11 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   selectOffice(officeID, office, officeInvite): void{
+    var officeId = sessionStorage.setItem('officeID', officeID);
     if(this.officeSelected){
       if(this.selectedOffice != office){
         this.leaveOffice();
         this.layout = [];
-
         var jwt = sessionStorage.getItem('jwt');
         this.officeRoomService.getOfficeRoomList(jwt, officeID).subscribe((response) => {
           console.log(response);

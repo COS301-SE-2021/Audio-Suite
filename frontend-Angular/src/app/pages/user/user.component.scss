@@ -155,6 +155,7 @@
     width: 92%;
     position: fixed;
     text-align: center;
+    overflow: auto;
 
     .newJoinOfficeContent{
         display: flex;
@@ -270,7 +271,13 @@
     display: flex;
     padding: 0 5px;
     height: 100vh;
-    overflow-x: scroll;
+    // overflow: auto;
+}
+
+#messageBoard::webkit-scrollbar{
+    display: none;
+    width: 0;
+    background: transparent;
 }
 
 #messageBoard::webkit-scrollbar{

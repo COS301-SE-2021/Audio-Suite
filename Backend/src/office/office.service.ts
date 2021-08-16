@@ -33,6 +33,7 @@ export class OfficeService {
         }catch(err){
             throw new UnauthorizedException();
         }
+
         try{
             const user = await this.userService.validateUser(jwt);
             const office = await this.officesRepository.create({name, invite});
@@ -91,6 +92,31 @@ export class OfficeService {
         }
         catch(err) {
             throw new BadRequestException();
+        }
+    }
+
+    async getOfficeFromOfficeID(jwt: string, officeID: number) : Promise<any> {
+        //verify the user
+        console.log("office??")
+        console.log(officeID);
+        try{
+            const user = await this.userService.validateUser(jwt);
+        }catch(err){
+            throw new UnauthorizedException();
+        }
+        
+        try{
+            const office = await this.officesRepository.findOne({id: officeID});
+            
+            if(office!=null){
+                return office;
+            }else{
+                throw new BadRequestException();
+            }
+
+        }catch(err) {
+            // console.log(officeID);
+            throw new BadRequestException("Office does not exist.");
         }
     }
 

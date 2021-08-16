@@ -59,6 +59,18 @@ export class UserService {
     return this.http.post<any>(logUserInURL, body, httpOptions);
   }
 
+  updateUsername(
+    id: string,
+    newUsername: string
+  ): Observable<any>{
+    const body = {
+      id: id,
+      newUsername: newUsername
+    }
+    var updateUsernameURL = baseUrl + '/api/user/updateUsername'
+    return this.http.post<any>(updateUsernameURL, body, httpOptions);
+  }
+
   getUserDetails(
     jwt: string
   ): Observable<any>{

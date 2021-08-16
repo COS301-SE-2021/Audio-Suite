@@ -58,6 +58,8 @@
             <button class="sidebarBtn" (click)="logOut()">Log out</button>
         </div>
     </div>
+
+    <button id="sidebar-officeHeader" (click)="gotoAccountSettings()"> Account Settings </button>
 </div>
 
 <!-- Page content -->
@@ -325,7 +327,7 @@
         </tab>
         <tab>
             <ng-template tabHeading>
-                <i class="tim-icons icon-components"> </i> Kanban Boards
+                <i class="tim-icons icon-components"> </i> <button (click)="testFunc();" > Kanban Boards </button>
             </ng-template>
             <div class="board_component">
                 <app-list *ngFor="let list of lists" [list]="list" [cardStore]="cardStore"></app-list>

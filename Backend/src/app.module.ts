@@ -21,6 +21,8 @@ import { RoomUsersService } from './roomusers/roomusers.service';
 import { MessageModule } from './message/message.module';
 import { GatewayModule } from './gateway/gateway.module';
 import { Message } from './message/message.entity';
+import { KanbanModule } from './kanban/kanban.module';
+import { Kanban } from './kanban/kanban.entity';
 
 @Module({
   imports: [
@@ -34,7 +36,16 @@ import { Message } from './message/message.entity';
       username: 'AudioSuiteDev', // TODO change to env var
       password: '4uLrYf49J3W6az', // TODO change to env var
       database: 'AUDIO_SUITE', // TODO change to env var
-      entities: [User, Office, OfficeUsers, Notifications, Room, RoomUsers, Message],
+      entities: [
+        User, 
+        Office, 
+        OfficeUsers, 
+        Notifications, 
+        Room, 
+        RoomUsers, 
+        Message, 
+        Kanban
+      ],
       synchronize: true,}), // TODO change to false for production
     UserModule, 
     OfficeModule, 
@@ -44,7 +55,8 @@ import { Message } from './message/message.entity';
     RoomModule, 
     RoomusersModule, 
     MessageModule,
-    GatewayModule],
+    GatewayModule,
+    KanbanModule],
   controllers: [AppController],
   providers: [AppService],
 })
