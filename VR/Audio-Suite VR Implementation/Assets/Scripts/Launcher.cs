@@ -12,7 +12,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// <summary>
     /// The game version 
     /// </summary>
-    private string gameVersion = "1";
+    private string gameVersion = "0";
 
     /// <summary>
     /// Flag to stop from reconnecting to the room just left.
@@ -71,7 +71,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         // Create or join a room after connecting
         if (isConnected)
         {            
-            PhotonNetwork.JoinOrCreateRoom("placeHolder", new RoomOptions { MaxPlayers = 10 }, TypedLobby.Default);
+            PhotonNetwork.JoinOrCreateRoom(roomCode.text, new RoomOptions { MaxPlayers = 10 }, TypedLobby.Default);
             isConnected = false;
         }
     }

@@ -49,8 +49,25 @@ public class GameManager : MonoBehaviourPunCallbacks
             // Check to make sure we dont create multiple instances of the users
             if(UserManager.LocalPlayerInstance == null)
             {
-                // Spawn the player
-                PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 1f, 0f), Quaternion.identity, 0);
+                // Get the number of users currently in the room
+                int userInRoom = PhotonNetwork.CurrentRoom.PlayerCount;
+
+                // Check the current amount of players to decide where to spawn
+                if (userInRoom <= 2)
+                {
+                    // Spawn the player
+                    PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(2f, 0f, -3f), Quaternion.identity, 0);
+                }
+                else if (userInRoom <= 6)
+                {
+                    // Spawn the player
+                    PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(4f, 0f, -3f), Quaternion.identity, 0);
+                }
+                else if (userInRoom <= 10)
+                {
+                    // Spawn the player
+                    PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(6f, 0f, -3f), Quaternion.identity, 0);
+                }
             }
         }
     }

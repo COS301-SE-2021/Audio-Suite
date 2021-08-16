@@ -367,9 +367,5 @@ PrefabInstance:
       propertyPath: m_Name
       value: Office User
       objectReference: {fileID: 0}
-    - target: {fileID: 1520512415214436821, guid: 3595d9a509c0e04428bab3ef39a14272, type: 3}
-      propertyPath: sceneViewId
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3595d9a509c0e04428bab3ef39a14272, type: 3}
