@@ -453,6 +453,9 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   leaveOffice(): void{
     var jwt = sessionStorage.getItem('jwt');
     this.textChannelsService.leaveRoom(jwt, this.selectedOfficeID, this.selectedOffice, this.selectedOffice);
+    if(this.roomSelected){
+      this.leaveRoom();
+    }
     this.selectedOffice = '';
     this.selectedOfficeID = null;
     this.selectedOfficeInvite = '';
