@@ -12,6 +12,8 @@ import { AudioComponent } from "./audio/audio.component";
 import { ProfilepageComponent } from "./pages/examples/profilepage/profilepage.component";
 import { RegisterpageComponent } from "./pages/examples/registerpage/registerpage.component";
 import { LandingpageComponent } from "./pages/examples/landingpage/landingpage.component";
+import { AccountComponent } from "./pages/account/account.component";
+import { ListComponent } from "./pages/list/list.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "login", pathMatch: "full" },
@@ -19,6 +21,8 @@ const routes: Routes = [
   { path: "login", component: LoginComponent},
   { path: "register", component: RegisterComponent },
   { path: "user", component: UserComponent },
+  // { path: "kanban", component: ListComponent },
+  { path: "account", component: AccountComponent },
   { path: "profile", component: ProfilepageComponent },
   { path: "registerExample", component: RegisterpageComponent },
   { path: "landing", component: LandingpageComponent },

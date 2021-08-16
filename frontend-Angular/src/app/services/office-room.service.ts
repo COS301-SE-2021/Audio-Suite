@@ -8,7 +8,7 @@ const httpOptions = {
     }),
 }
 
-const baseUrl = 'https://api.audiosuite.xyz'
+const baseUrl = 'http://localhost:3001'
 
 @Injectable({
   providedIn: 'root'

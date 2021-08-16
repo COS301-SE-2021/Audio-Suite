@@ -8,7 +8,7 @@ const httpOptions = {
     }),
 }
 
-const baseUrl = 'https://api.audiosuite.xyz'
+const baseUrl = 'http://localhost:3001'
 
 @Injectable({
   providedIn: 'root'
@@ -57,6 +57,18 @@ export class UserService {
     }
     var logUserInURL = baseUrl + '/api/login'
     return this.http.post<any>(logUserInURL, body, httpOptions);
+  }
+
+  updateUsername(
+    id: string,
+    newUsername: string
+  ): Observable<any>{
+    const body = {
+      id: id,
+      newUsername: newUsername
+    }
+    var updateUsernameURL = baseUrl + '/api/user/updateUsername'
+    return this.http.post<any>(updateUsernameURL, body, httpOptions);
   }
 
   getUserDetails(
