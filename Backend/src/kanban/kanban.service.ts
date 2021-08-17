@@ -1,7 +1,7 @@
 import { BadRequestException, HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { OfficeService } from 'src/office/office.service';
-import { UserService } from 'src/user/user.service';
+import { OfficeService } from '../office/office.service';
+import { UserService } from '../user/user.service';
 import { Repository } from 'typeorm';
 import { Kanban } from './kanban.entity';
 

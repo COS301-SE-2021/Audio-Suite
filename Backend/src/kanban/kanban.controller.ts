@@ -5,8 +5,7 @@ import { KanbanService } from './kanban.service';
 export class KanbanController {
     constructor(private readonly kanbanService: KanbanService){}
 
-    //Creating a card and assigning it to a list in the kanban.ughernwviunevjhdvkjwhef
-    // skdhvncgfingsdcfsjdk
+    //Creating a card and assigning it to a list in the kanban.
     @Post('kanban/createCard')
     async createCard(
         @Body('jwt') jwt: string,
