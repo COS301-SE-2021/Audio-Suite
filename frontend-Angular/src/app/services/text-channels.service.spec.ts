@@ -1,16 +1,22 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, inject } from '@angular/core/testing';
+import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 
 import { TextChannelsService } from './text-channels.service';
 
+const config: SocketIoConfig = { url: 'http://localhost:3001/serverSocket' };
+
 describe('TextChannelsService', () => {
-  let service: TextChannelsService;
+  let textChannelService: TextChannelsService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(TextChannelsService);
+    TestBed.configureTestingModule({
+      imports: [ SocketIoModule.forRoot(config) ],
+      providers: [ TextChannelsService ]
+    });
+    textChannelService = TestBed.inject(TextChannelsService);
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    expect(textChannelService).toBeTruthy();
   });
 });
