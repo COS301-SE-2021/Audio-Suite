@@ -35,7 +35,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   constructor(private userService: UserService, private router: Router) { }
 
   @HostListener("document:mousemove", ["$event"])
-  onMouseMove(e) {
+  onMouseMove(e: any) {
     var squares1 = document.getElementById("square1");
     var squares2 = document.getElementById("square2");
     var squares3 = document.getElementById("square3");
