@@ -448,6 +448,107 @@ describe('ROOM', () => {
       .expect(HttpStatus.CREATED);
   });
 
+  //Lets join the room we created
+  it('should join the room previously created in an existing office.', () => {
+    const user ={
+      email: 'JohnWhite@gmail.com',
+      password: 'Password!123'
+    };
+  
+    const office = {
+      officeID: 37
+    };
+
+    const room = {
+      roomName: "newRoom"
+    }
+  
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+        expect(body.response).toStrictEqual('Success');
+        jwtFromResponse=body.jwt;
+        const validOffice = request(app)
+                            .post('/office/officeFromOfficeID')
+                            .set('Accept', 'application/json')
+                            .send({
+                              jwt: jwtFromResponse,
+                              officeID: office.officeID
+                            })
+                            .expect(({body}) => {
+                              const joinOffice = request(app)
+                                                .post('/office/joinInvite')
+                                                .set('Accept', 'application/json')
+                                                .send({
+                                                  invite: "40f81a47a99cb26db76b261f1e34c2ed",
+                                                  jwt: jwtFromResponse
+                                                })
+                                                .expect(({body}) => {
+                                                  const joinRoom = request(app)
+                                                                    .post('/room/join')
+                                                                    .set('Accept', 'application/json')
+                                                                    .send({
+                                                                      jwt: jwtFromResponse,
+                                                                      officeID: office.officeID,
+                                                                      roomName: room.roomName
+                                                                    })
+                                                                    .expect(HttpStatus.CREATED);
+                                                })
+                                                .expect(HttpStatus.CREATED);
+                            })
+                            .expect(HttpStatus.CREATED);
+      })
+      .expect(HttpStatus.CREATED);
+  });
+
+  //Lets join the leave we created
+  it('should leave the room previously created in an existing office.', () => {
+    const user ={
+      email: 'JohnWhite@gmail.com',
+      password: 'Password!123'
+    };
+  
+    const office = {
+      officeID: 37
+    };
+
+    const room = {
+      roomName: "newRoom"
+    }
+  
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+        expect(body.response).toStrictEqual('Success');
+        jwtFromResponse=body.jwt;
+        const validOffice = request(app)
+                            .post('/office/officeFromOfficeID')
+                            .set('Accept', 'application/json')
+                            .send({
+                              jwt: jwtFromResponse,
+                              officeID: office.officeID
+                            })
+                            .expect(({body}) => {
+                              const joinRoom = request(app)
+                                                .post('/room/leave')
+                                                .set('Accept', 'application/json')
+                                                .send({
+                                                  jwt: jwtFromResponse,
+                                                  officeID: body.id,
+                                                  roomName: room.roomName
+                                                })
+                                                .expect(HttpStatus.CREATED);
+                            })
+                            .expect(HttpStatus.CREATED);
+      })
+      .expect(HttpStatus.CREATED);
+  });
+
+
   //Lets delete a room in an office.
   it('should delete a given room in an existing office.', () => {
     const user ={
