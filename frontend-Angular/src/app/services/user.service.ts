@@ -8,12 +8,12 @@ const httpOptions = {
     }),
 }
 
-const baseUrl = 'http://localhost:3001'
-
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+
+  baseUrl = 'http://localhost:3001'
 
   constructor(private http: HttpClient) { }
 
@@ -25,7 +25,7 @@ export class UserService {
       emailAddress: email,
       userName: userName
     }
-    var sendOTPVerificationEmailURL = baseUrl + '/api/notifications/sendVerification';
+    var sendOTPVerificationEmailURL = this.baseUrl + '/api/notifications/sendVerification';
     return this.http.post<any>(sendOTPVerificationEmailURL, body, httpOptions);
   }
 
@@ -43,7 +43,7 @@ export class UserService {
       email: emailAddress,
       password: password
     }
-    var registerUserURL = baseUrl + '/api/register';
+    var registerUserURL = this.baseUrl + '/api/register';
     return this.http.post<any>(registerUserURL, body, httpOptions);
   }
 
@@ -55,7 +55,7 @@ export class UserService {
       email: email,
       password: password
     }
-    var logUserInURL = baseUrl + '/api/login'
+    var logUserInURL = this.baseUrl + '/api/login'
     return this.http.post<any>(logUserInURL, body, httpOptions);
   }
 
@@ -67,7 +67,7 @@ export class UserService {
       id: id,
       newUsername: newUsername
     }
-    var updateUsernameURL = baseUrl + '/api/user/updateUsername'
+    var updateUsernameURL = this.baseUrl + '/api/user/updateUsername'
     return this.http.post<any>(updateUsernameURL, body, httpOptions);
   }
 
@@ -77,7 +77,7 @@ export class UserService {
     const body = {
       jwt: jwt
     }
-    var getUserDetailsURL = baseUrl + '/api/user/details';
+    var getUserDetailsURL = this.baseUrl + '/api/user/details';
     return this.http.post<any>(getUserDetailsURL, body, httpOptions);
   }
 }
