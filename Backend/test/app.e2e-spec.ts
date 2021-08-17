@@ -533,7 +533,7 @@ describe('ROOM', () => {
                               officeID: office.officeID
                             })
                             .expect(({body}) => {
-                              const joinRoom = request(app)
+                              const leaveRoom = request(app)
                                                 .post('/room/leave')
                                                 .set('Accept', 'application/json')
                                                 .send({
@@ -590,6 +590,138 @@ describe('ROOM', () => {
                                                 .expect(HttpStatus.CREATED);
                             })
                             .expect(HttpStatus.CREATED);
+      })
+      .expect(HttpStatus.CREATED);
+  });
+});
+
+describe('KANBAN', () => {
+
+  //Create card in a kanban in an existing office.
+  it('should create a new card in an existing office.', () => {
+    const user ={
+      email: 'JohnWhite@gmail.com',
+      password: 'Password!123'
+    };
+
+    const office = {
+      officeID: 37
+    };
+
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+      expect(body.response).toStrictEqual('Success');
+      jwtFromResponse=body.jwt;
+      const validOffice = request(app)
+                          .post('/office/officeFromOfficeID')
+                          .set('Accept', 'application/json')
+                          .send({
+                            jwt: jwtFromResponse,
+                            officeID: office.officeID
+                          })
+                          .expect(({body}) => {
+                            const createCard = request(app)
+                                              .post('/kanban/createCard')
+                                              .set('Accept', 'application/json')
+                                              .send({
+                                                jwt: jwtFromResponse,
+                                                officeID: body.id,
+                                                listName: "To Do",
+                                                cardID: "0",
+                                                cardMessage: "Testing"
+                                              })
+                                              .expect(HttpStatus.CREATED);
+                          })
+                          .expect(HttpStatus.CREATED);
+      })
+      .expect(HttpStatus.CREATED);
+  });
+
+  //Get all cards that belong to an existing office.
+  it('should get all cards that belong to an existing office.', () => {
+    const user ={
+      email: 'JohnWhite@gmail.com',
+      password: 'Password!123'
+    };
+
+    const office = {
+      officeID: 37
+    };
+
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+      expect(body.response).toStrictEqual('Success');
+      jwtFromResponse=body.jwt;
+      const validOffice = request(app)
+                          .post('/office/officeFromOfficeID')
+                          .set('Accept', 'application/json')
+                          .send({
+                            jwt: jwtFromResponse,
+                            officeID: office.officeID
+                          })
+                          .expect(({body}) => {
+                            const getCards = request(app)
+                                              .post('/kanban/createCard')
+                                              .set('Accept', 'application/json')
+                                              .send({
+                                                jwt: jwtFromResponse,
+                                                officeID: body.id
+                                              })
+                                              .expect(({body}) => {
+                                                expect(body.response).toStrictEqual('Success');
+                                              })
+                                              .expect(HttpStatus.CREATED);
+                          })
+                          .expect(HttpStatus.CREATED);
+      })
+      .expect(HttpStatus.CREATED);
+  });
+
+
+
+  //Delete card in a kanban in an existing office.
+  it('should delete a card in an existing office.', () => {
+    const user ={
+      email: 'JohnWhite@gmail.com',
+      password: 'Password!123'
+    };
+
+    const office = {
+      officeID: 37
+    };
+
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+      expect(body.response).toStrictEqual('Success');
+      jwtFromResponse=body.jwt;
+      const validOffice = request(app)
+                          .post('/office/officeFromOfficeID')
+                          .set('Accept', 'application/json')
+                          .send({
+                            jwt: jwtFromResponse,
+                            officeID: office.officeID
+                          })
+                          .expect(({body}) => {
+                            const createCard = request(app)
+                                              .post('/kanban/deleteCard')
+                                              .set('Accept', 'application/json')
+                                              .send({
+                                                jwt: jwtFromResponse,
+                                                officeID: body.id,
+                                                cardID: "0"
+                                              })
+                                              .expect(HttpStatus.CREATED);
+                          })
+                          .expect(HttpStatus.CREATED);
       })
       .expect(HttpStatus.CREATED);
   });
