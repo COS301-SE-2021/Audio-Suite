@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
+import { Office } from 'src/office/office.entity';
 
 
 const app = 'http://localhost:3001';
@@ -22,9 +23,9 @@ describe('USER', () => {
   // it('should register a user', () => {
   //   const user = {
   //     firstName: 'John',
-  //     lastName: 'Black',
-  //     userName: 'JohnBlack',
-  //     email: 'JohnBlack@gmail.com',
+  //     lastName: 'White',
+  //     userName: 'JohnWhite',
+  //     email: 'JohnWhite@gmail.com',
   //     password: 'Password!123'
   //   };
 
@@ -36,21 +37,21 @@ describe('USER', () => {
   // });
 
   // Registering a user that alreay exists.
-  it('should make use of registerUser from User and return a 500 "Internal Server Error" since the user John White has already been registered', () => {
-    const user = {
-      firstName: 'John',
-      lastName: 'White',
-      userName: 'JohnWhite',
-      email: 'johnwhite@gmail.com',
-      password: 'Password!123'
-    };
+  // it('should make use of registerUser from User and return a 500 "Internal Server Error" since the user John White has already been registered', () => {
+  //   const user = {
+  //     firstName: 'John',
+  //     lastName: 'White',
+  //     userName: 'JohnWhite',
+  //     email: 'johnwhite@gmail.com',
+  //     password: 'Password!123'
+  //   };
 
-    return request(app)
-      .post('/api/register')
-      .set('Accept', 'application/json')
-      .send(user)
-      .expect(HttpStatus.BAD_REQUEST);
-  });
+  //   return request(app)
+  //     .post('/api/register')
+  //     .set('Accept', 'application/json')
+  //     .send(user)
+  //     .expect(HttpStatus.BAD_REQUEST);
+  // });
 
   // Loging in a user that exists
   it('should make use of loginUser from User with John Whites details and return successfully.', () => {
@@ -87,7 +88,7 @@ describe('USER', () => {
   // Logging in and returning user details (by use of JWT)
   it('should login user John White and make use of userDetails from User.', () => {
     const user ={
-      email: 'johnwhite3@gmail.com',
+      email: 'johnwhite@gmail.com',
       password: 'Password!123'
     };
 
@@ -135,7 +136,7 @@ describe('NOTIFICATION', () => {
   // Makes use of createNotification
   it('should make use of createNotification from Notifications for John White.', () => {
     const user ={
-      email: 'johnwhite2@gmail.com',
+      email: 'johnwhite@gmail.com',
       password: 'Password!123'
     };
 
@@ -192,7 +193,7 @@ describe('NOTIFICATION', () => {
   // makes use of sendVerification
   it('should make use of sendVerification from Notifications for John White.', () => {
     const user = {
-      emailAddress: 'johnwhite2@gmail.com',
+      emailAddress: 'johnwhite@gmail.com',
       userName: 'JohnWhite2'
     }
 
@@ -247,60 +248,60 @@ describe('OFFICE', () => {
   var idFromResponse: string = "";
 
   // registering a new office
-  it('should make use of registerOffice from Office to register a new office.', () => {
-    const user ={
-      email: 'johnwhite@gmail.com',
-      password: 'Password!123'
-    };
+  // it('should make use of registerOffice from Office to register a new office.', () => {
+  //   const user ={
+  //     email: 'johnwhite@gmail.com',
+  //     password: 'Password!123'
+  //   };
 
-    return request(app)
-    .post('/api/login')
-    .set('Accept', 'application/json')
-    .send(user)
-    .expect(({body}) => {
-      expect(body.response).toStrictEqual('Success');
-      jwtFromResponse=body.jwt;
-      const createOffice = request(app)
-                          .post('/office/register')
-                          .set('Accept', 'application/json')
-                          .send({
-                            name: "newOffice",
-                            jwt: jwtFromResponse
-                          })
-                          .expect(HttpStatus.CREATED);
-    })
-    .expect(HttpStatus.CREATED);
-  });
+  //   return request(app)
+  //   .post('/api/login')
+  //   .set('Accept', 'application/json')
+  //   .send(user)
+  //   .expect(({body}) => {
+  //     expect(body.response).toStrictEqual('Success');
+  //     jwtFromResponse=body.jwt;
+  //     const createOffice = request(app)
+  //                         .post('/office/register')
+  //                         .set('Accept', 'application/json')
+  //                         .send({
+  //                           name: "newOffice",
+  //                           jwt: jwtFromResponse
+  //                         })
+  //                         .expect(HttpStatus.CREATED);
+  //   })
+  //   .expect(HttpStatus.CREATED);
+  // });
 
   // attempt to register an office that already exists
-  it('should make use of registerOffice from Office to register a new office and return a 400 "Bad Request" since newOffice has already been registered.', () => {
-    const user ={
-      email: 'johnwhite@gmail.com',
-      password: 'Password!123'
-    };
+  // it('should make use of registerOffice from Office to register a new office and return a 400 "Bad Request" since newOffice has already been registered.', () => {
+  //   const user ={
+  //     email: 'johnwhite@gmail.com',
+  //     password: 'Password!123'
+  //   };
 
-    return request(app)
-    .post('/api/login')
-    .set('Accept', 'application/json')
-    .send(user)
-    .expect(({body}) => {
-      expect(body.response).toStrictEqual('Success');
-      jwtFromResponse=body.jwt;
-      const createOffice = request(app)
-                          .post('/api/office/register')
-                          .set('Accept', 'application/json')
-                          .send({
-                            name: "Pegasus",
-                            jwt: jwtFromResponse
-                          })
-                          .expect(({body}) => {
-                            expect(body.statusCode).toStrictEqual('400');
-                            expect(body.message).toStrictEqual('Office with this name already exists.');
-                          })
-                          .expect(HttpStatus.BAD_REQUEST);
-    })
-    .expect(HttpStatus.CREATED);
-  });
+  //   return request(app)
+  //   .post('/api/login')
+  //   .set('Accept', 'application/json')
+  //   .send(user)
+  //   .expect(({body}) => {
+  //     expect(body.response).toStrictEqual('Success');
+  //     jwtFromResponse=body.jwt;
+  //     const createOffice = request(app)
+  //                         .post('/api/office/register')
+  //                         .set('Accept', 'application/json')
+  //                         .send({
+  //                           name: "Pegasus",
+  //                           jwt: jwtFromResponse
+  //                         })
+  //                         .expect(({body}) => {
+  //                           expect(body.statusCode).toStrictEqual('400');
+  //                           expect(body.message).toStrictEqual('Office with this name already exists.');
+  //                         })
+  //                         .expect(HttpStatus.BAD_REQUEST);
+  //   })
+  //   .expect(HttpStatus.CREATED);
+  // });
 
   // attempt to join an office
   it('should make use of joinInvite from Office', () => {
@@ -320,7 +321,7 @@ describe('OFFICE', () => {
                           .post('/office/joinInvite')
                           .set('Accept', 'application/json')
                           .send({
-                            invite: "3b942b255819aabff747b659b76ae3df",
+                            invite: "40f81a47a99cb26db76b261f1e34c2ed",
                             jwt: jwtFromResponse
                           })
                           .expect(HttpStatus.CREATED);
@@ -329,10 +330,44 @@ describe('OFFICE', () => {
   });
 
   // attempt to join an office with incorrect invite code
-  it('should make use of joinInvite from Office and return a 400 "Bad Request" since the invite code invalid', () => {
+  // it('should make use of joinInvite from Office and return a 400 "Bad Request" since the invite code invalid', () => {
+  //   const user ={
+  //     email: 'johnwhite@gmail.com',
+  //     password: 'Password!123'
+  //   };
+
+  //   return request(app)
+  //   .post('/api/login')
+  //   .set('Accept', 'application/json')
+  //   .send(user)
+  //   .expect(({body}) => {
+  //     expect(body.response).toStrictEqual('Success');
+  //     jwtFromResponse=body.jwt;
+  //     const createOffice = request(app)
+  //                         .post('/office/joinInvite')
+  //                         .set('Accept', 'application/json')
+  //                         .send({
+  //                           invite: "3b942b255819aaf747b659b76ae3df",
+  //                           jwt: jwtFromResponse
+  //                         })
+  //                         .expect(HttpStatus.BAD_REQUEST);
+  //   })
+  //   .expect(HttpStatus.CREATED);
+  // });
+
+});
+
+describe('ROOM', () => {
+
+  //Lets begin with registering a room in an office.
+  it('should register a new room in an existing office.', () => {
     const user ={
-      email: 'johnwhite@gmail.com',
+      email: 'JohnWhite@gmail.com',
       password: 'Password!123'
+    };
+
+    const office = {
+      officeID: 37
     };
 
     return request(app)
@@ -342,16 +377,120 @@ describe('OFFICE', () => {
     .expect(({body}) => {
       expect(body.response).toStrictEqual('Success');
       jwtFromResponse=body.jwt;
-      const createOffice = request(app)
-                          .post('/office/joinInvite')
+      const validOffice = request(app)
+                          .post('/office/officeFromOfficeID')
                           .set('Accept', 'application/json')
                           .send({
-                            invite: "3b942b255819aaf747b659b76ae3df",
-                            jwt: jwtFromResponse
+                            jwt: jwtFromResponse,
+                            officeID: office.officeID
                           })
-                          .expect(HttpStatus.BAD_REQUEST);
-    })
-    .expect(HttpStatus.CREATED);
+                          .expect(({body}) => {
+                            const createRoom = request(app)
+                                              .post('/room/register')
+                                              .set('Accept', 'application/json')
+                                              .send({
+                                                jwt: jwtFromResponse,
+                                                officeID: office.officeID,
+                                                roomName: "newRoom",
+                                                xCoordinate: 10,
+                                                yCoordinate: 10,
+                                                width: 5,
+                                                height: 5
+                                              })
+                                              .expect(HttpStatus.CREATED);
+                          })
+                          .expect(HttpStatus.CREATED);
+      })
+      .expect(HttpStatus.CREATED);
+  });
+
+  it('should register a new room in an office and return a 400 "Bad Request" since the officeID does not exist.', () => {
+    const user ={
+      email: 'JohnWhite@gmail.com',
+      password: 'Password!123'
+    };
+
+    const office = {
+      officeID: 999
+    };
+
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+      expect(body.response).toStrictEqual('Success');
+      jwtFromResponse=body.jwt;
+      const validOffice = request(app)
+                          .post('/office/officeFromOfficeID')
+                          .set('Accept', 'application/json')
+                          .send({
+                            jwt: jwtFromResponse,
+                            officeID: office.officeID
+                          })
+                          .expect(({body}) => {
+                            const createRoom = request(app)
+                                              .post('/room/register')
+                                              .set('Accept', 'application/json')
+                                              .send({
+                                                jwt: jwtFromResponse,
+                                                officeID: body.id,
+                                                roomName: "newRoom",
+                                                xCoordinate: 10,
+                                                yCoordinate: 10,
+                                                width: 5,
+                                                height: 5
+                                              })
+                                              .expect(HttpStatus.BAD_REQUEST);
+                          })
+                          .expect(HttpStatus.CREATED);
+      })
+      .expect(HttpStatus.CREATED);
+  });
+
+  //Lets delete a room in an office.
+  it('should delete a given room in an existing office.', () => {
+    const user ={
+      email: 'JohnWhite@gmail.com',
+      password: 'Password!123'
+    };
+  
+    const office = {
+      officeID: 37
+    };
+
+    const room = {
+      roomName: "newRoom"
+    }
+  
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+        expect(body.response).toStrictEqual('Success');
+        jwtFromResponse=body.jwt;
+        const validOffice = request(app)
+                            .post('/office/officeFromOfficeID')
+                            .set('Accept', 'application/json')
+                            .send({
+                              jwt: jwtFromResponse,
+                              officeID: office.officeID
+                            })
+                            .expect(({body}) => {
+                              const deleteRoom = request(app)
+                                                .post('/room/delete')
+                                                .set('Accept', 'application/json')
+                                                .send({
+                                                  jwt: jwtFromResponse,
+                                                  officeID: body.id,
+                                                  roomName: room.roomName
+                                                })
+                                                .expect(HttpStatus.CREATED);
+                            })
+                            .expect(HttpStatus.CREATED);
+      })
+      .expect(HttpStatus.CREATED);
   });
 
 });
