@@ -24,18 +24,6 @@ interface textMessage{
   message: string
 }
 
-interface Office{
-  id: string,
-  name: string,
-  invite: string
-}
-
-interface textMessage{
-  sender: string,
-  room: string,
-  message: string
-}
-
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',

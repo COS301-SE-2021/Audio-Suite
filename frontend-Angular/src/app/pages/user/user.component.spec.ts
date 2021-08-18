@@ -13,6 +13,12 @@ import { UserComponent } from './user.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3001/serverSocket' };
 
+interface Office{
+  id: string,
+  name: string,
+  invite: string
+}
+
 describe('UserComponent', () => {
   let component: UserComponent;
   let fixture: ComponentFixture<UserComponent>;
@@ -25,7 +31,12 @@ describe('UserComponent', () => {
     userServiceStub = {
       getUserDetails(jwt: string): Observable<any>{
         return of({
-          Response: "Success"
+          Response: "Success",
+          id: '1',
+          firstName: 'Test',
+          lastName: 'Test',
+          userName: 'Test',
+          email: 'test@test.com'
         })
       } 
     };
@@ -33,7 +44,13 @@ describe('UserComponent', () => {
       getUserOffices(jwt: string): Observable<any>{
         return of({
           Response: "Success",
-          Offices: []
+          Offices: [
+            {
+              id: '1',
+              name: 'Test_Office',
+              invite: 'ghsaghs343hkj34h'
+            }
+          ]
         })
       }
     };
@@ -51,10 +68,23 @@ describe('UserComponent', () => {
       },
 
       listen(eventName: string){
-        return of({
-          Response: "Success",
-          MessageList: []
-        })
+        if(eventName == 'joinedRoomText'){
+          return of({
+            Response: "Success",
+            MessageList: []
+          })
+        }
+        else if(eventName == 'leftRoomText'){
+          return of({
+            Response: "Success",
+            Room: "Test"
+          })
+        }
+        else if(eventName == 'msgToClient'){
+          return of({
+            Response: "Success",
+          })
+        }
       }
     };
     kanbanServiceStub = {};
@@ -94,4 +124,54 @@ describe('UserComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should initialise component variables correctly', () => {
+    expect(component.sidebarOpened).toBeTrue();
+    expect(component.showOfficeList).toBeTrue();
+    expect(component.showQuickSettingsList).toBeTrue();
+    expect(component.showOfficeSettingsList).toBeTrue();
+    expect(component.officeSelected).toBeFalse();
+    expect(component.roomSelected).toBeFalse();
+    expect(component.sendNewOfficeAlert).toBeFalse();
+    expect(component.sendJoinOfficeAlert).toBeFalse();
+    expect(component.displayFormModal).toBeFalse();
+    expect(component.showInviteModal).toBeFalse();
+    expect(component.showAddRoomModal).toBeFalse();
+    expect(component.focus6).toBeFalse();
+    expect(component.focus7).toBeFalse();
+  });
+
+  it('should get a list of offices and put them in the office list for a user', () => {
+    window.sessionStorage.setItem('jwt', 'hdsgakjghskahgioshgshbgiushgsjkbgis');
+    fixture.detectChanges();
+    component.getUserOfficeList();
+    fixture.detectChanges();
+    expect(component.officeListLoaded).toBeTrue();
+    var officeList: Office[] = [
+      {
+        id: '1',
+        name: 'Test_Office',
+        invite: 'ghsaghs343hkj34h'
+      },
+      {
+        id: '1',
+        name: 'Test_Office',
+        invite: 'ghsaghs343hkj34h'
+      }
+    ];
+    console.log(component.officeList);
+    expect(component.officeList).toEqual(officeList);
+  });
+
+  it('should get the users details', () => {
+    window.sessionStorage.setItem('jwt', 'hdsgakjghskahgioshgshbgiushgsjkbgis');
+    fixture.detectChanges();
+    component.getUserDetails();
+    fixture.detectChanges();
+    expect(component.userID).toEqual('1');
+    expect(component.userFirstName).toEqual('Test');
+    expect(component.userLastName).toEqual('Test');
+    expect(component.userUsername).toEqual('Test');
+    expect(component.userEmail).toEqual('test@test.com');
+  })
 });
