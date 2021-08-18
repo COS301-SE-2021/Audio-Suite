@@ -13,6 +13,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   email: string = "";
   password: string = "";
 
+  validUser: boolean = false;
   sendAlert: boolean = false;
   alertMsg: string = "";
 
@@ -130,12 +131,10 @@ export class LoginComponent implements OnInit, OnDestroy {
       }
     }
 
-    var validUser: boolean = false;
-
     this.userService.logUserIn(this.email, this.password).subscribe((response) => {
       //console.log(response);
       if(response.response == "Success"){
-        validUser = true;
+        this.validUser = true;
         sessionStorage.setItem('jwt', response.jwt);
         this.router.navigate(['user'])
         return
