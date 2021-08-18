@@ -1,0 +1,292 @@
+.sidebar{
+    margin: 0;
+    padding: 0;
+    width: 15%;
+    background: linear-gradient(45deg, rgba(10,250,207,1) 0%, rgba(220,123,255,1) 100%);
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+    font-size: 20px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    z-index: 2;
+
+    #sidebar-title{
+        margin-top: 15px;
+        color: black;
+        text-align: center;
+    }
+
+    #sidebar-officeHeader{
+        margin-left: 5px;
+        color: black;
+        background-color: transparent;
+        border: none;
+        outline: none;
+    }
+
+    .showOffices{
+        display: block;
+
+        .box{
+            width: 100%;
+            height: 50px;
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            //box-shadow: 4px 4px 20px rgba(0,0,0,0.3);
+
+            .container{
+                height: 15px;
+                width: 100%;
+                display: flex;
+                position: relative;
+                .circle{
+                    width: 15px;
+                    height: 15px;
+                    border-radius: 50%;
+                    background-color: #000;
+                    animation: move 750ms linear 0ms infinite;
+                    margin-right: 30px;
+                    
+                    &:first-child{
+                    position: absolute;
+                    top:0;
+                    left:0;
+                    animation: grow 750ms linear 0ms infinite;
+                    }
+                    
+                    &:last-child{
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    margin-right: 0;
+                    animation: grow 750ms linear 0s infinite reverse;
+                    }
+                }
+            }
+        }
+
+        .officeBtn{
+            margin-left: 30px;
+            color: black;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+    }
+
+    .showOfficeSettings{
+        display: block;
+
+        .sidebarBtn{
+            margin-left: 30px;
+            color: black;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+    }
+
+    .showQuickSettings{
+        display: block;
+
+        .sidebarBtn{
+            margin-left: 30px;
+            color: black;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+    }
+
+    .hideOffices{
+        display: none;
+
+        .officeBtn{
+            margin-left: 30px;
+            color: black;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+    }
+
+    .hideOfficeSettings{
+        display: none;
+
+        .sidebarBtn{
+            margin-left: 30px;
+            color: black;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+    }
+
+    .hideQuickSettings{
+        display: none;
+
+        .sidebarBtn{
+            margin-left: 30px;
+            color: black;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+    }
+}
+
+@keyframes grow {
+    from {transform: scale(0,0); opacity: 0;}
+    to {transform: scale(1,1); opacity: 1;}
+}
+    
+@keyframes move {
+    from {transform: translateX(0px)}
+    to {transform: translateX(45px)}
+}
+
+.content{
+    margin-left: 15%;
+    padding: 1px 16px;
+    height: 100%;
+    width: 92%;
+    position: fixed;
+    text-align: center;
+    overflow: auto;
+
+    .newJoinOfficeContent{
+        display: flex;
+        position: fixed;
+        height: 100%;
+        width: 83%;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.floorPlanContent{
+    width: 100%;
+    height: 85%;
+    position: fixed;
+    overflow-y: scroll;
+
+    #grid-content{
+        padding-right: 8%;
+
+        .ktd-grid-item{ 
+            background-color: #03205e;
+            border: 1px solid white;
+            border-radius: 10px;
+
+            .grid-item-content{
+                height: inherit;
+
+                .grid-item-button{
+                    width: 100%;
+                    height: inherit;
+                    background-color: inherit;
+                    outline: none;
+                    color: white;
+                }
+            }
+        }
+    }
+
+    .addRoomContainer{
+        display: flex;
+
+        #showAddRoomModalBtn{
+            justify-content: left;
+        }
+    }
+}
+
+.TextChannelContent{
+    position: fixed;
+    height: 85%;
+    width: 86%;
+
+    .messageBoard{
+        height: 94%;
+        padding-right: 3%;
+        margin-bottom: 1%;
+        border-top: 1px solid white;
+        color: black;
+        overflow-y: scroll;
+
+        .message{
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 10px;
+            grid-template-areas: "a a a a b b b b";
+
+            .incomming{
+                //border: 2px solid #dedede;
+                background-color: #03205e;
+                border-radius: 5px;
+                padding: 10px;
+                margin: 10px 0;
+                grid-area: a;
+                text-align: left;
+
+                .messageContent{
+                    overflow-x: hidden;
+                    word-wrap: break-word;
+                }
+            }
+
+            .outgoing{
+                background-color: #03205e;
+                border-radius: 5px;
+                padding: 10px;
+                margin: 10px 0;
+                grid-area: b;
+                text-align: left;
+
+                .messageContent{
+                    overflow-x: hidden;
+                    word-wrap: break-word;
+                }
+            }
+        }
+    }
+
+    .newMessageInput{
+        display: flex;
+        padding-left: 5px;
+        padding-right: 5px;
+        margin-right: 3%;
+
+        #sendOfficeMessageBtn{
+            margin-left: 1%;
+        }
+    }
+}
+
+.board_content{
+    background: #0079bf;
+    display: flex;
+    padding: 0 5px;
+    height: 100vh;
+    // overflow: auto;
+}
+
+#messageBoard::webkit-scrollbar{
+    display: none;
+    width: 0;
+    background: transparent;
+}
+
+#messageBoard::webkit-scrollbar{
+    display: none;
+    width: 0;
+    background: transparent;
+}
+
+.messageBoard {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }

@@ -16,6 +16,13 @@ import { RoomModule } from './room/room.module';
 import { RoomusersModule } from './roomusers/roomusers.module';
 import { Room } from './room/room.entity';
 import { RoomUsers } from './roomusers/roomusers.entity';
+import { ServerSocketGateway } from './gateway/server-socket.gateway';
+import { RoomUsersService } from './roomusers/roomusers.service';
+import { MessageModule } from './message/message.module';
+import { GatewayModule } from './gateway/gateway.module';
+import { Message } from './message/message.entity';
+import { KanbanModule } from './kanban/kanban.module';
+import { Kanban } from './kanban/kanban.entity';
 
 @Module({
   imports: [
@@ -24,12 +31,21 @@ import { RoomUsers } from './roomusers/roomusers.entity';
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '176.58.102.89', // TODO change to env var
+      host: '34.123.22.210', // TODO change to env var
       port: 3306, // TODO change to env var
-      username: 'System', // TODO change to env var
-      password: 'audiosuitetest', // TODO change to env var
+      username: 'AudioSuiteDev', // TODO change to env var
+      password: '4uLrYf49J3W6az', // TODO change to env var
       database: 'AUDIO_SUITE', // TODO change to env var
-      entities: [User, Office, OfficeUsers, Notifications, Room, RoomUsers],
+      entities: [
+        User, 
+        Office, 
+        OfficeUsers, 
+        Notifications, 
+        Room, 
+        RoomUsers, 
+        Message, 
+        Kanban
+      ],
       synchronize: true,}), // TODO change to false for production
     UserModule, 
     OfficeModule, 
@@ -37,7 +53,10 @@ import { RoomUsers } from './roomusers/roomusers.entity';
     NotificationModule, 
     MailModule, 
     RoomModule, 
-    RoomusersModule],
+    RoomusersModule, 
+    MessageModule,
+    GatewayModule,
+    KanbanModule],
   controllers: [AppController],
   providers: [AppService],
 })

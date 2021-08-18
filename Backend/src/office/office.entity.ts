@@ -1,6 +1,4 @@
-import { randomUUID } from "crypto";
-import { User } from "src/user/user.entity";
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Office{

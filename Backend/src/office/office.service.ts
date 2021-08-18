@@ -7,6 +7,7 @@ import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
 import { OfficeUsers } from '../officeusers/officeusers.entity';
 import { OfficeusersService } from '../officeusers/officeusers.service';
+import { RoomService } from '../room/room.service';
 
 @Injectable()
 export class OfficeService {
@@ -14,7 +15,8 @@ export class OfficeService {
         @InjectRepository(Office)
         private officesRepository: Repository<Office>,
         private userService: UserService,
-        private officeUserService: OfficeusersService
+        private officeUserService: OfficeusersService,
+        private roomService: RoomService,
         ) {}
 
     getOffice(): string {
@@ -31,14 +33,26 @@ export class OfficeService {
         }catch(err){
             throw new UnauthorizedException();
         }
+
         try{
             const user = await this.userService.validateUser(jwt);
             const office = await this.officesRepository.create({name, invite});
             const savedOffice = await this.officesRepository.save(office);
-            const addUserToOffice = await this.officeUserService.addUserToOffice(user.id,name);
+            const addUserToOffice = await this.officeUserService.addUserToOffice(user.id,name, "Manager");
+            
+            const room1 = await this.roomService.registerRoomAuth(savedOffice.id, 'Coffee Station', 3, 9, 3, 3);
+            const room2 = await this.roomService.registerRoomAuth(savedOffice.id, 'Conference Room 1', 5, 1, 2, 4);
+            const room3 = await this.roomService.registerRoomAuth(savedOffice.id, 'Conference Room 2', 5, 5, 2, 4);
+            const room4 = await this.roomService.registerRoomAuth(savedOffice.id, 'Open Plan Office', 2, 5, 3, 4);
             return{
                 Response: "Success",
-                Office: savedOffice
+                Office: savedOffice,
+                Rooms: [
+                    room1, 
+                    room2, 
+                    room3, 
+                    room4
+                ]
             };
         }
         catch(err) {
@@ -70,9 +84,39 @@ export class OfficeService {
                     }
                 }
             }
+
+            return {
+                Response: "Success",
+                Offices: []
+            }
         }
         catch(err) {
             throw new BadRequestException();
+        }
+    }
+
+    async getOfficeFromOfficeID(jwt: string, officeID: number) : Promise<any> {
+        //verify the user
+        console.log("office??")
+        console.log(officeID);
+        try{
+            const user = await this.userService.validateUser(jwt);
+        }catch(err){
+            throw new UnauthorizedException();
+        }
+        
+        try{
+            const office = await this.officesRepository.findOne({id: officeID});
+            
+            if(office!=null){
+                return office;
+            }else{
+                throw new BadRequestException();
+            }
+
+        }catch(err) {
+            // console.log(officeID);
+            throw new BadRequestException("Office does not exist.");
         }
     }
 
@@ -92,10 +136,10 @@ export class OfficeService {
         try{
             const user = await this.userService.validateUser(jwt);
             const office = await this.officesRepository.findOne({invite: officeInviteLink});
-            const addUserToOffice = await this.officeUserService.addUserToOffice(user.id,office.name);
+            const addUserToOffice = await this.officeUserService.addUserToOffice(user.id,office.name, "Unassigned");
             return {
-                status: "Success",
-                response: "User added to office"
+                Response: "Success",
+                Message: "User added to office"
             }
         }catch(err){
             throw new BadRequestException("Unable to add user to office");

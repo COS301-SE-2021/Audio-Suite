@@ -20,9 +20,37 @@ export class RoomController {
         @Body('jwt') jwt: string,
         @Body('officeID') officeID: number,
         @Body('roomName') roomName: string, 
+        @Body('xCoordinate') xCoordinate: number,
+        @Body('yCoordinate') yCoordinate: number,
+        @Body('width') width: number,
+        @Body('height') height: number,
     )
     {
-        return await this.roomService.registerRoom(jwt, officeID, roomName);
+        return await this.roomService.registerRoom(jwt, officeID, roomName, xCoordinate, yCoordinate, width, height);
+    }
+
+    @Post('room/updateDetails')
+    async updateRoomDetails(
+        @Body('jwt') jwt: string,
+        @Body('officeID') officeID: number,
+        @Body('roomName') roomName: string, 
+        @Body('xCoordinate') xCoordinate: number,
+        @Body('yCoordinate') yCoordinate: number,
+        @Body('width') width: number,
+        @Body('height') height: number,
+    )
+    {
+        return await this.roomService.updateRoomDetails(jwt, officeID, roomName, xCoordinate, yCoordinate, width, height);
+    }
+
+    @Post('room/delete')
+    async deleteRoom(
+        @Body('jwt') jwt: string,
+        @Body('officeID') officeID: number,
+        @Body('roomName') roomName: string,
+    )
+    {
+        return await this.roomService.deleteRoom(jwt, officeID, roomName);
     }
 
     //join room

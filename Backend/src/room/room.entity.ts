@@ -10,4 +10,16 @@ export class Room{
 
     @Column()
     roomName: string;
+
+    @Column()
+    xCoordinate: number;
+
+    @Column()
+    yCoordinate: number;
+
+    @Column()
+    width: number;
+
+    @Column()
+    height: number;
 }
