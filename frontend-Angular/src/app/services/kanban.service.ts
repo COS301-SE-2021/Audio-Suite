@@ -8,12 +8,12 @@ const httpOptions = {
     }),
 }
 
-const baseUrl = 'http://localhost:3001'
-
 @Injectable({
   providedIn: 'root'
 })
 export class KanbanService {
+
+  baseUrl = 'http://localhost:3001'
 
   constructor(private http: HttpClient) { }
 
@@ -31,7 +31,7 @@ export class KanbanService {
           cardID: cardID,
           cardMessage: cardMessage
       }
-      var createCardURL = baseUrl + '/api/kanban/createCard';
+      var createCardURL = this.baseUrl + '/api/kanban/createCard';
       return this.http.post<any>(createCardURL, body, httpOptions);
   }
 
@@ -45,7 +45,7 @@ export class KanbanService {
           officeID: officeID,
           cardID: cardID,
       }
-      var deleteCardURL = baseUrl + '/api/kanban/deleteCard';
+      var deleteCardURL = this.baseUrl + '/api/kanban/deleteCard';
       return this.http.post<any>(deleteCardURL, body, httpOptions);
   }
 
@@ -57,7 +57,7 @@ export class KanbanService {
           jwt: jwt,
           officeID: officeID
       }
-      var deleteCardURL = baseUrl + '/api/kanban/getAllCards';
+      var deleteCardURL = this.baseUrl + '/api/kanban/getAllCards';
       return this.http.post<any>(deleteCardURL, body, httpOptions);
   }
 
