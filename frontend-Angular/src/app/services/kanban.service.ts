@@ -75,7 +75,7 @@ export class KanbanService {
       oldListName: oldListName,
       newListName: newListName
     }
-    var editCardURL = baseUrl + '/api/kanban/editCard';
+    var editCardURL = this.baseUrl + '/api/kanban/editCard';
     return this.http.post<any>(editCardURL, body, httpOptions);
   }
 
@@ -89,7 +89,7 @@ export class KanbanService {
       officeID: officeID,
       cardID: cardID
     }
-    var getListNameURL = baseUrl + '/api/kanban/getListName';
+    var getListNameURL = this.baseUrl + '/api/kanban/getListName';
     return this.http.post<any>(getListNameURL, body, httpOptions);
   }
 

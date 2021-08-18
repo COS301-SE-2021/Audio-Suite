@@ -15,15 +15,6 @@ export class CardComponent implements OnInit {
   }
 
   deleteCard(id: string){
-    // if(this.list.cards.length === 1){
-      // this.list.cards.pop();
-    // }
-    // this.list.cards.splice(parseInt(id),1);
-    //id is cardId
-    console.log(id);
-    console.log(sessionStorage.getItem('jwt'));
-    console.log(sessionStorage.getItem('officeID'));
-
     this.kanbanService.deleteCard(sessionStorage.getItem('jwt'), 
     parseInt(sessionStorage.getItem('officeID')), 
     id).subscribe((response) =>{
