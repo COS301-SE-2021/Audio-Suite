@@ -56,15 +56,6 @@ export class OfficeRoomService {
     return this.http.post<any>(getUserOfficesURL, body, httpOptions);
   }
 
-  getOfficeRoomList(jwt: string, officeID: number): Observable<any>{
-    const body = {
-      jwt: jwt,
-      officeID: officeID
-    }
-    var getRoomListURL = this.baseUrl + '/api/room/getOfficeRooms';
-    return this.http.post<any>(getRoomListURL, body, httpOptions);
-  }
-
   sendOfficeInvite(
     email: string,
     name: string, 
@@ -103,6 +94,15 @@ export class OfficeRoomService {
     }
     var registerRoomURL = this.baseUrl + '/api/room/register';
     return this.http.post<any>(registerRoomURL, body, httpOptions);
+  }
+
+  getOfficeRoomList(jwt: string, officeID: number): Observable<any>{
+    const body = {
+      jwt: jwt,
+      officeID: officeID
+    }
+    var getRoomListURL = this.baseUrl + '/api/room/getOfficeRooms';
+    return this.http.post<any>(getRoomListURL, body, httpOptions);
   }
 
   updateRoom(
