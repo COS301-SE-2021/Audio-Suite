@@ -76,6 +76,48 @@ export class KanbanService {
         }
     }
 
+    async editCard(jwt: string, officeID: number, cardID:string, oldListName:string, newListName: string): Promise<any>{
+        //verify the office -> this includes verifying the user.
+        try{
+            const office = this.officeService.getOfficeFromOfficeID(jwt, officeID);
+        }catch(err){
+            throw new UnauthorizedException();
+        }
+
+        try{
+            const card = await this.kanbanRepository.findOne({officeID: officeID, cardID: cardID,listName: oldListName});
+            card.listName = newListName;
+            await this.kanbanRepository.save(card);
+            return {
+                Response: "Success",
+                Card: card
+            };
+
+        }catch(err){
+            throw new BadRequestException();
+        }
+    }
+
+    async getListName(jwt: string, officeID: number, cardID:string): Promise<any>{
+        //verify the office -> this includes verifying the user.
+        try{
+            const office = this.officeService.getOfficeFromOfficeID(jwt, officeID);
+        }catch(err){
+            throw new UnauthorizedException();
+        }
+
+        try{
+            const card = await this.kanbanRepository.findOne({officeID: officeID, cardID: cardID});
+            return {
+                Response: "Success",
+                listName: card.listName
+            };
+
+        }catch(err){
+            throw new BadRequestException();
+        }
+    }
+
     //TODO: getAllCards -> this is office exclusive
     //Also, include the author of a message in entity so we can make use of it on the frontend.
 }

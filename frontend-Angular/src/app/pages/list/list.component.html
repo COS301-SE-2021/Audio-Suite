@@ -1,5 +1,5 @@
-<div class="list" (dragover)="allowDrop($event)" (drop)="drop($event)">
-	<p class="list__title"><strong>{{list.name}}</strong></p>
+<div  id='{{list.name}}' class="list" (dragover)="allowDrop($event)" (drop)="drop($event)">
+	<p  id="list__title" class="list__title"><strong>{{list.name}}</strong></p>
 	
 	<input #addCardInput type="text" (keyup.enter)="onEnter(addCardInput.value, list.name, addCardInput.value); addCardInput.value=''; displayAddCard=false;" *ngIf="displayAddCard" autofocus>
 	<p *ngIf="displayAddCard" >Press enter to add issue.</p>

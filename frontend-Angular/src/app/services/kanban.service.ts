@@ -61,4 +61,36 @@ export class KanbanService {
       return this.http.post<any>(deleteCardURL, body, httpOptions);
   }
 
+  editCard(
+    jwt: string, 
+    officeID: number, 
+    cardID:string, 
+    oldListName:string, 
+    newListName: string
+  ): Observable<any> {
+    const body = {
+      jwt: jwt,
+      officeID: officeID,
+      cardID: cardID,
+      oldListName: oldListName,
+      newListName: newListName
+    }
+    var editCardURL = baseUrl + '/api/kanban/editCard';
+    return this.http.post<any>(editCardURL, body, httpOptions);
+  }
+
+  getListName(
+    jwt: string, 
+    officeID: number, 
+    cardID:string
+  ): Observable<any> {
+    const body = {
+      jwt: jwt,
+      officeID: officeID,
+      cardID: cardID
+    }
+    var getListNameURL = baseUrl + '/api/kanban/getListName';
+    return this.http.post<any>(getListNameURL, body, httpOptions);
+  }
+
 }

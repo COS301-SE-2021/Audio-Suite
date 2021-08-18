@@ -35,4 +35,24 @@ export class KanbanController {
     ){
         return await this.kanbanService.getAllCards(jwt, officeID);
     }
+
+    @Post('kanban/editCard')
+    async editCard(
+        @Body('jwt') jwt: string,
+        @Body('officeID')officeID: number,
+        @Body('cardID')cardID: string,
+        @Body('oldListName') oldListName: string,
+        @Body('newListName')newListName: string
+    ){
+        return await this.kanbanService.editCard(jwt, officeID, cardID, oldListName, newListName);
+    }
+
+    @Post('kanban/getListName')
+    async getListName(
+        @Body('jwt') jwt: string,
+        @Body('officeID')officeID: number,
+        @Body('cardID')cardID: string,
+    ){
+        return await this.kanbanService.getListName(jwt, officeID, cardID);
+    }
 }
