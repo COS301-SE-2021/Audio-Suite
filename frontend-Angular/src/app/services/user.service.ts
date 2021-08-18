@@ -13,7 +13,7 @@ const httpOptions = {
 })
 export class UserService {
 
-  baseUrl = 'http://localhost:3001'
+  baseUrl = 'https://api.audiosuite.xyz'
 
   constructor(private http: HttpClient) { }
 
