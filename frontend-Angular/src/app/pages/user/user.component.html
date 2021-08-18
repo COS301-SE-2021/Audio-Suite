@@ -292,9 +292,9 @@
                 <i class="tim-icons icon-email-85"> </i> {{ selectedRoom }} Channel
             </ng-template>
             <div class="TextChannelContent">
-                <div class="messageBoard" id="messageBoard" #scrollframe>
+                <div class="messageBoard" id="messageBoardRoom" #scrollRoomframe>
                     <!--Messages will be displayed here when fetched from the server.-->
-                    <div *ngFor="let message of roomTextChannelMessages" #messageitem>
+                    <div *ngFor="let message of roomTextChannelMessages" #messageRoomitem>
                         <div>
                             <div *ngIf="message.sender == userUsername; then incommingMessage else outgoingMessage"></div>
                             <ng-template #incommingMessage>

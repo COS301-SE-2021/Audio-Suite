@@ -36,8 +36,11 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('scrollframe', {static: false}) scrollFrame: ElementRef;
   @ViewChildren('messageitem') itemElements: QueryList<any>;
+  @ViewChild('scrollRoomframe', {static: false}) scrollRoomFrame: ElementRef;
+  @ViewChildren('messageRoomitem') itemRoomElements: QueryList<any>;
   @ViewChild(KtdGridComponent, { static: true }) grid: KtdGridComponent;
   scrollContainer: any;
+  scrollRoomContainer: any;
 
   agoraConfig: AgoraConfig = {
     AppID: '023766436b244044ab85f65470dcbae2',
@@ -430,6 +433,9 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   tabSetOpened(): void {
     this.scrollContainer = this.scrollFrame.nativeElement;  
     this.itemElements.changes.subscribe(_ => this.scrollMessageBoardToBottom());
+
+    this.scrollRoomContainer = this.scrollRoomFrame.nativeElement;
+    this.itemRoomElements.changes.subscribe(_ => this.scrollRoomMessageBoardToBottom());
   }
 
   leaveOffice(): void{
@@ -620,6 +626,11 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
   scrollMessageBoardToBottom(): void{
     var messageBoard = document.getElementById("messageBoard");
+    messageBoard.scrollTop = messageBoard.scrollHeight;
+  }
+
+  scrollRoomMessageBoardToBottom(): void{
+    var messageBoard = document.getElementById("messageBoardRoom");
     messageBoard.scrollTop = messageBoard.scrollHeight;
   }
 
