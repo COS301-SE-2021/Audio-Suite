@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
+import { Office } from 'src/office/office.entity';
 
 
 const app = 'http://localhost:3001';
@@ -19,21 +20,21 @@ describe('ROOT', () => {
 
 describe('USER', () => {
   // Registering a user that doesn't exist.
-  // it('should register a user', () => {
-  //   const user = {
-  //     firstName: 'John',
-  //     lastName: 'Black',
-  //     userName: 'JohnBlack',
-  //     email: 'JohnBlack@gmail.com',
-  //     password: 'Password!123'
-  //   };
+  it('should register a user', () => {
+    const user = {
+      firstName: 'John',
+      lastName: 'White',
+      userName: 'JohnWhite',
+      email: 'JohnWhite@gmail.com',
+      password: 'Password!123'
+    };
 
-  //   return request(app)
-  //     .post('/api/register')
-  //     .set('Accept', 'application/json')
-  //     .send(user)
-  //     .expect(HttpStatus.CREATED);
-  // });
+    return request(app)
+      .post('/api/register')
+      .set('Accept', 'application/json')
+      .send(user)
+      .expect(HttpStatus.CREATED);
+  });
 
   // Registering a user that alreay exists.
   it('should make use of registerUser from User and return a 500 "Internal Server Error" since the user John White has already been registered', () => {
@@ -87,7 +88,7 @@ describe('USER', () => {
   // Logging in and returning user details (by use of JWT)
   it('should login user John White and make use of userDetails from User.', () => {
     const user ={
-      email: 'johnwhite3@gmail.com',
+      email: 'johnwhite@gmail.com',
       password: 'Password!123'
     };
 
@@ -135,7 +136,7 @@ describe('NOTIFICATION', () => {
   // Makes use of createNotification
   it('should make use of createNotification from Notifications for John White.', () => {
     const user ={
-      email: 'johnwhite2@gmail.com',
+      email: 'johnwhite@gmail.com',
       password: 'Password!123'
     };
 
@@ -192,7 +193,7 @@ describe('NOTIFICATION', () => {
   // makes use of sendVerification
   it('should make use of sendVerification from Notifications for John White.', () => {
     const user = {
-      emailAddress: 'johnwhite2@gmail.com',
+      emailAddress: 'johnwhite@gmail.com',
       userName: 'JohnWhite2'
     }
 
@@ -320,7 +321,7 @@ describe('OFFICE', () => {
                           .post('/office/joinInvite')
                           .set('Accept', 'application/json')
                           .send({
-                            invite: "3b942b255819aabff747b659b76ae3df",
+                            invite: "40f81a47a99cb26db76b261f1e34c2ed",
                             jwt: jwtFromResponse
                           })
                           .expect(HttpStatus.CREATED);
@@ -352,6 +353,377 @@ describe('OFFICE', () => {
                           .expect(HttpStatus.BAD_REQUEST);
     })
     .expect(HttpStatus.CREATED);
+  });
+
+});
+
+describe('ROOM', () => {
+
+  //Lets begin with registering a room in an office.
+  it('should register a new room in an existing office.', () => {
+    const user ={
+      email: 'JohnWhite@gmail.com',
+      password: 'Password!123'
+    };
+
+    const office = {
+      officeID: 37
+    };
+
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+      expect(body.response).toStrictEqual('Success');
+      jwtFromResponse=body.jwt;
+      const validOffice = request(app)
+                          .post('/office/officeFromOfficeID')
+                          .set('Accept', 'application/json')
+                          .send({
+                            jwt: jwtFromResponse,
+                            officeID: office.officeID
+                          })
+                          .expect(({body}) => {
+                            const createRoom = request(app)
+                                              .post('/room/register')
+                                              .set('Accept', 'application/json')
+                                              .send({
+                                                jwt: jwtFromResponse,
+                                                officeID: office.officeID,
+                                                roomName: "newRoom",
+                                                xCoordinate: 10,
+                                                yCoordinate: 10,
+                                                width: 5,
+                                                height: 5
+                                              })
+                                              .expect(HttpStatus.CREATED);
+                          })
+                          .expect(HttpStatus.CREATED);
+      })
+      .expect(HttpStatus.CREATED);
+  });
+
+  it('should register a new room in an office and return a 400 "Bad Request" since the officeID does not exist.', () => {
+    const user ={
+      email: 'JohnWhite@gmail.com',
+      password: 'Password!123'
+    };
+
+    const office = {
+      officeID: 999
+    };
+
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+      expect(body.response).toStrictEqual('Success');
+      jwtFromResponse=body.jwt;
+      const validOffice = request(app)
+                          .post('/office/officeFromOfficeID')
+                          .set('Accept', 'application/json')
+                          .send({
+                            jwt: jwtFromResponse,
+                            officeID: office.officeID
+                          })
+                          .expect(({body}) => {
+                            const createRoom = request(app)
+                                              .post('/room/register')
+                                              .set('Accept', 'application/json')
+                                              .send({
+                                                jwt: jwtFromResponse,
+                                                officeID: body.id,
+                                                roomName: "newRoom",
+                                                xCoordinate: 10,
+                                                yCoordinate: 10,
+                                                width: 5,
+                                                height: 5
+                                              })
+                                              .expect(HttpStatus.BAD_REQUEST);
+                          })
+                          .expect(HttpStatus.CREATED);
+      })
+      .expect(HttpStatus.CREATED);
+  });
+
+  //Lets join the room we created
+  it('should join the room previously created in an existing office.', () => {
+    const user ={
+      email: 'JohnWhite@gmail.com',
+      password: 'Password!123'
+    };
+  
+    const office = {
+      officeID: 37
+    };
+
+    const room = {
+      roomName: "newRoom"
+    }
+  
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+        expect(body.response).toStrictEqual('Success');
+        jwtFromResponse=body.jwt;
+        const validOffice = request(app)
+                            .post('/office/officeFromOfficeID')
+                            .set('Accept', 'application/json')
+                            .send({
+                              jwt: jwtFromResponse,
+                              officeID: office.officeID
+                            })
+                            .expect(({body}) => {
+                              const joinOffice = request(app)
+                                                .post('/office/joinInvite')
+                                                .set('Accept', 'application/json')
+                                                .send({
+                                                  invite: "40f81a47a99cb26db76b261f1e34c2ed",
+                                                  jwt: jwtFromResponse
+                                                })
+                                                .expect(({body}) => {
+                                                  const joinRoom = request(app)
+                                                                    .post('/room/join')
+                                                                    .set('Accept', 'application/json')
+                                                                    .send({
+                                                                      jwt: jwtFromResponse,
+                                                                      officeID: office.officeID,
+                                                                      roomName: room.roomName
+                                                                    })
+                                                                    .expect(HttpStatus.CREATED);
+                                                })
+                                                .expect(HttpStatus.CREATED);
+                            })
+                            .expect(HttpStatus.CREATED);
+      })
+      .expect(HttpStatus.CREATED);
+  });
+
+  //Lets join the leave we created
+  it('should leave the room previously created in an existing office.', () => {
+    const user ={
+      email: 'JohnWhite@gmail.com',
+      password: 'Password!123'
+    };
+  
+    const office = {
+      officeID: 37
+    };
+
+    const room = {
+      roomName: "newRoom"
+    }
+  
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+        expect(body.response).toStrictEqual('Success');
+        jwtFromResponse=body.jwt;
+        const validOffice = request(app)
+                            .post('/office/officeFromOfficeID')
+                            .set('Accept', 'application/json')
+                            .send({
+                              jwt: jwtFromResponse,
+                              officeID: office.officeID
+                            })
+                            .expect(({body}) => {
+                              const leaveRoom = request(app)
+                                                .post('/room/leave')
+                                                .set('Accept', 'application/json')
+                                                .send({
+                                                  jwt: jwtFromResponse,
+                                                  officeID: body.id,
+                                                  roomName: room.roomName
+                                                })
+                                                .expect(HttpStatus.CREATED);
+                            })
+                            .expect(HttpStatus.CREATED);
+      })
+      .expect(HttpStatus.CREATED);
+  });
+
+
+  //Lets delete a room in an office.
+  it('should delete a given room in an existing office.', () => {
+    const user ={
+      email: 'JohnWhite@gmail.com',
+      password: 'Password!123'
+    };
+  
+    const office = {
+      officeID: 37
+    };
+
+    const room = {
+      roomName: "newRoom"
+    }
+  
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+        expect(body.response).toStrictEqual('Success');
+        jwtFromResponse=body.jwt;
+        const validOffice = request(app)
+                            .post('/office/officeFromOfficeID')
+                            .set('Accept', 'application/json')
+                            .send({
+                              jwt: jwtFromResponse,
+                              officeID: office.officeID
+                            })
+                            .expect(({body}) => {
+                              const deleteRoom = request(app)
+                                                .post('/room/delete')
+                                                .set('Accept', 'application/json')
+                                                .send({
+                                                  jwt: jwtFromResponse,
+                                                  officeID: body.id,
+                                                  roomName: room.roomName
+                                                })
+                                                .expect(HttpStatus.CREATED);
+                            })
+                            .expect(HttpStatus.CREATED);
+      })
+      .expect(HttpStatus.CREATED);
+  });
+});
+
+describe('KANBAN', () => {
+
+  //Create card in a kanban in an existing office.
+  it('should create a new card in an existing office.', () => {
+    const user ={
+      email: 'JohnWhite@gmail.com',
+      password: 'Password!123'
+    };
+
+    const office = {
+      officeID: 37
+    };
+
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+      expect(body.response).toStrictEqual('Success');
+      jwtFromResponse=body.jwt;
+      const validOffice = request(app)
+                          .post('/office/officeFromOfficeID')
+                          .set('Accept', 'application/json')
+                          .send({
+                            jwt: jwtFromResponse,
+                            officeID: office.officeID
+                          })
+                          .expect(({body}) => {
+                            const createCard = request(app)
+                                              .post('/kanban/createCard')
+                                              .set('Accept', 'application/json')
+                                              .send({
+                                                jwt: jwtFromResponse,
+                                                officeID: body.id,
+                                                listName: "To Do",
+                                                cardID: "0",
+                                                cardMessage: "Testing"
+                                              })
+                                              .expect(HttpStatus.CREATED);
+                          })
+                          .expect(HttpStatus.CREATED);
+      })
+      .expect(HttpStatus.CREATED);
+  });
+
+  //Get all cards that belong to an existing office.
+  it('should get all cards that belong to an existing office.', () => {
+    const user ={
+      email: 'JohnWhite@gmail.com',
+      password: 'Password!123'
+    };
+
+    const office = {
+      officeID: 37
+    };
+
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+      expect(body.response).toStrictEqual('Success');
+      jwtFromResponse=body.jwt;
+      const validOffice = request(app)
+                          .post('/office/officeFromOfficeID')
+                          .set('Accept', 'application/json')
+                          .send({
+                            jwt: jwtFromResponse,
+                            officeID: office.officeID
+                          })
+                          .expect(({body}) => {
+                            const getCards = request(app)
+                                              .post('/kanban/createCard')
+                                              .set('Accept', 'application/json')
+                                              .send({
+                                                jwt: jwtFromResponse,
+                                                officeID: body.id
+                                              })
+                                              .expect(({body}) => {
+                                                expect(body.response).toStrictEqual('Success');
+                                              })
+                                              .expect(HttpStatus.CREATED);
+                          })
+                          .expect(HttpStatus.CREATED);
+      })
+      .expect(HttpStatus.CREATED);
+  });
+
+
+
+  //Delete card in a kanban in an existing office.
+  it('should delete a card in an existing office.', () => {
+    const user ={
+      email: 'JohnWhite@gmail.com',
+      password: 'Password!123'
+    };
+
+    const office = {
+      officeID: 37
+    };
+
+    return request(app)
+    .post('/api/login')
+    .set('Accept', 'application/json')
+    .send(user)
+    .expect(({body}) => {
+      expect(body.response).toStrictEqual('Success');
+      jwtFromResponse=body.jwt;
+      const validOffice = request(app)
+                          .post('/office/officeFromOfficeID')
+                          .set('Accept', 'application/json')
+                          .send({
+                            jwt: jwtFromResponse,
+                            officeID: office.officeID
+                          })
+                          .expect(({body}) => {
+                            const createCard = request(app)
+                                              .post('/kanban/deleteCard')
+                                              .set('Accept', 'application/json')
+                                              .send({
+                                                jwt: jwtFromResponse,
+                                                officeID: body.id,
+                                                cardID: "0"
+                                              })
+                                              .expect(HttpStatus.CREATED);
+                          })
+                          .expect(HttpStatus.CREATED);
+      })
+      .expect(HttpStatus.CREATED);
   });
 
 });

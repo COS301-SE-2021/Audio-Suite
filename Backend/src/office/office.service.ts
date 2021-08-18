@@ -7,7 +7,7 @@ import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
 import { OfficeUsers } from '../officeusers/officeusers.entity';
 import { OfficeusersService } from '../officeusers/officeusers.service';
-import { RoomService } from 'src/room/room.service';
+import { RoomService } from '../room/room.service';
 
 @Injectable()
 export class OfficeService {

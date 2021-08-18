@@ -5,8 +5,7 @@ import { KanbanService } from './kanban.service';
 export class KanbanController {
     constructor(private readonly kanbanService: KanbanService){}
 
-    //Creating a card and assigning it to a list in the kanban.ughernwviunevjhdvkjwhef
-    // skdhvncgfingsdcfsjdk
+    //Creating a card and assigning it to a list in the kanban.
     @Post('kanban/createCard')
     async createCard(
         @Body('jwt') jwt: string,
@@ -35,5 +34,25 @@ export class KanbanController {
         @Body('officeID') officeID: number
     ){
         return await this.kanbanService.getAllCards(jwt, officeID);
+    }
+
+    @Post('kanban/editCard')
+    async editCard(
+        @Body('jwt') jwt: string,
+        @Body('officeID')officeID: number,
+        @Body('cardID')cardID: string,
+        @Body('oldListName') oldListName: string,
+        @Body('newListName')newListName: string
+    ){
+        return await this.kanbanService.editCard(jwt, officeID, cardID, oldListName, newListName);
+    }
+
+    @Post('kanban/getListName')
+    async getListName(
+        @Body('jwt') jwt: string,
+        @Body('officeID')officeID: number,
+        @Body('cardID')cardID: string,
+    ){
+        return await this.kanbanService.getListName(jwt, officeID, cardID);
     }
 }

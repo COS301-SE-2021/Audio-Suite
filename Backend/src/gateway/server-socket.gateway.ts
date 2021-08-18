@@ -1,8 +1,8 @@
 import { OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { Logger } from '@nestjs/common';
-import { MessageService } from 'src/message/message.service';
-import { RoomService } from 'src/room/room.service';
+import { MessageService } from '../message/message.service';
+import { RoomService } from '../room/room.service';
 
 interface ClientList{
   client: Socket,

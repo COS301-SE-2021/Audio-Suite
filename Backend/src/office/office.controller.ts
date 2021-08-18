@@ -43,4 +43,12 @@ export class OfficeController {
     {
         return await this.officeService.getOfficeIdFromUserId(jwt);
     }
+
+    @Post('office/officeFromOfficeID')
+    async getOfficeFromOfficeID(
+        @Body('jwt') jwt: string,
+        @Body('officeID') officeID: number
+    ){
+        return await this.officeService.getOfficeFromOfficeID(jwt, officeID);
+    }
 }

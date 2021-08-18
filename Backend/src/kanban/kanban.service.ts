@@ -1,7 +1,7 @@
 import { BadRequestException, HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { OfficeService } from 'src/office/office.service';
-import { UserService } from 'src/user/user.service';
+import { OfficeService } from '../office/office.service';
+import { UserService } from '../user/user.service';
 import { Repository } from 'typeorm';
 import { Kanban } from './kanban.entity';
 
@@ -69,6 +69,48 @@ export class KanbanService {
             return {
                 Response: "Success",
                 Cards: cards
+            };
+
+        }catch(err){
+            throw new BadRequestException();
+        }
+    }
+
+    async editCard(jwt: string, officeID: number, cardID:string, oldListName:string, newListName: string): Promise<any>{
+        //verify the office -> this includes verifying the user.
+        try{
+            const office = this.officeService.getOfficeFromOfficeID(jwt, officeID);
+        }catch(err){
+            throw new UnauthorizedException();
+        }
+
+        try{
+            const card = await this.kanbanRepository.findOne({officeID: officeID, cardID: cardID,listName: oldListName});
+            card.listName = newListName;
+            await this.kanbanRepository.save(card);
+            return {
+                Response: "Success",
+                Card: card
+            };
+
+        }catch(err){
+            throw new BadRequestException();
+        }
+    }
+
+    async getListName(jwt: string, officeID: number, cardID:string): Promise<any>{
+        //verify the office -> this includes verifying the user.
+        try{
+            const office = this.officeService.getOfficeFromOfficeID(jwt, officeID);
+        }catch(err){
+            throw new UnauthorizedException();
+        }
+
+        try{
+            const card = await this.kanbanRepository.findOne({officeID: officeID, cardID: cardID});
+            return {
+                Response: "Success",
+                listName: card.listName
             };
 
         }catch(err){

@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 import { Repository } from 'typeorm';
 import { Message } from './message.entity';
 
