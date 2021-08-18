@@ -54,8 +54,8 @@ export class MessageService {
                 order: {
                     id: "DESC"
                 },
-                skip: offset*20,
-                take: 20
+                skip: offset*50,
+                take: 50
             });
 
             return {
