@@ -102,7 +102,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     var body = document.getElementsByTagName("body")[0];
     body.classList.add("register-page");
 
-    this.onMouseMove(event);
+    //this.onMouseMove(event);
   }
 
   registerNewUser(): void{

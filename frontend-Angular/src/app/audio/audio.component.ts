@@ -194,11 +194,7 @@ export class AudioComponent {
         if(this.currentRoom != stream[2]){
           // --------------- Get Rooms details ----------------
           var remoteRoomDetails: Room;
-          console.log(rooms);
           rooms.forEach((room) => {
-            console.log("-----------------");
-            console.log(room.id);
-            console.log(stream[2]);
             if(room.id === stream[2]){
               remoteRoomDetails = room;
             }

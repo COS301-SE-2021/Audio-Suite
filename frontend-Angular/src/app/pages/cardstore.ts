@@ -22,9 +22,9 @@ export class CardStore {
   }
 
   getCard(cardId: string) {
-    console.log("right track");
-    console.log(cardId);
-    console.log(this.cards);
+    // console.log("right track");
+    // console.log(cardId);
+    // console.log(this.cards);
     // if(this.cards[cardId] == null){
     //   this.retrieveCard(cardId, description, listName);
     // }

@@ -8,12 +8,12 @@ const httpOptions = {
     }),
 }
 
-const baseUrl = 'https://api.audiosuite.xyz'
-
 @Injectable({
   providedIn: 'root'
 })
 export class KanbanService {
+
+  baseUrl = 'http://localhost:3001'
 
   constructor(private http: HttpClient) { }
 
@@ -31,7 +31,7 @@ export class KanbanService {
           cardID: cardID,
           cardMessage: cardMessage
       }
-      var createCardURL = baseUrl + '/api/kanban/createCard';
+      var createCardURL = this.baseUrl + '/api/kanban/createCard';
       return this.http.post<any>(createCardURL, body, httpOptions);
   }
 
@@ -45,7 +45,7 @@ export class KanbanService {
           officeID: officeID,
           cardID: cardID,
       }
-      var deleteCardURL = baseUrl + '/api/kanban/deleteCard';
+      var deleteCardURL = this.baseUrl + '/api/kanban/deleteCard';
       return this.http.post<any>(deleteCardURL, body, httpOptions);
   }
 
@@ -57,8 +57,40 @@ export class KanbanService {
           jwt: jwt,
           officeID: officeID
       }
-      var deleteCardURL = baseUrl + '/api/kanban/getAllCards';
+      var deleteCardURL = this.baseUrl + '/api/kanban/getAllCards';
       return this.http.post<any>(deleteCardURL, body, httpOptions);
+  }
+
+  editCard(
+    jwt: string, 
+    officeID: number, 
+    cardID:string, 
+    oldListName:string, 
+    newListName: string
+  ): Observable<any> {
+    const body = {
+      jwt: jwt,
+      officeID: officeID,
+      cardID: cardID,
+      oldListName: oldListName,
+      newListName: newListName
+    }
+    var editCardURL = this.baseUrl + '/api/kanban/editCard';
+    return this.http.post<any>(editCardURL, body, httpOptions);
+  }
+
+  getListName(
+    jwt: string, 
+    officeID: number, 
+    cardID:string
+  ): Observable<any> {
+    const body = {
+      jwt: jwt,
+      officeID: officeID,
+      cardID: cardID
+    }
+    var getListNameURL = this.baseUrl + '/api/kanban/getListName';
+    return this.http.post<any>(getListNameURL, body, httpOptions);
   }
 
 }

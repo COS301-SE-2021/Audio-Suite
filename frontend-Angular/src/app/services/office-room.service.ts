@@ -8,12 +8,12 @@ const httpOptions = {
     }),
 }
 
-const baseUrl = 'https://api.audiosuite.xyz'
-
 @Injectable({
   providedIn: 'root'
 })
 export class OfficeRoomService {
+
+  baseUrl = 'http://localhost:3001'
 
   constructor(private http: HttpClient) { }
 
@@ -30,7 +30,7 @@ export class OfficeRoomService {
       name: officeName,
       jwt: jwt
     }
-    var registerOfficeURL = baseUrl + '/api/office/register';
+    var registerOfficeURL = this.baseUrl + '/api/office/register';
     return this.http.post<any>(registerOfficeURL, body, httpOptions)
   }
 
@@ -42,7 +42,7 @@ export class OfficeRoomService {
       jwt: jwt,
       invite: invite
     }
-    var joinOfficeURL = baseUrl + '/api/office/joinInvite';
+    var joinOfficeURL = this.baseUrl + '/api/office/joinInvite';
     return this.http.post<any>(joinOfficeURL, body, httpOptions);
   }
 
@@ -52,17 +52,8 @@ export class OfficeRoomService {
     const body = {
       jwt: jwt
     }
-    var getUserOfficesURL = baseUrl + '/api/office/getUserOffices';
+    var getUserOfficesURL = this.baseUrl + '/api/office/getUserOffices';
     return this.http.post<any>(getUserOfficesURL, body, httpOptions);
-  }
-
-  getOfficeRoomList(jwt: string, officeID: number): Observable<any>{
-    const body = {
-      jwt: jwt,
-      officeID: officeID
-    }
-    var getRoomListURL = baseUrl + '/api/room/getOfficeRooms';
-    return this.http.post<any>(getRoomListURL, body, httpOptions);
   }
 
   sendOfficeInvite(
@@ -75,7 +66,7 @@ export class OfficeRoomService {
       name: name,
       inviteCode: invite
     }
-    var sendInviteCodeURL = baseUrl + '/api/notifications/sendInviteCode';
+    var sendInviteCodeURL = this.baseUrl + '/api/notifications/sendInviteCode';
     return this.http.post<any>(sendInviteCodeURL, body, httpOptions);
   }
 
@@ -101,8 +92,17 @@ export class OfficeRoomService {
       width: width,
       height: height
     }
-    var registerRoomURL = baseUrl + '/api/room/register';
+    var registerRoomURL = this.baseUrl + '/api/room/register';
     return this.http.post<any>(registerRoomURL, body, httpOptions);
+  }
+
+  getOfficeRoomList(jwt: string, officeID: number): Observable<any>{
+    const body = {
+      jwt: jwt,
+      officeID: officeID
+    }
+    var getRoomListURL = this.baseUrl + '/api/room/getOfficeRooms';
+    return this.http.post<any>(getRoomListURL, body, httpOptions);
   }
 
   updateRoom(
@@ -123,7 +123,7 @@ export class OfficeRoomService {
       width: width,
       height: height
     }
-    var registerRoomURL = baseUrl + '/api/room/updateDetails';
+    var registerRoomURL = this.baseUrl + '/api/room/updateDetails';
     return this.http.post<any>(registerRoomURL, body, httpOptions);
   }
 
@@ -137,7 +137,7 @@ export class OfficeRoomService {
         officeID: officeID,
         roomName: roomName
       }
-      var deleteRoomURL = baseUrl + '/api/room/delete';
+      var deleteRoomURL = this.baseUrl + '/api/room/delete';
       return this.http.post<any>(deleteRoomURL, body, httpOptions);
   }
 
@@ -149,7 +149,7 @@ export class OfficeRoomService {
         jwt: jwt,
         userID: userID
       }
-      var userRoom = baseUrl + '/api/room/findUser';
+      var userRoom = this.baseUrl + '/api/room/findUser';
       return this.http.post<any>(userRoom, body, httpOptions);
   }
 }

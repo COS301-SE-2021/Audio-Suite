@@ -28,11 +28,13 @@ export class ListComponent implements OnInit {
   toggleDisplayAddCard() {
     this.displayAddCard = !this.displayAddCard;
     if(this.displayAddCard){
-      document.getElementById("addCardInput").focus();
+      //document.getElementById("addCardInput").focus();
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log("The List of cards: ", this.list)
+  }
 
   allowDrop($event) {
     $event.preventDefault();
@@ -43,16 +45,43 @@ export class ListComponent implements OnInit {
     const data = $event.dataTransfer.getData("text");
     let target = $event.target;
     const targetClassName = target.className;
-    
-    console.log(target);
-    console.log(targetClassName);
 
     while (target.className !== "list") {
       target = target.parentNode;
     }
+    const newListName = target.id;
     target = target.querySelector(".cards");
 
-    console.log(target);
+    const cardID = data;
+    const oldListName = ""
+
+    this.kanbanService.getListName(
+      sessionStorage.getItem('jwt'), 
+      parseInt(sessionStorage.getItem('officeID')),
+      data).subscribe((response) =>{
+        if(response.Response == "Success"){
+          //console.log("Card edited successfully");
+          const oldListName = response.listName;
+          this.kanbanService.editCard(
+            sessionStorage.getItem('jwt'), 
+            parseInt(sessionStorage.getItem('officeID')),
+            cardID,
+            oldListName,
+            newListName).subscribe((response) =>{
+              if(response.Response == "Success"){
+                console.log("Card edited successfully");
+              }
+            },
+            (error) => {
+              console.log(error)
+            });
+        }
+      },
+      (error) => {
+        console.log(error)
+      });
+
+    // const oldListName = document.getElementById(target.parentNode.children[0].className).textContent;
 
     if (targetClassName === "card") {
       console.log("card statement");
@@ -76,12 +105,7 @@ export class ListComponent implements OnInit {
   }
 
   onEnter(value: string, listName: string) {
-    console.log(sessionStorage.getItem('jwt'));
-    console.log(sessionStorage.getItem('officeID'));
-    console.log(listName);
-    console.log(value);
     const cardId = this.cardStore.newCard(value, listName); 
-    console.log(cardId);
     this.kanbanService.createCard(
       sessionStorage.getItem('jwt'), 
       parseInt(sessionStorage.getItem('officeID')),
@@ -95,7 +119,6 @@ export class ListComponent implements OnInit {
       (error) => {
         console.log(error)
       });
-    console.log("here??")
     this.list.cards.push(cardId);
   }
 }

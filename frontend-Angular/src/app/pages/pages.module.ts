@@ -25,7 +25,6 @@ import { RegisterpageComponent } from "./examples/registerpage/registerpage.comp
 import { LandingpageComponent } from "./examples/landingpage/landingpage.component";
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
-import { FormModalComponent } from './components/form-modal/form-modal.component';
 import { UserComponent } from './user/user.component';
 import { ListComponent } from './list/list.component';
 import { CardComponent } from './card/card.component';
@@ -65,7 +64,6 @@ const agoraConfig: AgoraConfig = {
     LandingpageComponent,
     RegisterComponent,
     LoginComponent,
-    FormModalComponent,
     UserComponent,
     ListComponent,
     CardComponent,

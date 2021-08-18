@@ -24,18 +24,6 @@ interface textMessage{
   message: string
 }
 
-interface Office{
-  id: string,
-  name: string,
-  invite: string
-}
-
-interface textMessage{
-  sender: string,
-  room: string,
-  message: string
-}
-
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -182,25 +170,17 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log(parseInt(officeID));
     this.kanbanService.getAllCards(jwt, parseInt(officeID)).subscribe((response) => {
       var cards = response.Cards;
-      console.log("below is 'cards'");
-      console.log(cards);
-      console.log(cards[0].cardID);
-      // if(cards[0].listName == "To Do"){
-      //   console.log("hello");
-      //   console.log(lists[0].name);
-      // }
       for(var i=0; i<cards.length; i++){
         var cardID =  cards[i].cardID;
         console.log(cardID);
         var retCard = this.cardStore.retrieveCard(cards[i].cardID, cards[i].cardMessage, cards[i].listName);
         if(cards[i].listName == "To Do"){
-          // var retCard = this.cardStore.retrieveCard(cards[i].cardID, cards[i].cardMessage, cards[i].listName);
-          // console.log(retCard);
           lists[0].cards.push(cardID);
-          // console.log(lists[0].cards);
-        }else if(cards[i].listName == "In Progress"){
+        }
+        else if(cards[i].listName == "In Progress"){
           lists[1].cards.push(cardID);
-        }else if(cards[i].listName == "Done"){
+        }
+        else if(cards[i].listName == "Done"){
           lists[2].cards.push(cardID);
         }
       }
@@ -410,6 +390,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         this.officeSelected = true;
         var jwt = sessionStorage.getItem('jwt');
         this.textChannelsService.joinRoom(jwt, officeID, office, office, false);
+        this.setListData();
       }
     }
     else{
@@ -442,6 +423,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.officeSelected = true;
       var jwt = sessionStorage.getItem('jwt');
       this.textChannelsService.joinRoom(jwt, officeID, office, office, false);
+      this.setListData();
     }
   }
 
