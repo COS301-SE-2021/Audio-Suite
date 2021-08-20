@@ -63,7 +63,7 @@ The web application is being developed with the following technologies.
 
 Once the web application is finished we will create a desktop application version using [Electron](https://www.electronjs.org/).<br>
 
-## Documentation and Project Management
+## Documentation, Project Management and Demos
 
 [Project Management](https://github.com/COS301-SE-2021/Audio-Suite/projects/1)<br>
 [SRS Documentation v3](https://drive.google.com/file/d/1mBSz5y9StW_y_6qSwQddD_s8WK1I74Sv/view?usp=sharing)<br>
@@ -71,7 +71,8 @@ Once the web application is finished we will create a desktop application versio
 [User Manual](https://docs.google.com/presentation/d/1WyPs-JHFQsm8Ok4hJfgbjqjEimHqWq96/edit?usp=sharing&ouid=104322984998480890641&rtpof=true&sd=true)<br>
 [Coding Standard](https://docs.google.com/document/d/1YQJ80dcvNXtEqiYyIloxZ29m_JIRDgEnGyT02bMPX-4/edit?usp=sharing)<br>
 [Technical Installation Manual](https://drive.google.com/file/d/1eHZHlnPZbgO99RkW2EkMcpuBRthPTxdC/view?usp=sharing)<br>
-
+[Demo 2 Video](https://drive.google.com/file/d/1WKohde6r6xpy9Ml95WexVwvjREQtRNCr/view?usp=sharing)<br>
+[Demo 3 Video](https://drive.google.com/file/d/1UdlwEwLDYw1p7xH1Y5BHAlFga6tNurdi/view?usp=sharing)<br>
 
 ## The Team
 
