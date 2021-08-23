@@ -91,6 +91,7 @@ As a team we have the skills to implement nearly any software solution. Audio Su
   <li>Extensive NodeJS development experience.</li>
   <li>Cybersecurity specialist.</li>
   <li><a href="https://github.com/0xWra1th">GitHub</a></li>
+  <li><a href="https://www.linkedin.com/in/daniel-scragg-619102209/">LinkedIn</a></li>
   <li>Responsibilities:
     <ul style="font-size: 100%">
       <li>Audio Streaming</li>
@@ -109,6 +110,7 @@ As a team we have the skills to implement nearly any software solution. Audio Su
   <li>Experience in backend such as NodeJS and Spring Boot.</li>
   <li>Database management with PostgreSQL.</li>
   <li><a href="https://github.com/Chris-18">GitHub</a></li>
+  <li><a href="https://www.linkedin.com/in/christian-still-893107210/">LinkedIn</a></li>
   <li>Responsibilities:
     <ul style="font-size: 100%">
       <li>Backend Endpoints</li>
@@ -127,6 +129,7 @@ As a team we have the skills to implement nearly any software solution. Audio Su
   <li>UI/UX Designer</li>
   <li>Experience in JavaScript and API integration</li>
   <li><a href="https://github.com/DreamerJ1">GitHub</a></li>
+  <li><a href="https://www.linkedin.com/in/johannes-de-clercq-515196210/">LinkedIn</a></li>
   <li>Responsibilities:
     <ul style="font-size: 100%">
       <li>Notification Backend Subsystem</li>
@@ -145,6 +148,7 @@ As a team we have the skills to implement nearly any software solution. Audio Su
   <li>Extensive Database management experience.</li>
   <li>Front-end and Back-end development</li>
   <li><a href="https://github.com/KeanuSwart">GitHub</a></li>
+  <li><a href="https://www.linkedin.com/in/keanu-swart-930013210/">LinkedIn</a></li>
   <li>Responsibilities:
     <ul style="font-size: 100%">
       <li>Kanban Board</li>
@@ -162,6 +166,7 @@ As a team we have the skills to implement nearly any software solution. Audio Su
   <li>Database management.</li>
   <li>Implementation of security solutions in applications for reliability and user confidentiality.</li>
   <li><a href="https://github.com/u19126222">GitHub</a></li>
+  <li><a href="https://www.linkedin.com/in/kyra-coetzee-58a111210/">LinkedIn</a></li>
   <li>Responsibilities:
     <ul style="font-size: 100%">
       <li>Audio Streaming</li>
