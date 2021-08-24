@@ -31,10 +31,10 @@ import { Kanban } from './kanban/kanban.entity';
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '34.123.22.210', // TODO change to env var
+      host: '35.234.158.100', // TODO change to env var
       port: 3306, // TODO change to env var
-      username: 'AudioSuiteDev', // TODO change to env var
-      password: '4uLrYf49J3W6az', // TODO change to env var
+      username: 'root', // TODO change to env var
+      password: 'ozyBfCN4G15DDy5L', // TODO change to env var
       database: 'AUDIO_SUITE', // TODO change to env var
       entities: [
         User, 

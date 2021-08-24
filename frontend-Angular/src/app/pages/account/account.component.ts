@@ -70,7 +70,8 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
 
   updateUsername(): void{
     var jwt = sessionStorage.getItem('jwt');
-    var newUsername = document.getElementById('update-username');
+    // var newUsername = document.getElementById('update-username').value;
+    var newUsername = (<HTMLInputElement>document.getElementById('update-username')).value;
 
     this.userService.getUserDetails(jwt).subscribe((response) => {
       this.userID = response.id;
@@ -78,14 +79,12 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       this.userLastName = response.lastName;
       this.userUsername = response.userName;
       this.userEmail = response.email;
-      console.log(response);
       this.userService.updateUsername(this.userID, String(newUsername)).subscribe((response) => {
         // this.userID = response.id;
         // this.userFirstName = response.firstName;
         // this.userLastName = response.lastName;
         // this.userUsername = response.userName;
         // this.userEmail = response.email;
-        console.log(response);
       },
       (error) => {
         console.log(error);
