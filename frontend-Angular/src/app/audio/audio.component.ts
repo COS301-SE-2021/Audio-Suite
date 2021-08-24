@@ -3,6 +3,7 @@ import { AngularAgoraRtcService, Stream } from 'angular-agora-rtc';
 import { OfficeRoomService } from 'src/app/services/office-room.service';
 import { Observable } from 'rxjs';
 import { tokenize } from '@angular/compiler/src/ml_parser/lexer';
+import { AudioService } from 'src/app/services/audio.service';
 
 interface Room{
   id: number,
@@ -53,7 +54,7 @@ export class AudioComponent {
       console.log("Entered room");
       this.agoraService.client.join(null, this.channelName, userID);
       this.localStream = this.agoraService.createStream(userID, true, null, null, false, false);
-      setTimeout(() => {this.assignRemoteHandlers()},1000);
+      setTimeout(() => {this.assignRemoteHandlers(Number(userID))},1000);
       setTimeout(() => {this.publish(room)},3000);
     });
   }
@@ -100,7 +101,7 @@ export class AudioComponent {
     });
   }
 
-  assignRemoteHandlers(): void{
+  assignRemoteHandlers(userID: number): void{
     this.agoraService.client.on('error', (err) => {
       console.log("Got error msg:", err.reason);
       if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
@@ -111,8 +112,10 @@ export class AudioComponent {
           var token: string = "";
 
           // 2) Make request
-          
-
+          this.officeRoomService.fetchToken(userID, this.channelName, 1).subscribe((res) => {
+            token = res.json().token;
+          });
+        
           // 3) Return new token
           return token;
         }, () => {
