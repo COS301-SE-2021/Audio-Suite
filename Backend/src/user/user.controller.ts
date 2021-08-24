@@ -49,19 +49,30 @@ export class UserController {
 
     @Post('user/updateUsername')
     async updateUsername(
+        @Body('jwt') jwt: string,
         @Body('id') id: string,
         @Body('newUsername') newUsername: string
     )
     {
-        return await this.userService.updateUsername(id, newUsername);
+        return await this.userService.updateUsername(jwt, id, newUsername);
     }
 
     @Post('user/updatePassword')
     async updatePassword(
+        @Body('jwt') jwt: string,
         @Body('id') id: string,
         @Body('newPassword') newPassword: string
     )
     {
-        return await this.userService.updatePassword(id, newPassword);
+        return await this.userService.updatePassword(jwt, id, newPassword);
+    }
+
+    @Post('user/deleteUser')
+    async deleteUser(
+        @Body('jwt') jwt: string,
+        @Body('id') id: string,
+    )
+    {
+        return await this.userService.deleteUser(jwt, id);
     }
 }

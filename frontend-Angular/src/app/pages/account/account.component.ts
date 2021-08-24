@@ -79,7 +79,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       this.userLastName = response.lastName;
       this.userUsername = response.userName;
       this.userEmail = response.email;
-      this.userService.updateUsername(this.userID, String(newUsername)).subscribe((response) => {
+      this.userService.updateUsername(jwt, this.userID, String(newUsername)).subscribe((response) => {
         // this.userID = response.id;
         // this.userFirstName = response.firstName;
         // this.userLastName = response.lastName;
@@ -106,12 +106,41 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       this.userLastName = response.lastName;
       this.userUsername = response.userName;
       this.userEmail = response.email;
-      this.userService.updatePassword(this.userID, String(newPassword)).subscribe((response) => {
+      this.userService.updatePassword(jwt, this.userID, String(newPassword)).subscribe((response) => {
         // this.userID = response.id;
         // this.userFirstName = response.firstName;
         // this.userLastName = response.lastName;
         // this.userUsername = response.userName;
         // this.userEmail = response.email;
+      },
+      (error) => {
+        console.log(error);
+      })
+    },
+    (error) => {
+      console.log(error);
+    })
+  }
+
+  deleteUser(): void{
+    var jwt = sessionStorage.getItem('jwt');
+
+    this.userService.getUserDetails(jwt).subscribe((response) => {
+      this.userID = response.id;
+      this.userFirstName = response.firstName;
+      this.userLastName = response.lastName;
+      this.userUsername = response.userName;
+      this.userEmail = response.email;
+      this.userService.deleteUser(jwt, this.userID,).subscribe((response) => {
+        // this.userID = response.id;
+        // this.userFirstName = response.firstName;
+        // this.userLastName = response.lastName;
+        // this.userUsername = response.userName;
+        // this.userEmail = response.email;
+        if(response.response == "Success"){
+          this.router.navigate(['login'])
+          return
+        }
       },
       (error) => {
         console.log(error);

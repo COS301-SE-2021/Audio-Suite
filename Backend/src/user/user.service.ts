@@ -89,7 +89,7 @@ export class UserService {
         }
     }
 
-    async updateUsername(id: string, newUsername: string): Promise<any>{
+    async updateUsername(jwt: string, id: string, newUsername: string): Promise<any>{
         try{
             const user = await this.usersRepository.findOne({id: Number(id)});
             user.userName = newUsername;
@@ -101,7 +101,7 @@ export class UserService {
         }
     }
 
-    async updatePassword(id: string, newPassword: string): Promise<any>{
+    async updatePassword(jwt: string, id: string, newPassword: string): Promise<any>{
         try{
             const user = await this.usersRepository.findOne({id: Number(id)});
             const saltOrRounds = 10;
@@ -111,6 +111,19 @@ export class UserService {
             await this.usersRepository.save(user);
             const {password, ...result} = user;
             return result;
+        }catch(err){
+            throw new NotFoundException('User Not Found.');
+        }
+    }
+
+    async deleteUser(jwt: string, id: string): Promise<any>{
+        try{
+            const user = await this.usersRepository.findOne({id: Number(id)});
+            await this.usersRepository.delete(user);
+            return {
+                response: 'Success',
+                jwt: jwt
+            };
         }catch(err){
             throw new NotFoundException('User Not Found.');
         }
