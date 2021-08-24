@@ -55,4 +55,13 @@ export class UserController {
     {
         return await this.userService.updateUsername(id, newUsername);
     }
+
+    @Post('user/updatePassword')
+    async updatePassword(
+        @Body('id') id: string,
+        @Body('newPassword') newPassword: string
+    )
+    {
+        return await this.userService.updatePassword(id, newPassword);
+    }
 }

@@ -95,6 +95,33 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   }
 
+  updatePassword(): void{
+    var jwt = sessionStorage.getItem('jwt');
+    // var newUsername = document.getElementById('update-username').value;
+    var newPassword = (<HTMLInputElement>document.getElementById('update-password')).value;
+
+    this.userService.getUserDetails(jwt).subscribe((response) => {
+      this.userID = response.id;
+      this.userFirstName = response.firstName;
+      this.userLastName = response.lastName;
+      this.userUsername = response.userName;
+      this.userEmail = response.email;
+      this.userService.updatePassword(this.userID, String(newPassword)).subscribe((response) => {
+        // this.userID = response.id;
+        // this.userFirstName = response.firstName;
+        // this.userLastName = response.lastName;
+        // this.userUsername = response.userName;
+        // this.userEmail = response.email;
+      },
+      (error) => {
+        console.log(error);
+      })
+    },
+    (error) => {
+      console.log(error);
+    })
+  }
+
   ngOnDestroy() {
     var body = document.getElementsByTagName("body")[0];
     body.classList.remove("account-page");

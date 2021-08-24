@@ -71,6 +71,18 @@ export class UserService {
     return this.http.post<any>(updateUsernameURL, body, httpOptions);
   }
 
+  updatePassword(
+    id: string,
+    newPassword: string
+  ): Observable<any>{
+    const body = {
+      id: id,
+      newPassword: newPassword
+    }
+    var updatePasswordURL = this.baseUrl + '/api/user/updatePassword'
+    return this.http.post<any>(updatePasswordURL, body, httpOptions);
+  }
+
   getUserDetails(
     jwt: string
   ): Observable<any>{

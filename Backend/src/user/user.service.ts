@@ -101,4 +101,19 @@ export class UserService {
         }
     }
 
+    async updatePassword(id: string, newPassword: string): Promise<any>{
+        try{
+            const user = await this.usersRepository.findOne({id: Number(id)});
+            const saltOrRounds = 10;
+            const hashed_password = await bcrypt.hash(newPassword, saltOrRounds);
+            newPassword = hashed_password;
+            user.password = newPassword;
+            await this.usersRepository.save(user);
+            const {password, ...result} = user;
+            return result;
+        }catch(err){
+            throw new NotFoundException('User Not Found.');
+        }
+    }
+
 }
