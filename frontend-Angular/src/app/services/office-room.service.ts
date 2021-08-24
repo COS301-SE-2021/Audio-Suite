@@ -15,6 +15,7 @@ const httpOptions = {
 export class OfficeRoomService {
 
   baseUrl = environment.apiUrl;
+  tokenUrl = 'http://139.162.248.140:8082/fetch_rtc_token'
 
   constructor(private http: HttpClient) { }
 
