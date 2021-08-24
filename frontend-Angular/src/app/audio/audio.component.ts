@@ -2,6 +2,7 @@ import { Component, Input, Self } from '@angular/core';
 import { AngularAgoraRtcService, Stream } from 'angular-agora-rtc';
 import { OfficeRoomService } from 'src/app/services/office-room.service';
 import { Observable } from 'rxjs';
+import { tokenize } from '@angular/compiler/src/ml_parser/lexer';
 
 interface Room{
   id: number,
@@ -35,6 +36,7 @@ export class AudioComponent {
   currentRoom: string = "NO-ROOM-SELECTED";
   currentRoomDetails: Room;
   currentRoomCenter = [];
+  channelName = "OFFICE";
 
   constructor(
     private agoraService: AngularAgoraRtcService,
@@ -49,7 +51,7 @@ export class AudioComponent {
       console.log(res.Rooms);
       this.rooms = res.Rooms;
       console.log("Entered room");
-      this.agoraService.client.join(null, '1000', userID);
+      this.agoraService.client.join(null, this.channelName, userID);
       this.localStream = this.agoraService.createStream(userID, true, null, null, false, false);
       setTimeout(() => {this.assignRemoteHandlers()},1000);
       setTimeout(() => {this.publish(room)},3000);
@@ -102,7 +104,18 @@ export class AudioComponent {
     this.agoraService.client.on('error', (err) => {
       console.log("Got error msg:", err.reason);
       if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
-        this.agoraService.client.renewChannelKey("", () => {
+        this.agoraService.client.renewChannelKey(() => {
+          // ---- RENEW CHANNEL KEY FUNCTION ----
+          // 1) Get details
+          var channel = this.channelName;
+          var token: string = "";
+
+          // 2) Make request
+          
+
+          // 3) Return new token
+          return token;
+        }, () => {
           console.log("Renew channel key successfully");
         }, (err) => {
           console.log("Renew channel key failed: ", err);
