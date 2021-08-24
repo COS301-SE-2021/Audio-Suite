@@ -14,6 +14,7 @@ const httpOptions = {
 export class OfficeRoomService {
 
   baseUrl = 'http://localhost:3001'
+  tokenUrl = 'http://139.162.248.140:8082/fetch_rtc_token'
 
   constructor(private http: HttpClient) { }
 
@@ -152,4 +153,18 @@ export class OfficeRoomService {
       var userRoom = this.baseUrl + '/api/room/findUser';
       return this.http.post<any>(userRoom, body, httpOptions);
   }
+
+  fetchToken(
+    uid: number, 
+    channelName: string,
+    role: number
+    ): Observable<any>{
+    const body = {
+      uid: uid, 
+      channelName: channelName,
+      role: role
+    }
+
+    return this.http.post<any>(this.tokenUrl, body, httpOptions);
+    }
 }
