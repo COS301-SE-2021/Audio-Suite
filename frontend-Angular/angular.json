@@ -40,6 +40,14 @@
             "scripts": []
           },
           "configurations": {
+            "development": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ]
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -72,6 +80,9 @@
             "browserTarget": "blk-design-system-angular:build"
           },
           "configurations": {
+            "development": {
+              "browserTarget": "blk-design-system-angular:build:development"
+            },
             "production": {
               "browserTarget": "blk-design-system-angular:build:production"
             }
