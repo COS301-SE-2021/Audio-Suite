@@ -177,9 +177,12 @@
         padding-right: 8%;
 
         .ktd-grid-item{ 
-            background-color: #03205e;
-            border: 1px solid white;
+            //border: 1px solid white;
             border-radius: 10px;
+            background: linear-gradient(145deg, #031d55, #032265);
+            // background: linear-gradient(145deg, #15173b, #191b46);
+            // box-shadow:  20px 20px 60px #141537,
+            //             -20px -20px 60px #1a1d4b;
 
             .grid-item-content{
                 height: inherit;
@@ -188,8 +191,32 @@
                     width: 100%;
                     height: inherit;
                     background-color: inherit;
-                    outline: none;
+                    border: 0;
                     color: white;
+                    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+                        border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+                }
+            }
+        }
+
+        .ktd-grid-item:hover{
+            //border: 1px solid white;
+            border-radius: 10px;
+            background: linear-gradient(145deg, #09e1ba, #0bffdd);
+            //box-shadow:  20px 20px 60px #09d5b0,
+            //            -20px -20px 60px #0cffee;
+
+            .grid-item-content{
+                height: inherit;
+
+                .grid-item-button{
+                    width: 100%;
+                    height: inherit;
+                    background-color: inherit;
+                    border: 0;
+                    color: black;
+                    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+                        border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
                 }
             }
         }

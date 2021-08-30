@@ -223,7 +223,7 @@
                                     <ng-template #enterRoom>
                                         <div class="grid-item-content">
                                             <button (click)="selectRoom(item.id, false)" class="grid-item-button">
-                                                <b>Enter Room:</b><br> {{ item.id }}
+                                                <b>{{ item.id }}</b>
                                             </button>
                                             <app-audio #joinAudio [userId]="userID"></app-audio>
                                         </div>
@@ -231,7 +231,7 @@
                                     <ng-template #leaveRoom>
                                         <div class="grid-item-content">
                                             <button (click)="selectRoom(item.id, true); leaveAudio.leave()" class="grid-item-button">
-                                                <b>Leave Room:</b><br> {{ item.id }}
+                                                <b>{{ item.id }}</b>
                                             </button>
                                             <app-audio #leaveAudio></app-audio>
                                         </div>
@@ -239,8 +239,16 @@
                                 </ng-template>
                                 <ng-template #dblClick>
                                     <div class="grid-item-content">
-                                        <button (dblclick)="removeRoom(item.id)" class="grid-item-button">
-                                            <b>Double click to delete room:</b><br> {{ item.id }}
+                                        <button 
+                                        (dblclick)="removeRoom(item.id)" 
+                                        class="grid-item-button btn-tooltip mr-4"
+                                        data-animation="true"
+                                        data-container="body"
+                                        placement="bottom"
+                                        tooltip="Tooltip on bottom"
+                                        type="button"
+                                        >
+                                            <b>{{ item.id }}</b>
                                         </button>
                                     </div>
                                 </ng-template>
