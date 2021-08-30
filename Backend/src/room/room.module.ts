@@ -8,15 +8,23 @@ import { JwtModule } from '@nestjs/jwt';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { RoomUsersService } from '../roomusers/roomusers.service';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Room]),
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forFeature([RoomUsers]),
-    JwtModule.register({
-      secret: 'secret', // TODO change to env var
-      signOptions: {expiresIn: '1d'}
+    JwtModule.registerAsync({
+      useFactory: (config: ConfigService) => {
+        return {
+          secret: config.get<string>('JWT_SECRET_KEY'),
+          signOptions: {
+            expiresIn: config.get<string | number>('JWT_EXPIRATION_TIME'),
+          },
+        };
+      },
+      inject: [ConfigService],
     })
   ],
   controllers: [RoomController],
