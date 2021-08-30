@@ -321,6 +321,11 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
   }
 
+  accountNav(): void{
+    this.router.navigate(['account'])
+    return
+  }
+
   getUserOfficeList(): void{
     var jwt = sessionStorage.getItem("jwt");
     this.officeRoomService.getUserOffices(jwt).subscribe((response) =>{

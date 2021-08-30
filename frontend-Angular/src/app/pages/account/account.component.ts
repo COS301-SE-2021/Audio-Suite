@@ -53,6 +53,11 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
   }
 
+  userNav():void{
+    this.router.navigate(['user']);
+    return
+  }
+
   getUserDetails(): void {
     var jwt = sessionStorage.getItem('jwt');
     console.log(jwt);
