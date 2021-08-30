@@ -263,6 +263,11 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
+    var jwt = window.sessionStorage.getItem('jwt');
+    console.log(jwt)
+    if(jwt == null){
+      this.router.navigate(['login']);
+    }
     var body = document.getElementsByTagName("body")[0];
     body.classList.add("user-page");
     this.audioComponent = new AudioComponent( this.agoraService, this.officeRoomService );
