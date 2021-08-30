@@ -11,7 +11,7 @@ import { OfficeUsers } from './officeusers/officeusers.entity';
 import { NotificationModule } from './notification/notification.module';
 import { Notifications } from './notification/notification.entity';
 import { MailModule } from './mail/mail.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RoomModule } from './room/room.module';
 import { RoomusersModule } from './roomusers/roomusers.module';
 import { Room } from './room/room.entity';
@@ -29,24 +29,21 @@ import { Kanban } from './kanban/kanban.entity';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: '34.123.22.210', // TODO change to env var
-      port: 3306, // TODO change to env var
-      username: 'AudioSuiteDev', // TODO change to env var
-      password: '4uLrYf49J3W6az', // TODO change to env var
-      database: 'AUDIO_SUITE', // TODO change to env var
-      entities: [
-        User, 
-        Office, 
-        OfficeUsers, 
-        Notifications, 
-        Room, 
-        RoomUsers, 
-        Message, 
-        Kanban
-      ],
-      synchronize: true,}), // TODO change to false for production
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'mysql',
+        host: configService.get('DB_HOST'),
+        port: +configService.get<number>('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_DATABASE'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        synchronize: true,
+      }),
+      inject: [ConfigService],
+    }),
     UserModule, 
     OfficeModule, 
     OfficeusersModule, 
