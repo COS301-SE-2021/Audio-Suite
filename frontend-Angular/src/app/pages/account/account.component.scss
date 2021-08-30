@@ -1,0 +1,149 @@
+.sidebar{
+    margin: 0;
+    padding: 0;
+    width: 15%;
+    background: linear-gradient(45deg, rgba(10,250,207,1) 0%, rgba(220,123,255,1) 100%);
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+    font-size: 20px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    z-index: 2;
+
+    #sidebar-title{
+        margin-top: 15px;
+        color: black;
+        text-align: center;
+    }
+
+    #sidebar-officeHeader, #sidebar-backToUser{
+        margin-left: 5px;
+        color: black;
+        background-color: transparent;
+        border: none;
+        outline: none;
+    }
+
+    .showOffices{
+        display: block;
+
+        .box{
+            width: 100%;
+            height: 50px;
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            //box-shadow: 4px 4px 20px rgba(0,0,0,0.3);
+
+            .container{
+                height: 15px;
+                width: 100%;
+                display: flex;
+                position: relative;
+                .circle{
+                    width: 15px;
+                    height: 15px;
+                    border-radius: 50%;
+                    background-color: #000;
+                    animation: move 750ms linear 0ms infinite;
+                    margin-right: 30px;
+                    
+                    &:first-child{
+                    position: absolute;
+                    top:0;
+                    left:0;
+                    animation: grow 750ms linear 0ms infinite;
+                    }
+                    
+                    &:last-child{
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    margin-right: 0;
+                    animation: grow 750ms linear 0s infinite reverse;
+                    }
+                }
+            }
+        }
+
+        .officeBtn{
+            margin-left: 30px;
+            color: black;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+    }
+
+    .showOfficeSettings{
+        display: block;
+
+        .sidebarBtn{
+            margin-left: 30px;
+            color: black;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+    }
+
+    .showQuickSettings{
+        display: block;
+
+        .sidebarBtn{
+            margin-left: 30px;
+            color: black;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+    }
+
+    .hideOffices{
+        display: none;
+
+        .officeBtn{
+            margin-left: 30px;
+            color: black;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+    }
+
+    .hideOfficeSettings{
+        display: none;
+
+        .sidebarBtn{
+            margin-left: 30px;
+            color: black;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+    }
+
+    .hideQuickSettings{
+        display: none;
+
+        .sidebarBtn{
+            margin-left: 30px;
+            color: black;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+    }
+}
+
+.content{
+    margin-left: 15%;
+    padding: 1px 16px;
+    height: 100%;
+    width: 92%;
+    position: fixed;
+    text-align: center;
+    overflow: auto;
+}

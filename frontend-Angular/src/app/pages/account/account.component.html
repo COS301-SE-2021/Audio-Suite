@@ -1,22 +1,81 @@
-<div>
-    <!-- back to user page button here -->
-    <button id="backBtn" (click)="userNav();" > Back to User</button>
+<!-- sidebar -->
+<div class="sidebar">
+    <h2 id='sidebar-title' >Audio Suite</h2>
+
+    <button id="sidebar-backToUser" (click)="userNav()" > Back To User </button>
+
+    <div id="officeList" class="showOffices">
+        <div class="box" *ngIf="!officeListLoaded">
+            <div class="container">
+              <span class="circle"></span>
+              <span class="circle"></span>
+              <span class="circle"></span>
+              <span class="circle"></span>
+              <span class="circle"></span>
+              <span class="circle"></span>
+              <span class="circle"></span>
+              <span class="circle"></span>
+              <span class="circle"></span>
+            </div>
+        </div>
+        <div *ngIf="officeListLoaded">
+            <div *ngFor="let office of officeList">
+                <button class="officeBtn" (click)="selectOffice(office.id, office.name, office.invite)">{{office.name}}</button>
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="officeSelected">
+        <br>
+        <button id="sidebar-officeHeader" (click)="toggleOfficeSettingsListView()">
+            <i id="officeSettingsListIcon" class="tim-icons icon-minimal-down"></i> Office Settings:
+        </button>
+        <div id="officeSettingsList" class="showOfficeSettings">
+            <button class="sidebarBtn" (click)="showSendInviteModal()">Send Invite</button>
+            <br>
+            <div *ngIf="inFloorPlanEditorMode; then closeEditorMode else openEditorMode"></div>
+            <ng-template #openEditorMode>
+                <button class="sidebarBtn" (click)="EditFloorPlan()">Edit FloorPlan</button>
+                <br>
+            </ng-template>
+            <ng-template #closeEditorMode>
+                <button class="sidebarBtn" (click)="closeEditFloorPlan()">Exit Edit Mode</button>
+                <br>
+            </ng-template>
+            <button class="sidebarBtn" (click)="leaveOffice()">Leave Office</button>
+            <br>
+        </div>
+    </div>
+
+    <br>
+    <div>
+        <button id="sidebar-officeHeader" (click)="toggleQuickSettingsListView()">
+            <i id="quickSettingsListIcon" class="tim-icons icon-minimal-down"></i> Quick Settings:
+        </button>
+        <div id="quickSettingsList" class="showQuickSettings">
+            <button class="sidebarBtn" (click)="logOut()">Log out</button>
+        </div>
+    </div>
 </div>
 
-<div>
-    <h1>USERNAME</h1>
-    <h3>{{userUsername}}</h3>
-    <input id="update-username" type="text" >
-    <button (click)="updateUsername()" >Edit Username</button>
-</div>
-<br>
-<div>
-    <h1>PASSWORD</h1>
-    <input id="update-password" type="text" >
-    <button (click)="updatePassword()" >Edit Password</button>
-</div>
-<br>
-<div>
-    <h1>DELETE USER</h1>
-    <button (click)="deleteUser()" >Delete</button>
+
+<div class="content">
+    <div>
+        <h1>USERNAME</h1>
+        <h3>{{userUsername}}</h3>
+        <input id="update-username" type="text" >
+        <button (click)="updateUsername()" >Edit Username</button>
+    </div>
+    <br>
+    <div>
+        <h1>PASSWORD</h1>
+        <input id="update-password" type="text" >
+        <button (click)="updatePassword()" >Edit Password</button>
+    </div>
+    <br>
+    <div>
+        <h1>DELETE USER</h1>
+        <button (click)="deleteUser()" >Delete</button>
+    </div>
 </div>
