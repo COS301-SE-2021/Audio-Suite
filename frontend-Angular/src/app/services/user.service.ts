@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs'
+import { environment } from 'src/environments/environment';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -13,7 +14,7 @@ const httpOptions = {
 })
 export class UserService {
 
-  baseUrl = 'http://localhost:3001'
+  baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
