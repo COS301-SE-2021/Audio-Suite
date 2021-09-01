@@ -1,4 +1,5 @@
 .sidebar{
+    display: block;
     margin: 0;
     padding: 0;
     width: 15%;
@@ -23,6 +24,20 @@
         background-color: transparent;
         border: none;
         outline: none;
+        font-size: x-large;
+        cursor: pointer;
+
+        #officeListIcon{
+            font-size: small;
+        }
+
+        #officeSettingsListIcon{
+            font-size: small;
+        }
+
+        #quickSettingsListIcon{
+            font-size: small;
+        }
     }
 
     .showOffices{
@@ -69,72 +84,93 @@
         }
 
         .officeBtn{
-            margin-left: 30px;
             color: black;
             background-color: transparent;
             border: none;
             outline: none;
+            position: relative;
+            width: 100%;
+            text-align:start;
+            cursor: pointer;
+
+            .officeName{
+                padding-left: 10%;
+            }
+        }
+
+        .officeBtn::before {  
+            transform: scaleX(0);
+            transform-origin: bottom right;
+        }
+          
+        .officeBtn:hover::before {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+          
+        .officeBtn::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            inset: 0 0 0 0;
+            background: hsl(200 100% 80%);
+            z-index: -1;
+            transition: transform .3s ease;
         }
     }
 
-    .showOfficeSettings{
-        display: block;
-
-        .sidebarBtn{
-            margin-left: 30px;
-            color: black;
-            background-color: transparent;
-            border: none;
-            outline: none;
-        }
-    }
-
+    .showOfficeSettings,
     .showQuickSettings{
         display: block;
 
         .sidebarBtn{
-            margin-left: 30px;
             color: black;
             background-color: transparent;
             border: none;
             outline: none;
+            position: relative;
+            width: 100%;
+            text-align:start;
+            cursor: pointer;
+
+            .settingType{
+                padding-left: 10%;
+            }
+        }
+
+        .sidebarBtn::before {  
+            transform: scaleX(0);
+            transform-origin: bottom right;
+        }
+          
+        .sidebarBtn:hover::before {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+          
+        .sidebarBtn::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            inset: 0 0 0 0;
+            background: hsl(200 100% 80%);
+            z-index: -1;
+            transition: transform .3s ease;
         }
     }
 
     .hideOffices{
         display: none;
-
-        .officeBtn{
-            margin-left: 30px;
-            color: black;
-            background-color: transparent;
-            border: none;
-            outline: none;
-        }
     }
 
     .hideOfficeSettings{
         display: none;
-
-        .sidebarBtn{
-            margin-left: 30px;
-            color: black;
-            background-color: transparent;
-            border: none;
-            outline: none;
-        }
     }
 
     .hideQuickSettings{
         display: none;
-
-        .sidebarBtn{
-            margin-left: 30px;
-            color: black;
-            background-color: transparent;
-            border: none;
-            outline: none;
-        }
     }
 }
 
@@ -146,6 +182,22 @@
 @keyframes move {
     from {transform: translateX(0px)}
     to {transform: translateX(45px)}
+}
+
+.showHiddenSidebar{
+    display: flex;
+    #showTaskBar{
+        top: 10px; 
+        left: 10px;
+        color: white;
+        background-color: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding-top: 0.5%;
+        padding-left: 2%;
+        font-size: 30px;
+    }
 }
 
 .content{
@@ -172,12 +224,13 @@
     height: 85%;
     position: fixed;
     overflow-y: scroll;
+    overflow-x: hidden;
 
     #grid-content{
-        padding-right: 8%;
+        height: inherit;
 
         .ktd-grid-item{ 
-            //border: 1px solid white;
+            border: 1px solid white;
             border-radius: 10px;
             background: linear-gradient(145deg, #031d55, #032265);
             // background: linear-gradient(145deg, #15173b, #191b46);
@@ -197,19 +250,46 @@
                         border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
                 }
             }
+
+            .grid-item-content-leave{
+                height: inherit;
+
+                .grid-item-button{
+                    width: 100%;
+                    height: inherit;
+                    background-color: #DA4FD2;
+                    border: 0;
+                    color: white;
+                    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+                        border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+                }
+            }
+
+            .grid-item-content-remove{
+                height: inherit;
+
+                .grid-item-button{
+                    width: 100%;
+                    height: inherit;
+                    background-color: inherit;
+                    border: 0;
+                    color: white;
+                    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+                        border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+                }
+            }
         }
 
         .ktd-grid-item:hover{
-            //border: 1px solid white;
             border-radius: 10px;
             background: linear-gradient(145deg, #09e1ba, #0bffdd);
-            //box-shadow:  20px 20px 60px #09d5b0,
-            //            -20px -20px 60px #0cffee;
+            
 
             .grid-item-content{
                 height: inherit;
 
                 .grid-item-button{
+                    cursor: pointer;
                     width: 100%;
                     height: inherit;
                     background-color: inherit;
@@ -218,6 +298,61 @@
                     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
                         border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
                 }
+            }
+
+            .grid-item-content-leave{
+                height: inherit;
+
+                .grid-item-button{
+                    cursor: pointer;
+                    width: 100%;
+                    height: inherit;
+                    background-color: #DA4FD2;
+                    border: 0;
+                    color: white;
+                    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+                        border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+                }
+            }
+
+            .grid-item-content-remove{
+                height: inherit;
+
+                .grid-item-button{
+                    cursor: -webkit-grab; 
+                    cursor: grab;
+                    width: 100%;
+                    height: inherit;
+                    background-color: inherit;
+                    border: 0;
+                    color: black;
+                    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+                        border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+                }
+            }
+        }
+    }
+
+    #UserRoomList-content{
+        min-height: 85vh;
+        border-radius: 50px;
+        background: #171941;
+        box-shadow: inset 20px 20px 60px #141537,
+                    inset -20px -20px 60px #1a1d4b;
+        
+        #sidebar-roomHeader{
+            color: white;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            padding-left: 12%;
+            padding-top: 5%;
+            width: 100%;
+            text-align:start;
+            cursor: pointer;
+
+            .icon-minimal-down{
+                font-size: small;
             }
         }
     }
@@ -233,7 +368,7 @@
 
 .TextChannelContent{
     position: fixed;
-    height: 85%;
+    height: 84.5%;
     width: 86%;
 
     .messageBoard{
@@ -316,4 +451,4 @@
 .messageBoard {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
-  }
+}
