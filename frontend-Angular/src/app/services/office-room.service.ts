@@ -153,4 +153,16 @@ export class OfficeRoomService {
       var userRoom = this.baseUrl + '/api/room/findUser';
       return this.http.post<any>(userRoom, body, httpOptions);
   }
+
+  getRoomUsersByOfficeID(
+    jwt: string, 
+    officeID: number
+    ): Observable<any>{
+      const body = {
+        jwt: jwt,
+        officeID: officeID
+      }
+      var getRoomUsersByOfficeID_URL = this.baseUrl + '/api/room/getRoomUsers';
+      return this.http.post<any>(getRoomUsersByOfficeID_URL, body, httpOptions);
+  }
 }
