@@ -1,9 +1,9 @@
 <!-- sidebar -->
-<div class="sidebar">
-    <h2 id='sidebar-title' >Audio Suite</h2>
+<div class="sidebar" id="Sidebar">
+    <h1 id='sidebar-title' >Audio Suite</h1>
 
     <button id="sidebar-officeHeader" (click)="toggleOfficeListView()">
-        <i id="officeListIcon" class="tim-icons icon-minimal-down"></i> Offices:
+        <i id="officeListIcon" class="tim-icons icon-minimal-down"></i>  Offices:
     </button>
     <div id="officeList" class="showOffices">
         <div class="box" *ngIf="!officeListLoaded">
@@ -21,7 +21,14 @@
         </div>
         <div *ngIf="officeListLoaded">
             <div *ngFor="let office of officeList">
-                <button class="officeBtn" (click)="selectOffice(office.id, office.name, office.invite)">{{office.name}}</button>
+                <button 
+                class="officeBtn" 
+                (click)="selectOffice(office.id, office.name, office.invite, office.role)"
+                >
+                    <div class="officeName">
+                        {{office.name}}
+                    </div>    
+                </button>
                 <br>
             </div>
         </div>
@@ -33,18 +40,36 @@
             <i id="officeSettingsListIcon" class="tim-icons icon-minimal-down"></i> Office Settings:
         </button>
         <div id="officeSettingsList" class="showOfficeSettings">
-            <button class="sidebarBtn" (click)="showSendInviteModal()">Send Invite</button>
-            <br>
-            <div *ngIf="inFloorPlanEditorMode; then closeEditorMode else openEditorMode"></div>
-            <ng-template #openEditorMode>
-                <button class="sidebarBtn" (click)="EditFloorPlan()">Edit FloorPlan</button>
-                <br>
-            </ng-template>
-            <ng-template #closeEditorMode>
-                <button class="sidebarBtn" (click)="closeEditFloorPlan()">Exit Edit Mode</button>
-                <br>
-            </ng-template>
-            <button class="sidebarBtn" (click)="leaveOffice()">Leave Office</button>
+            <button *ngIf="selectedOfficeRole == 'Manager'" class="sidebarBtn" (click)="showSendInviteModal()">
+                <div class="settingType">
+                    Send Invite
+                </div>
+            </button>
+            <br *ngIf="selectedOfficeRole == 'Manager'">
+            <div *ngIf="selectedOfficeRole == 'Manager'">
+                <div *ngIf="inFloorPlanEditorMode; then closeEditorMode else openEditorMode"></div>
+                <ng-template #openEditorMode>
+                    <button class="sidebarBtn" (click)="EditFloorPlan()">
+                        <div class="settingType">
+                            Edit FloorPlan
+                        </div>
+                    </button>
+                    <br>
+                </ng-template>
+                <ng-template #closeEditorMode>
+                    <button class="sidebarBtn" (click)="closeEditFloorPlan()">
+                        <div class="settingType">
+                            Exit Edit Mode
+                        </div>
+                    </button>
+                    <br>
+                </ng-template>
+            </div>
+            <button class="sidebarBtn" (click)="leaveOffice()">
+                <div class="settingType">
+                    Leave Office
+                </div>
+            </button>
             <br>
         </div>
     </div>
@@ -55,24 +80,33 @@
             <i id="quickSettingsListIcon" class="tim-icons icon-minimal-down"></i> Quick Settings:
         </button>
         <div id="quickSettingsList" class="showQuickSettings">
-            <button class="sidebarBtn" (click)="logOut()">Log out</button>
+            <button *ngIf="sidebarOpened" class="sidebarBtn" (click)="toggleSidebar()">
+                <div class="settingType">
+                    Close Sidebar
+                </div>
+            </button>
+            <button class="sidebarBtn" (click)="logOut()">
+                <div class="settingType">
+                    Log Out
+                </div>
+            </button>
         </div>
     </div>
 
     <!-- <button id="sidebar-officeHeader" > Account Settings </button> -->
 </div>
 
+<div class="showHiddenSidebar">
+    <button id="showTaskBar" (click)="toggleSidebar()">
+        <i class="tim-icons icon-align-center"></i>
+    </button>
+</div>
+
 <!-- Page content -->
-<div class="content">
-    <div *ngIf="!officeSelected" class="newJoinOfficeContent">
+<div class="content" id="Content">
+    <div *ngIf="!officeSelected" class="newJoinOfficeContent" id="newJoinOfficeContent">
         <div class="card card-registerNewOffice" id="card-newOffice">
             <div class="card-header">
-              <img
-                alt="Card image"
-                class="card-img"
-                src="assets/img/square-purple-1.png"
-              />
-
               <h4 class="card-title" style="padding-left: 15px">New Office</h4>
             </div>
             <div id="alertPosition">
@@ -122,12 +156,6 @@
 
           <div class="card card-joinOffice" id="card-joinOffice">
             <div class="card-header">
-              <img
-                alt="Card image"
-                class="card-img"
-                src="assets/img/square-purple-1.png"
-              />
-
               <h4 class="card-title" style="padding-left: 15px">Join Office</h4>
             </div>
             <div id="alertPosition">
@@ -184,12 +212,6 @@
         <div class="square square-7" id="square7"></div>
         <div class="square square-8" id="square8"></div>
     </div>
-        
-    <div *ngIf="officeSelected">
-        <h2 style="margin-top: 10px; margin-bottom: 5px;">
-            {{selectedOffice}}
-        </h2>
-    </div>
     <tabset *ngIf="officeSelected" class="nav-tabs-primary" (click)="tabSetOpened()">
         <tab>
             <ng-template tabHeading>
@@ -201,59 +223,74 @@
                         Add New Room
                     </button>
                 </div>
-                <div id="grid-content">
-                    <ktd-grid
-                        [cols]="cols"
-                        [rowHeight]="rowHeight"
-                        [layout]="layout"
-                        [compactType]="compactType"
-                        [preventCollision]="preventCollision"
-                        [scrollableParent]="scrollableParent"
-                        (layoutUpdated)="onLayoutUpdated($event)">
-                        <ktd-grid-item 
-                            class="ktd-grid-item" 
-                            *ngFor="let item of layout; trackBy:trackById" 
-                            [id]="item.id" [transition]="currentTransition"
-                            [dragStartThreshold]="dragStartThreshold" 
-                            [draggable]="!disableDrag" 
-                            [resizable]="!disableResize">
-                                <div *ngIf="disableDrag; then click else dblClick"></div>
-                                <ng-template #click>
-                                    <div *ngIf="selectedRoom == item.id; then leaveRoom else enterRoom"></div>
-                                    <ng-template #enterRoom>
-                                        <div class="grid-item-content">
-                                            <button (click)="selectRoom(item.id, false)" class="grid-item-button">
-                                                <b>{{ item.id }}</b>
-                                            </button>
-                                            <app-audio #joinAudio [userId]="userID"></app-audio>
-                                        </div>
-                                    </ng-template>
-                                    <ng-template #leaveRoom>
-                                        <div class="grid-item-content">
-                                            <button (click)="selectRoom(item.id, true); leaveAudio.leave()" class="grid-item-button">
-                                                <b>{{ item.id }}</b>
-                                            </button>
-                                            <app-audio #leaveAudio></app-audio>
-                                        </div>
-                                    </ng-template>
-                                </ng-template>
-                                <ng-template #dblClick>
-                                    <div class="grid-item-content">
-                                        <button 
-                                        (dblclick)="removeRoom(item.id)" 
-                                        class="grid-item-button btn-tooltip mr-4"
-                                        data-animation="true"
-                                        data-container="body"
-                                        placement="bottom"
-                                        tooltip="Tooltip on bottom"
-                                        type="button"
-                                        >
-                                            <b>{{ item.id }}</b>
-                                        </button>
-                                    </div>
-                                </ng-template>
-                        </ktd-grid-item>
-                    </ktd-grid>
+                <div class="row">
+                    <div class="col-lg-7 col-xl-7" style="height: 85vh">
+                        <div id="grid-content">
+                            <ktd-grid
+                                [cols]="cols"
+                                [rowHeight]="rowHeight"
+                                [layout]="layout"
+                                [compactType]="compactType"
+                                [preventCollision]="preventCollision"
+                                [scrollableParent]="scrollableParent"
+                                (layoutUpdated)="onLayoutUpdated($event)">
+                                <ktd-grid-item 
+                                    class="ktd-grid-item" 
+                                    *ngFor="let item of layout; trackBy:trackById" 
+                                    [id]="item.id" [transition]="currentTransition"
+                                    [dragStartThreshold]="dragStartThreshold" 
+                                    [draggable]="!disableDrag" 
+                                    [resizable]="!disableResize">
+                                        <div *ngIf="disableDrag; then click else dblClick"></div>
+                                        <ng-template #click>
+                                            <div *ngIf="selectedRoom == item.id; then leaveRoom else enterRoom"></div>
+                                            <ng-template #enterRoom>
+                                                <div class="grid-item-content">
+                                                    <button (click)="selectRoom(item.id, false)" class="grid-item-button">
+                                                        <b>{{ item.id }}</b>
+                                                    </button>
+                                                    <app-audio #joinAudio [userId]="userID"></app-audio>
+                                                </div>
+                                            </ng-template>
+                                            <ng-template #leaveRoom>
+                                                <div class="grid-item-content-leave">
+                                                    <button (click)="selectRoom(item.id, true); leaveAudio.leave()" class="grid-item-button">
+                                                        <b>{{ item.id }}</b>
+                                                    </button>
+                                                    <app-audio #leaveAudio></app-audio>
+                                                </div>
+                                            </ng-template>
+                                        </ng-template>
+                                        <ng-template #dblClick>
+                                            <div class="grid-item-content-remove">
+                                                <button 
+                                                (dblclick)="removeRoom(item.id)" 
+                                                class="grid-item-button"
+                                                >
+                                                    <b>{{ item.id }}</b>
+                                                </button>
+                                            </div>
+                                        </ng-template>
+                                </ktd-grid-item>
+                            </ktd-grid>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-xl-5" style="height: 85vh">
+                        <div id="UserRoomList-content">
+                            <div *ngFor="let roomUserItem of roomUsersList">
+                                <button id="sidebar-roomHeader" (click)="toggleRoomListView(roomUserItem.IconID, roomUserItem.UserListID)">
+                                    <i id={{roomUserItem.IconID}} class="tim-icons icon-minimal-down"></i>  {{roomUserItem.Room}}
+                                </button>
+                                <div id={{roomUserItem.UserListID}} class="userNameInRoomUserList" *ngFor="let user of roomUserItem.RoomUsers">
+                                    <p
+                                        style="display: flex; justify-content: left; padding-left: 13%;"
+                                    >
+                                        {{user}}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </tab>
@@ -261,7 +298,7 @@
             <ng-template tabHeading>
                 <i class="tim-icons icon-email-85"> </i> Text Channel
             </ng-template>
-            <div class="TextChannelContent">
+            <div class="TextChannelContent" id="TextChannelContent">
                 <div class="messageBoard" id="messageBoard" #scrollframe>
                     <!--Messages will be displayed here when fetched from the server.-->
                     <div *ngFor="let message of officeTextChannelMessages" #messageitem>
