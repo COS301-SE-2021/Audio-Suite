@@ -4,6 +4,7 @@ import { RoomUsersService } from '../roomusers/roomusers.service';
 import { UserService } from '../user/user.service';
 import { Repository } from 'typeorm';
 import { Room } from './room.entity';
+import { RoomUsers } from 'src/roomusers/roomusers.entity';
 
 @Injectable()
 export class RoomService {
@@ -295,6 +296,44 @@ export class RoomService {
         }
         catch(err){
             throw new BadRequestException("Could not remove records with the given user ID.")
+        }
+    }
+
+    async getRoomUsersByOfficeID(jwt: string, officeID: number): Promise<any>{
+        //verify the user
+        try{
+            const user = await this.userService.validateUser(jwt);
+        }
+        catch(err){
+            throw new UnauthorizedException();
+        }
+
+        interface RoomUserList{
+            Room: string,
+            RoomUsers: RoomUsers []
+        }
+
+        let roomUserList: RoomUserList[] = [];
+        try{
+            const rooms: Room [] = await this.roomRepository.find({officeID: officeID});
+            for(var i = 0; i < rooms.length; i++){
+                let newRoomUserItem: RoomUserList = {
+                    Room: rooms[i].roomName,
+                    RoomUsers: await this.roomUserService.getRoomUserByRoomID(rooms[i].id)
+                }
+
+                roomUserList.push(newRoomUserItem);
+
+                if(i == rooms.length-1){
+                    return {
+                        Response: "Success",
+                        RoomUserList: roomUserList
+                    }
+                }
+            }
+        }
+        catch(err){
+            throw new BadRequestException("Could not find records with the given office ID.")
         }
     }
 }

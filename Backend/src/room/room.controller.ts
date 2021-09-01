@@ -84,4 +84,14 @@ export class RoomController {
     {
         return await this.roomService.findWhatRoomAUserIsIn(jwt, userID);
     }
+
+    //Returns all the room users for a given office
+    @Post('room/getRoomUsers')
+    async getRoomUsersByOfficeID(
+        @Body('jwt') jwt: string,
+        @Body('officeID') officeID: number,
+    )
+    {
+        return await this.roomService.getRoomUsersByOfficeID(jwt, officeID);
+    }
 }
