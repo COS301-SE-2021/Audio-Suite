@@ -15,7 +15,15 @@ import { KanbanService } from 'src/app/services/kanban.service';
 interface Office{
   id: string,
   name: string,
-  invite: string
+  invite: string,
+  role: string
+}
+
+interface RoomUsersList{
+  Room: string,
+  IconID: string,
+  UserListID: string,
+  RoomUsers: string[]
 }
 
 interface textMessage{
@@ -68,6 +76,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   selectedOffice: string = '';
   selectedOfficeID: number = null;
   selectedOfficeInvite: string = '';
+  selectedOfficeRole: string = '';
   selectedRoom: string = '';
   selectedRoomID: string = '';
   newOfficeName: string = '';
@@ -88,6 +97,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   newRoomName: string = '';
 
   officeList: Office[] = [];
+  roomUsersList: RoomUsersList[] = [];
 
   officeTextChannelMessages: textMessage[] = [];
   roomTextChannelMessages: textMessage[] = [];
@@ -263,17 +273,29 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-    var jwt = window.sessionStorage.getItem('jwt');
-    console.log(jwt)
-    if(jwt == null){
+    var jwt = sessionStorage.getItem('jwt');
+    this.userService.getUserDetails(jwt).subscribe((response) => {
+      this.userID = response.id;
+      this.userFirstName = response.firstName;
+      this.userLastName = response.lastName;
+      this.userUsername = response.userName;
+      this.userEmail = response.email;
+
+      this.audioComponent = new AudioComponent( this.agoraService, this.officeRoomService );
+
+      this.getUserOfficeList();
+    },
+    (error) => {
+      console.log(error);
       this.router.navigate(['login']);
-    }
+    })
+
     var body = document.getElementsByTagName("body")[0];
     body.classList.add("user-page");
-    this.audioComponent = new AudioComponent( this.agoraService, this.officeRoomService );
+    // this.audioComponent = new AudioComponent( this.agoraService, this.officeRoomService );
 
-    this.getUserDetails();
-    this.getUserOfficeList();
+    // this.getUserDetails();
+    // this.getUserOfficeList();
 
     this.textChannelsService.listen("joinedRoomText").subscribe(data => {
       console.log("Joined room: ", data);
@@ -309,32 +331,62 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.receivedMessage(data);
     }) 
 
-    this.resizeSubscription = merge(
-      fromEvent(window, 'resize'),
-      fromEvent(window, 'orientationchange')
-    )
-      .pipe(
-        debounceTime(50),
-        filter(() => this.autoResize)
-      )
-      .subscribe(() => {
-        this.grid.resize();
-      });
+    this.textChannelsService.listen("updateRoomAttendance").subscribe(data => {
+      let jwt = window.sessionStorage.getItem('jwt');
+      this.getRoomUsersByOfficeID(jwt, this.selectedOfficeID);
+    })
 
+    window.addEventListener("resize", () => {
+      if(window.innerWidth < 800){
+        document.getElementById('Sidebar').style.display = "none";
+        document.getElementById('Content').style.marginLeft = "0%"
+        document.getElementById('Content').style.width = "100%";
+        document.getElementById('TextChannelContent').style.width = "100%";
+      }
+      else if(window.innerWidth < 1200){
+        document.getElementById('Sidebar').style.display = "none";
+        document.getElementById('Content').style.marginLeft = "0%";
+        document.getElementById('Content').style.width = "100%";
+        document.getElementById('TextChannelContent').style.width = "100%";
+      }
+      else if(window.innerWidth < 1400){
+        this.sidebarOpened = true;
+        document.getElementById('Sidebar').style.width = "20%";
+        document.getElementById('Sidebar').style.display = "block";
+        document.getElementById('Content').style.marginLeft = "20%";
+        document.getElementById('TextChannelContent').style.width = "80%";
+      }
+      else if(window.innerWidth >= 1400){
+        this.sidebarOpened = true;
+        document.getElementById('Sidebar').style.width = "15%";
+        document.getElementById('Sidebar').style.display = "block";
+        document.getElementById('Content').style.marginLeft = "15%";
+        document.getElementById('TextChannelContent').style.width = "86%";
+      }
+    })
   }
 
   ngAfterViewInit(): void {
+    if(window.innerWidth < 1200){
+      this.sidebarOpened = false;
+
+      document.getElementById('Sidebar').style.display = "none";
+      document.getElementById('Content').style.marginLeft = "0%";
+      document.getElementById('Content').style.width = "100%";
+      document.getElementById('TextChannelContent').style.width = "100%";
+    }
   }
 
   getUserOfficeList(): void{
     var jwt = sessionStorage.getItem("jwt");
     this.officeRoomService.getUserOffices(jwt).subscribe((response) =>{
-      var listOfOffices = response.Offices;
-      for(let i = 0; i < listOfOffices.length; i++) {
+      console.log(response)
+      for(let i = 0; i < response.Offices.length; i++) {
         var newOffice = {
-          id: listOfOffices[i].id, 
-          name: listOfOffices[i].name, 
-          invite: listOfOffices[i].invite
+          id: response.Offices[i].id, 
+          name: response.Offices[i].name, 
+          invite: response.Offices[i].invite, 
+          role: response.Offices[i].role
         }
         this.officeList.push(newOffice);
       }
@@ -356,14 +408,45 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     },
     (error) => {
       console.log(error);
+      this.router.navigate(['login']);
     })
   }
 
   toggleSidebar(): void {
     this.sidebarOpened = !this.sidebarOpened;
+    if(this.sidebarOpened){
+      document.getElementById('Sidebar').style.display = "block";
+
+      if(window.innerWidth < 600){
+        document.getElementById('Sidebar').style.width = "100%";
+      }
+      else if(window.innerWidth < 800){
+        document.getElementById('Sidebar').style.width = "60%";
+      }
+      else if(window.innerWidth < 1200){
+        document.getElementById('Sidebar').style.width = "30%";
+        document.getElementById('TextChannelContent').style.width = "86%";
+      }
+      else if(window.innerWidth < 1400){
+        document.getElementById('Sidebar').style.width = "20%";
+        document.getElementById('Content').style.marginLeft = "20%";
+        document.getElementById('TextChannelContent').style.width = "86%";
+      }
+      else{
+        document.getElementById('Sidebar').style.width = "15%";
+        document.getElementById('Content').style.marginLeft = "15%";
+        document.getElementById('TextChannelContent').style.width = "86%";
+      }
+    }
+    else{
+      document.getElementById('Sidebar').style.display = "none";
+      document.getElementById('Content').style.marginLeft = "0%";
+      document.getElementById('Content').style.width = "100%";
+      document.getElementById('TextChannelContent').style.width = "100%";
+    }
   }
 
-  selectOffice(officeID, office, officeInvite): void{
+  selectOffice(officeID, office, officeInvite, role): void{
     var officeId = sessionStorage.setItem('officeID', officeID);
     if(this.officeSelected){
       if(this.selectedOffice != office){
@@ -391,10 +474,13 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
           console.log(error);
         });
 
+        this.getRoomUsersByOfficeID(jwt, officeID);
+
         //this.audioComponent.join(this.userID, officeID);
         this.selectedOffice = office;
         this.selectedOfficeID = officeID;
         this.selectedOfficeInvite = officeInvite;
+        this.selectedOfficeRole = role;
         this.officeSelected = true;
         var jwt = sessionStorage.getItem('jwt');
         this.textChannelsService.joinRoom(jwt, officeID, office, office, false);
@@ -424,15 +510,44 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log(error);
       });
 
+      this.getRoomUsersByOfficeID(jwt, officeID);
+
       //this.audioComponent.join(this.userID, officeID);
       this.selectedOffice = office;
       this.selectedOfficeID = officeID;
       this.selectedOfficeInvite = officeInvite;
+      this.selectedOfficeRole = role;
       this.officeSelected = true;
       var jwt = sessionStorage.getItem('jwt');
       this.textChannelsService.joinRoom(jwt, officeID, office, office, false);
       this.setListData();
     }
+  }
+
+  async getRoomUsersByOfficeID(jwt: string, officeID: number){
+    this.officeRoomService.getRoomUsersByOfficeID(jwt, officeID).subscribe((response) => {
+      // console.log(response)
+      this.roomUsersList = [];
+      response.RoomUserList.forEach((roomUserItem) => {
+        let users: string[] = [];
+        roomUserItem.RoomUsers.forEach((roomUser) => {
+          users.push(roomUser.userName);
+        })
+
+        let roomUserListItem: RoomUsersList = {
+          Room: roomUserItem.Room,
+          IconID: roomUserItem.Room + "-Icon",
+          UserListID: roomUserItem.Room + "-List",
+          RoomUsers: users
+        };
+        this.roomUsersList.push(roomUserListItem);
+      })
+
+      console.log(this.roomUsersList);
+    },
+    (error) => {
+      console.log(error)
+    })
   }
 
   tabSetOpened(): void {
@@ -454,6 +569,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     this.selectedOfficeInvite = '';
     this.officeSelected = false;
     this.officeTextChannelMessages = [];
+    this.roomUsersList = [];
     this.audioComponent.leave();
   }
 
@@ -626,6 +742,18 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       document.getElementById('quickSettingsList').classList.replace("hideQuickSettings", "showQuickSettings");
       document.getElementById('quickSettingsListIcon').classList.replace("icon-minimal-right", "icon-minimal-down");
       this.showQuickSettingsList = true;
+    }
+  }
+
+  toggleRoomListView(IconID: string, ListID: string): void{
+    let icon = document.getElementById(IconID);
+    if(icon.classList.contains("icon-minimal-down")){
+      icon.classList.replace("icon-minimal-down", "icon-minimal-right");
+      document.getElementById(ListID).style.display = "none";
+    }
+    else{
+      icon.classList.replace("icon-minimal-right", "icon-minimal-down");
+      document.getElementById(ListID).style.display = "block";
     }
   }
 
