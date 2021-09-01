@@ -72,15 +72,28 @@ export class OfficeService {
             const user = await this.userService.validateUser(jwt);
             const officeUsers: OfficeUsers[] = await this.officeUserService.getOfficeIdFromUserId(user.id);
 
-            const offices: Office[] = [];
+            interface UserOffices {
+                id: number;
+                name: string;
+                invite: string;
+                role: string;
+            }
+
+            const userOffices: UserOffices[] = [];
             for(let i = 0; i < officeUsers.length; i++){
-                const tempOffice = await this.officesRepository.findOne({name: officeUsers[i].officeName});
-                offices.push(tempOffice);
+                const returnedOffice = await this.officesRepository.findOne({name: officeUsers[i].officeName});
+                let tempOffice = {
+                    id: returnedOffice.id,
+                    name: returnedOffice.name,
+                    invite: returnedOffice.invite,
+                    role: officeUsers[i].role
+                };
+                userOffices.push(tempOffice);
 
                 if(i == officeUsers.length-1){
                     return{
                         Response: "Success",
-                        Offices: offices
+                        Offices: userOffices
                     }
                 }
             }
