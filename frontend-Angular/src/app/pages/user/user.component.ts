@@ -19,6 +19,12 @@ interface Office{
   role: string
 }
 
+interface FloorPlan{
+  RoomID: number,
+  RoomType: string,
+  RoomLayout: KtdGridLayoutItem
+}
+
 interface RoomUsersList{
   Room: string,
   IconID: string,
@@ -108,6 +114,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   cols = 12;
   rowHeight = 50;
   compactType: 'vertical' | 'horizontal' | null = null;
+  floorPlan: FloorPlan[] = [];
   layout: KtdGridLayout = [];
   transitions: { name: string; value: string }[] = [
     {
@@ -456,18 +463,29 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         this.officeRoomService.getOfficeRoomList(jwt, officeID).subscribe((response) => {
           console.log(response);
           if(response.Response == "Success"){
-            var newLayout: KtdGridLayout = [];
-            for(let room of response.Rooms){
-              var newRoom: KtdGridLayoutItem = { 
+            let newFloorPlan: FloorPlan[] = [];
+            let newLayout: KtdGridLayout = [];
+            response.Rooms.forEach((room) => {
+              let newRoomLayout: KtdGridLayoutItem = { 
                 id: room.roomName, 
                 x: room.xCoordinate, 
                 y: room.yCoordinate, 
                 w: room.width, 
                 h: room.height 
               };
-              newLayout.push(newRoom);
-            }
+  
+              let newRoom: FloorPlan = {
+                RoomID: room.id,
+                RoomType: room.roomType,
+                RoomLayout: newRoomLayout
+              }
+  
+              newLayout.push(newRoomLayout);
+              newFloorPlan.push(newRoom);
+            })
+  
             this.layout = newLayout;
+            this.floorPlan = newFloorPlan;
           }
         },
         (error) => {
@@ -492,18 +510,29 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.officeRoomService.getOfficeRoomList(jwt, officeID).subscribe((response) => {
         console.log(response);
         if(response.Response == "Success"){
-          var newLayout: KtdGridLayout = [];
-          for(let room of response.Rooms){
-            var newRoom: KtdGridLayoutItem = { 
+          let newFloorPlan: FloorPlan[] = [];
+          let newLayout: KtdGridLayout = [];
+          response.Rooms.forEach((room) => {
+            let newRoomLayout: KtdGridLayoutItem = { 
               id: room.roomName, 
               x: room.xCoordinate, 
               y: room.yCoordinate, 
               w: room.width, 
               h: room.height 
             };
-            newLayout.push(newRoom);
-          }
+
+            let newRoom: FloorPlan = {
+              RoomID: room.id,
+              RoomType: room.roomType,
+              RoomLayout: newRoomLayout
+            }
+
+            newLayout.push(newRoomLayout);
+            newFloorPlan.push(newRoom);
+          })
+
           this.layout = newLayout;
+          this.floorPlan = newFloorPlan;
         }
       },
       (error) => {
@@ -554,8 +583,10 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     this.scrollContainer = this.scrollFrame.nativeElement;  
     this.itemElements.changes.subscribe(_ => this.scrollMessageBoardToBottom());
 
-    this.scrollRoomContainer = this.scrollRoomFrame.nativeElement;
-    this.itemRoomElements.changes.subscribe(_ => this.scrollRoomMessageBoardToBottom());
+    if(this.roomSelected){
+      this.scrollRoomContainer = this.scrollRoomFrame.nativeElement;
+      this.itemRoomElements.changes.subscribe(_ => {this.scrollRoomMessageBoardToBottom()});
+    }
   }
 
   leaveOffice(): void{
@@ -573,8 +604,8 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     this.audioComponent.leave();
   }
 
-  selectRoom(id: string, leaveRoom: boolean): void{
-  
+  selectRoom(id: string, roomType: string, leaveRoom: boolean): void{
+    // console.log("Room Type: " + roomType)
     if(leaveRoom){
       var jwt = sessionStorage.getItem('jwt');
       this.textChannelsService.leaveRoom(jwt, this.selectedOfficeID, this.selectedOffice, id);
@@ -616,7 +647,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
   addRoom(): void{
     console.log("add room: " + this.newRoomName)
-    var newRoom: KtdGridLayoutItem = {
+    var newRoomLayout: KtdGridLayoutItem = {
       id: this.newRoomName,
       x: 0,
       y: 0,
@@ -626,29 +657,36 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
     var newLayout: KtdGridLayout = [];
     this.layout.forEach(room => {
-      var oldRoom: KtdGridLayoutItem = {
+      var oldRoomLayout: KtdGridLayoutItem = {
         id: room.id,
         x: room.x,
         y: room.y,
         w: room.w,
         h: room.h
       };
-      newLayout.push(oldRoom);
+      newLayout.push(oldRoomLayout);
     })
-    newLayout.push(newRoom);
+    newLayout.push(newRoomLayout);
 
     var jwt = sessionStorage.getItem('jwt');
     this.officeRoomService.registerRoom(
       jwt, 
       this.selectedOfficeID, 
-      this.newRoomName, 
+      this.newRoomName,
+      'Normal',
       0, 
       0, 
       1, 
       1).subscribe((response) => {
         console.log(response);
         if(response.Response == "Success"){
+          let newRoom: FloorPlan = {
+            RoomID: response.Room.id,
+            RoomType: response.Room.roomType,
+            RoomLayout: newRoomLayout
+          };
           this.layout = newLayout;
+          this.floorPlan.push(newRoom);
           this.hideDisplayFormModal();
         }
     },
@@ -666,17 +704,29 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     this.officeRoomService.deleteRoom(jwt, this.selectedOfficeID, id).subscribe((response) => {
       console.log(response)
       if(response.Response == "Success"){
-        var newLayout: KtdGridLayout = [];
-        response.Rooms.forEach(room => {
-          var newRoom: KtdGridLayoutItem = { 
+        let newFloorPlan: FloorPlan[] = [];
+        let newLayout: KtdGridLayout = [];
+        response.Rooms.forEach((room) => {
+          let newRoomLayout: KtdGridLayoutItem = { 
             id: room.roomName, 
             x: room.xCoordinate, 
             y: room.yCoordinate, 
             w: room.width, 
-            h: room.height };
-          newLayout.push(newRoom);
+            h: room.height 
+          };
+
+          let newRoom: FloorPlan = {
+            RoomID: room.id,
+            RoomType: room.roomType,
+            RoomLayout: newRoomLayout
+          }
+
+          newLayout.push(newRoomLayout);
+          newFloorPlan.push(newRoom);
         })
+
         this.layout = newLayout;
+        this.floorPlan = newFloorPlan;
       }
     },
     (error) => {
@@ -692,7 +742,8 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.officeRoomService.updateRoom(
         jwt, 
         this.selectedOfficeID, 
-        room.id, 
+        room.id,
+        'Normal',
         room.x, 
         room.y, 
         room.w, 
@@ -764,7 +815,9 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
   scrollRoomMessageBoardToBottom(): void{
     var messageBoard = document.getElementById("messageBoardRoom");
-    messageBoard.scrollTop = messageBoard.scrollHeight;
+    if(messageBoard != null){
+      messageBoard.scrollTop = messageBoard.scrollHeight;
+    }
   }
 
   sendMessage(room: string): void{
@@ -900,7 +953,5 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy() {
     var body = document.getElementsByTagName("body")[0];
     body.classList.remove("user-page");
-
-    this.resizeSubscription.unsubscribe();
   }
 }
