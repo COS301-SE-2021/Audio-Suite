@@ -40,10 +40,10 @@ export class OfficeService {
             const savedOffice = await this.officesRepository.save(office);
             const addUserToOffice = await this.officeUserService.addUserToOffice(user.id,name, "Manager");
             
-            const room1 = await this.roomService.registerRoomAuth(savedOffice.id, 'Coffee Station', 3, 9, 3, 3);
-            const room2 = await this.roomService.registerRoomAuth(savedOffice.id, 'Conference Room 1', 5, 1, 2, 4);
-            const room3 = await this.roomService.registerRoomAuth(savedOffice.id, 'Conference Room 2', 5, 5, 2, 4);
-            const room4 = await this.roomService.registerRoomAuth(savedOffice.id, 'Open Plan Office', 2, 5, 3, 4);
+            const room1 = await this.roomService.registerRoomAuth(savedOffice.id, 'Coffee Station', 'Normal', 3, 9, 3, 3);
+            const room2 = await this.roomService.registerRoomAuth(savedOffice.id, 'Conference Room 1', 'Normal', 5, 1, 2, 4);
+            const room3 = await this.roomService.registerRoomAuth(savedOffice.id, 'Conference Room 2', 'Normal', 5, 5, 2, 4);
+            const room4 = await this.roomService.registerRoomAuth(savedOffice.id, 'Open Plan Office', 'Normal', 2, 5, 3, 4);
             return{
                 Response: "Success",
                 Office: savedOffice,
