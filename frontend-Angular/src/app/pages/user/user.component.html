@@ -234,44 +234,45 @@
                                 [preventCollision]="preventCollision"
                                 [scrollableParent]="scrollableParent"
                                 (layoutUpdated)="onLayoutUpdated($event)">
-                                <ktd-grid-item 
-                                    class="ktd-grid-item" 
-                                    *ngFor="let item of layout; trackBy:trackById" 
-                                    [id]="item.id" [transition]="currentTransition"
-                                    [dragStartThreshold]="dragStartThreshold" 
-                                    [draggable]="!disableDrag" 
-                                    [resizable]="!disableResize">
-                                        <div *ngIf="disableDrag; then click else dblClick"></div>
-                                        <ng-template #click>
-                                            <div *ngIf="selectedRoom == item.id; then leaveRoom else enterRoom"></div>
-                                            <ng-template #enterRoom>
-                                                <div class="grid-item-content">
-                                                    <button (click)="selectRoom(item.id, false)" class="grid-item-button">
-                                                        <b>{{ item.id }}</b>
+                                <div *ngFor="let room of floorPlan">
+                                    <ktd-grid-item 
+                                        class="ktd-grid-item" 
+                                        [id]="room.RoomLayout.id" [transition]="currentTransition"
+                                        [dragStartThreshold]="dragStartThreshold" 
+                                        [draggable]="!disableDrag" 
+                                        [resizable]="!disableResize">
+                                            <div *ngIf="disableDrag; then click else dblClick"></div>
+                                            <ng-template #click>
+                                                <div *ngIf="selectedRoom == room.RoomLayout.id; then leaveRoom else enterRoom"></div>
+                                                <ng-template #enterRoom>
+                                                    <div class="grid-item-content">
+                                                        <button (click)="selectRoom(room.RoomLayout.id, room.RoomType, false)" class="grid-item-button">
+                                                            <b>{{ room.RoomLayout.id }}</b>
+                                                        </button>
+                                                        <app-audio #joinAudio [userId]="userID"></app-audio>
+                                                    </div>
+                                                </ng-template>
+                                                <ng-template #leaveRoom>
+                                                    <div class="grid-item-content-leave">
+                                                        <button (click)="selectRoom(room.RoomLayout.id, room.RoomType, true); leaveAudio.leave()" class="grid-item-button">
+                                                            <b>{{ room.RoomLayout.id }}</b>
+                                                        </button>
+                                                        <app-audio #leaveAudio></app-audio>
+                                                    </div>
+                                                </ng-template>
+                                            </ng-template>
+                                            <ng-template #dblClick>
+                                                <div class="grid-item-content-remove">
+                                                    <button 
+                                                    (dblclick)="removeRoom(room.RoomLayout.id)" 
+                                                    class="grid-item-button"
+                                                    >
+                                                        <b>{{ room.RoomLayout.id }}</b>
                                                     </button>
-                                                    <app-audio #joinAudio [userId]="userID"></app-audio>
                                                 </div>
                                             </ng-template>
-                                            <ng-template #leaveRoom>
-                                                <div class="grid-item-content-leave">
-                                                    <button (click)="selectRoom(item.id, true); leaveAudio.leave()" class="grid-item-button">
-                                                        <b>{{ item.id }}</b>
-                                                    </button>
-                                                    <app-audio #leaveAudio></app-audio>
-                                                </div>
-                                            </ng-template>
-                                        </ng-template>
-                                        <ng-template #dblClick>
-                                            <div class="grid-item-content-remove">
-                                                <button 
-                                                (dblclick)="removeRoom(item.id)" 
-                                                class="grid-item-button"
-                                                >
-                                                    <b>{{ item.id }}</b>
-                                                </button>
-                                            </div>
-                                        </ng-template>
-                                </ktd-grid-item>
+                                    </ktd-grid-item>
+                                </div>
                             </ktd-grid>
                         </div>
                     </div>
