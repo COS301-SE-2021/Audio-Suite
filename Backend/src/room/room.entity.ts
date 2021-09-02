@@ -12,6 +12,9 @@ export class Room{
     roomName: string;
 
     @Column()
+    roomType: string;
+
+    @Column()
     xCoordinate: number;
 
     @Column()
