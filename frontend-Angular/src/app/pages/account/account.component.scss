@@ -1,3 +1,8 @@
+.container{
+    text-align: center;
+    margin: auto;
+}
+
 #header {
     display: flex;
     justify-content: center;
@@ -28,47 +33,26 @@
 	}
 }
 
-// .section-button{
-
-// }
-
 #header-text {
     text-align: center;
     font-size: 45px;
 }
 
 .sections{
-    margin: auto;
     width: 50%;
-	color: #FFF;
-    background-color: rgba(17, 19, 49, 0.9);
-	border: solid 3px rgba(12, 13, 34, 0.9);
     padding: 12px 5px 12px 5px;
-
     background-color: rgba(23, 25, 65, 0.9);
-	// width: 350px;
-	// max-width: 350px;
-	// padding: 6px;
-	// margin-left: 400px;
-	// display: inline-block;
-	display: inline-table;
+	display:inline-table;
+    margin:0 auto;
+	margin-top: 10px;
 	position: relative;
-	// right: 40px;
-	
+	left: 25%;
 	$border: 3px;
 	color: #FFF;
 	background-clip: padding-box;
 	border: solid $border transparent;
 	border-radius: 1em;
-
-	// overflow: relative!important;
-
-	overflow: auto;
-
-	// min-height: 200px;
-	// max-height: 200px;
-	// height: 100%;
-	
+	overflow: none;
 	&:before {
 		content: '';
 		position: absolute;
@@ -78,18 +62,52 @@
 		border-radius: inherit;
 		background: linear-gradient(45deg, #0afacf 0%, #dc7bff 100%);
 		overflow :none;
-		// min-height: 200px;
-		// max-width: 350px;
-		// max-height: 200px;
-		// height: 100%;
 	}
 }
 
-.section-header, .edit-input, #current-username{
+.section-header, .section-header-delete, .subheading, .edit-input, #current-username{
     text-align: center;
+}
+
+.section-header-delete{
+	color: #e14eca;
 }
 
 .edit-input, .section-button{
     display: block;
     margin: 0 auto;
+}
+
+.edit-input{
+	width: 300px;
+	padding: 10px;
+	color: white;
+	// border: 1px solid violet;
+	outline: 0;
+	background: #fff;
+	background-color: rgba(23, 25, 65, 0.9);
+	border:none;
+	// border-bottom:1px solid violet ;
+	box-shadow:none;
+	transition: border-bottom 0.3s;
+}
+.edit-input:focus{
+	border-bottom:1px solid violet ;
+}
+
+.section-button {
+	width: 50%;
+	display: block;
+	text-decoration: none;
+	margin-top: 10px;
+	background-color: rgba(58, 63, 156, 0.1);
+	border: 2px solid rgba(23, 25, 65, 0.9);
+	border-radius: 1em;
+	color: #e14eca;
+	outline: none;
+	transition: border-color 0.3s;
+}
+
+.section-button:hover{
+	border-color: #e14eca;
 }

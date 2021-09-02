@@ -6,16 +6,17 @@
     </div>
 
     <div class="sections">
-        <h2 class="section-header">USERNAME</h2>
-        <h3 id="current-username">Current Username: {{userUsername}}</h3>
-        <input class="edit-input" id="update-username" type="text" >
+        <h2 class="section-header">Edit Username</h2>
+        <h4 class="subheading" >Enter your new username below.</h4>
+        <input class="edit-input" id="update-username" type="text" value={{userUsername}}>
         <button class="section-button" (click)="updateUsername()" >Edit Username</button>
     </div>
 
     <br>
 
     <div class="sections">
-        <h2 class="section-header">PASSWORD</h2>
+        <h2 class="section-header">Edit Password</h2>
+        <h4 class="subheading" >Enter your new password below.</h4>
         <input class="edit-input" id="update-password" type="text" >
         <button class="section-button" (click)="updatePassword()" >Edit Password</button>
     </div>
@@ -23,7 +24,10 @@
     <br>
 
     <div class="sections">
-        <h2 class="section-header">DELETE USER</h2>
+        <h2 class="section-header-delete">Delete Account</h2>
+        <h4 class="subheading">Please be careful. All data saved on this account will not be retrievable once 
+            you delete your account.
+        </h4>
         <button class="section-button" (click)="deleteUser()" >Delete</button>
     </div>
 
