@@ -32,7 +32,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// </summary>
     void Start()
     {
-
+        roomCode.text = "test";
+        Connect();
     }
 
     /// <summary>
