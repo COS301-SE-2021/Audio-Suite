@@ -10,9 +10,9 @@
         placement="bottom"
         [routerLink]="['/home']"
         target="_blank"
-        tooltip="Designed and Coded by Creative Tim"
+        tooltip="Audio Suite by Project Pegasus"
       >
-        <span> BLK• </span> Design System Angular
+        <span>Audio</span> Suite
       </a>
       <button
         aria-controls="navigation-index"
@@ -55,7 +55,7 @@
         <li class="nav-item p-0">
           <a
             class="nav-link"
-            href="https://twitter.com/CreativeTim"
+            href="#"
             placement="bottom"
             target="_blank"
             tooltip="Follow us on Twitter"
@@ -67,7 +67,7 @@
         <li class="nav-item p-0">
           <a
             class="nav-link"
-            href="https://www.facebook.com/CreativeTim"
+            href="#"
             placement="bottom"
             target="_blank"
             tooltip="Like us on Facebook"
@@ -79,7 +79,7 @@
         <li class="nav-item p-0">
           <a
             class="nav-link"
-            href="https://www.instagram.com/CreativeTimOfficial"
+            href="#"
             placement="bottom"
             target="_blank"
             tooltip="Follow us on Instagram"
@@ -88,38 +88,18 @@
             <p class="d-lg-none d-xl-none">Instagram</p>
           </a>
         </li>
-        <li class="dropdown nav-item" dropdown>
+        <li class="nav-item">
           <a
-            class="dropdown-toggle nav-link dropdown-toggle"
-            data-toggle="dropdown"
-            dropdownToggle
-            href="javascript:void(0)"
+            class="nav-link"
+            [routerLink]="['/login']"
           >
-            <i class="fa fa-cogs d-lg-none d-xl-none"> </i> Getting started
+            Login
           </a>
-          <div class="dropdown-menu dropdown-with-icons" *dropdownMenu>
-            <a
-              class="dropdown-item"
-              href="https://demos.creative-tim.com/blk-design-system-angular/#/documentation/overview"
-            >
-              <i class="tim-icons icon-paper"> </i> Documentation
-            </a>
-            <a class="dropdown-item" [routerLink]="['/register']">
-              <i class="tim-icons icon-bullet-list-67"> </i> Register Page
-            </a>
-            <a class="dropdown-item" [routerLink]="['/landing']">
-              <i class="tim-icons icon-image-02"> </i> Landing Page
-            </a>
-            <a class="dropdown-item" [routerLink]="['/profile']">
-              <i class="tim-icons icon-single-02"> </i> Profile Page
-            </a>
-          </div>
         </li>
         <li class="nav-item">
           <a
             class="nav-link btn btn-default d-none d-lg-block"
             href="javascript:void(0)"
-            (click)="scrollToDownload(target)"
           >
             <i class="tim-icons icon-cloud-download-93"> </i> Download
           </a>
@@ -139,7 +119,7 @@
     <div class="squares square7"></div>
     <div class="container">
       <div class="content-center brand">
-        <h1 class="h1-seo">BLK•</h1>
+        <h1 class="h1-seo">Audio Suite</h1>
         <h3>
           A beautiful Design System for Bootstrap 4 and Angular. It's Free and
           Open Source.
@@ -147,7 +127,7 @@
       </div>
     </div>
   </div>
-  <div class="main">
+  <!-- <div class="main">
     <div class="section section-basic" id="basic-elements">
       <img class="path" src="assets/img/path1.png" />
 
@@ -1905,7 +1885,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <footer class="footer">
     <div class="container">
       <div class="row">
