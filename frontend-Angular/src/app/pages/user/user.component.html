@@ -215,7 +215,7 @@
     <tabset *ngIf="officeSelected" class="nav-tabs-primary" (click)="tabSetOpened()">
         <tab>
             <ng-template tabHeading>
-                <i class="tim-icons icon-bank"> </i> Floor Plan
+                <i class="tim-icons icon-components"> </i> Floor Plan
             </ng-template>
             <div class="floorPlanContent" id="floorPlanContent">
                 <div *ngIf="!disableDrag" class="addRoomContainer">
@@ -248,6 +248,9 @@
                                                     <div class="grid-item-content">
                                                         <button (click)="selectRoom(room.RoomLayout.id, room.RoomType, false)" class="grid-item-button">
                                                             <b>{{ room.RoomLayout.id }}</b>
+                                                            <br>
+                                                            <span *ngIf="room.RoomType == 'VR'">{{ room.RoomType }}</span>
+                                                            <span *ngIf="room.RoomType == 'Private'">{{ room.RoomType }}</span>
                                                         </button>
                                                         <app-audio #joinAudio [userId]="userID"></app-audio>
                                                     </div>
@@ -369,6 +372,44 @@
                         <button type="submit" id="sendOfficeMessageBtn" class="btn btn-primary btn-sm" (click)="sendMessage(selectedRoom)"><i class="tim-icons icon-send"> </i>  Send</button>
                     </div>
                 </form>
+            </div>
+        </tab>
+        <tab>
+            <ng-template tabHeading>
+                <i class="tim-icons icon-time-alarm"> </i> Time Tracker
+            </ng-template>
+            <div class="timeTrackerContent" id="timeTrackerContent">
+                <div class="row">
+                    <div class="col-lg-8 col-xl-8" style="height: 85vh">
+                        <div class="newTrackerForm">
+                            <input type="text" name="workDescription" id="workDescription">
+                            <button id="project-btn"><i class="tim-icons icon-app"> </i></button>
+                            <button id="tag-btn"><i class="tim-icons icon-tag"> </i></button>
+                            <div id="timer">
+                                <p>
+                                    00:00:00
+                                </p>
+                            </div>
+                            <button id="startTimer-btn">Start</button>
+                        </div>
+                        <div class="userTimeTrackerList" id="userTimeTrackerList">
+
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-xl-4" style="height: 85vh">
+                        <div id="timeTrackerOptions">
+                            <button class="sidebar-timeTrackerOption">
+                                <i class="tim-icons icon-minimal-down"></i>  Dashboard
+                            </button>
+                            <button class="sidebar-timeTrackerOption">
+                                <i class="tim-icons icon-minimal-down"></i>  Projects
+                            </button>
+                            <button class="sidebar-timeTrackerOption">
+                                <i class="tim-icons icon-minimal-down"></i>  Tags
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </tab>
         <tab>
@@ -498,6 +539,19 @@
                     />
                 </div>
             </div>
+            <div class="form-group mb-3">
+                <label for="roomTypeDropdown">Room Type</label>
+                <select 
+                    class="form-control"   
+                    id="roomTypeDropdown"
+                    name="newRoomType"
+                    [(ngModel)]="newRoomType"
+                >
+                  <option value="Normal" selected>Normal</option>
+                  <option value="Private">Private</option>
+                  <option value="VR">VR</option>
+                </select>
+              </div>
             <div class="text-center">
                 <button 
                     class="btn btn-success my-4" 
