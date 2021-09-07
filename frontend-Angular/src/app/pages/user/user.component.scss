@@ -428,6 +428,65 @@
     }
 }
 
+.timeTrackerContent{
+    position: fixed;
+    height: 84.5%;
+    width: 86%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    //background-color: white;
+
+    .newTrackerForm{
+        display: inline-flex;
+        justify-content: center;
+        width: 100%;
+
+        #workDescription{
+            width: 50%;
+        }
+
+        #project-btn{
+            width: 7.5%;
+        }
+
+        #tag-btn{
+            width: 7.5%;
+        }
+
+        #timer{
+            width: 25%;
+        }
+
+        #startTimer-btn{
+            width: 10%;
+        }
+    }
+
+    #timeTrackerOptions{
+        min-height: 85vh;
+        border-radius: 50px;
+        background: #171941;
+        box-shadow: inset 20px 20px 60px #141537,
+                    inset -20px -20px 60px #1a1d4b;
+
+        .sidebar-timeTrackerOption{
+            color: white;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            padding-left: 12%;
+            padding-top: 5%;
+            width: 100%;
+            text-align:start;
+            cursor: pointer;
+
+            .icon-minimal-down{
+                font-size: small;
+            }
+        }
+    }
+}
+
 .board_content{
     background: #0079bf;
     display: flex;
