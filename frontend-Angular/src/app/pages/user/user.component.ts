@@ -101,6 +101,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   sendInviteToEmail: string = '';
   sendInviteToName: string = '';
   newRoomName: string = '';
+  newRoomType: string = '';
 
   officeList: Office[] = [];
   roomUsersList: RoomUsersList[] = [];
@@ -647,6 +648,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
   addRoom(): void{
     console.log("add room: " + this.newRoomName)
+    console.log('new room type: ' + this.newRoomType);
     var newRoomLayout: KtdGridLayoutItem = {
       id: this.newRoomName,
       x: 0,
@@ -673,7 +675,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       jwt, 
       this.selectedOfficeID, 
       this.newRoomName,
-      'Normal',
+      this.newRoomType,
       0, 
       0, 
       1, 
@@ -743,7 +745,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         jwt, 
         this.selectedOfficeID, 
         room.id,
-        'Normal',
+        this.getRoomTypeByRoomID(room.id),
         room.x, 
         room.y, 
         room.w, 
@@ -755,6 +757,16 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log(error)
       })
     })
+  }
+
+  getRoomTypeByRoomID(roomName: string): any{
+    let type: string = 'Normal';
+    this.floorPlan.forEach((room) => {
+      if(room.RoomLayout.id == roomName){
+        type = room.RoomType;
+      }
+    });
+    return type;
   }
 
   toggleOfficeListView(): void{
