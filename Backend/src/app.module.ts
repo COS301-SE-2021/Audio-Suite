@@ -4,25 +4,18 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { OfficeModule } from './office/office.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user/user.entity';
-import { Office } from './office/office.entity';
 import { OfficeusersModule } from './officeusers/officeusers.module';
-import { OfficeUsers } from './officeusers/officeusers.entity';
 import { NotificationModule } from './notification/notification.module';
-import { Notifications } from './notification/notification.entity';
 import { MailModule } from './mail/mail.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RoomModule } from './room/room.module';
 import { RoomusersModule } from './roomusers/roomusers.module';
-import { Room } from './room/room.entity';
-import { RoomUsers } from './roomusers/roomusers.entity';
-import { ServerSocketGateway } from './gateway/server-socket.gateway';
-import { RoomUsersService } from './roomusers/roomusers.service';
 import { MessageModule } from './message/message.module';
 import { GatewayModule } from './gateway/gateway.module';
-import { Message } from './message/message.entity';
 import { KanbanModule } from './kanban/kanban.module';
-import { Kanban } from './kanban/kanban.entity';
+import { TimeTrackerTagModule } from './time-tracker-tag/time-tracker-tag.module';
+import { TimeTrackerProjectModule } from './time-tracker-project/time-tracker-project.module';
+import { TimeTrackerUserModule } from './time-tracker-user/time-tracker-user.module';
 
 @Module({
   imports: [
@@ -53,7 +46,10 @@ import { Kanban } from './kanban/kanban.entity';
     RoomusersModule, 
     MessageModule,
     GatewayModule,
-    KanbanModule],
+    KanbanModule,
+    TimeTrackerTagModule,
+    TimeTrackerProjectModule,
+    TimeTrackerUserModule],
   controllers: [AppController],
   providers: [AppService],
 })
