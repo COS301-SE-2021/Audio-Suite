@@ -445,20 +445,48 @@
             width: 50%;
         }
 
-        #project-btn{
-            width: 7.5%;
+        #ProjectDiv{
+            width: 15%;
+
+            #selectedProject{
+                width: 100%;
+                height: 100%;
+
+                 p{
+                    width: 100%;
+                    height: 100%;
+                 }
+            }
+
+            #ProjectDropdown{
+                width: 100%;
+
+                #project-btn{
+                    width: 100%;
+                }
+            }
         }
 
-        #tag-btn{
-            width: 7.5%;
+        #AddTagDiv{
+            width: 5%;
+
+            #tag-btn{
+                width: 100%;
+            }
         }
 
         #timer{
-            width: 25%;
+            width: 15%;
+            height: 100%;
+
+            p{
+                width: 100%;
+                height: 100%;
+            }
         }
 
         #startTimer-btn{
-            width: 10%;
+            width: 15%;
         }
     }
 
