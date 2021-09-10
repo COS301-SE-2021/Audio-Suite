@@ -135,20 +135,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         // Get the number of users currently in the room
         int userInRoom = PhotonNetwork.CurrentRoom.PlayerCount;
-
-        // Check which level should be called
-        if (userInRoom <= 2)
-        {
-            PhotonNetwork.LoadLevel("OfficeSmall");
-        }
-        else if (userInRoom <= 6)
-        {
-            PhotonNetwork.LoadLevel("OfficeMeduim");
-        }
-        else if(userInRoom <= 10)
-        {
-            PhotonNetwork.LoadLevel("OfficeLarge");
-        }
     }
 
     #endregion
