@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 755253568797683041}
   - component: {fileID: 755253568797683046}
+  - component: {fileID: 8080152508949691401}
   m_Layer: 0
   m_Name: XR Rig
   m_TagString: Untagged
@@ -50,6 +51,22 @@ MonoBehaviour:
   m_TrackingOriginMode: 2
   m_TrackingSpace: 3
   m_CameraYOffset: 1.36144
+--- !u!114 &8080152508949691401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 755253568797683047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1 &755253568870179577
 GameObject:
   m_ObjectHideFlags: 0
@@ -1098,6 +1115,7 @@ GameObject:
   m_Component:
   - component: {fileID: 755253570733091244}
   - component: {fileID: 755253570733091245}
+  - component: {fileID: 4831715197131191341}
   m_Layer: 0
   m_Name: XR Interaction Manager
   m_TagString: Untagged
@@ -1131,6 +1149,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83e4e6cca11330d4088d729ab4fc9d9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4831715197131191341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 755253570733091234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1 &1614320038190329929
 GameObject:
   m_ObjectHideFlags: 0
@@ -1382,6 +1416,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3600874532156031402}
   - component: {fileID: 3579087976267450957}
+  - component: {fileID: 6112703285725418731}
   m_Layer: 0
   m_Name: Input Action Manager
   m_TagString: Untagged
@@ -1417,6 +1452,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ActionAssets:
   - {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+--- !u!114 &6112703285725418731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4332616057936130404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1 &6985612461591888822
 GameObject:
   m_ObjectHideFlags: 0
@@ -1429,7 +1480,6 @@ GameObject:
   - component: {fileID: 2568898663989449192}
   - component: {fileID: 1912784588071696513}
   - component: {fileID: 2352789902433488118}
-  - component: {fileID: 4817508075187088658}
   m_Layer: 0
   m_Name: vrPlayer
   m_TagString: Untagged
@@ -1474,7 +1524,9 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 4817508075187088658}
+  - {fileID: 4831715197131191341}
+  - {fileID: 8080152508949691401}
+  - {fileID: 6112703285725418731}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -1506,26 +1558,10 @@ MonoBehaviour:
   logLevel: 3
   ignoreGlobalLogLevel: 0
   recorderInUse: {fileID: 0}
-  speakerInUse: {fileID: 0}
+  speakerInUse: {fileID: 6087721337120625200}
   AutoCreateRecorderIfNotFound: 0
   UsePrimaryRecorder: 0
   SetupDebugSpeaker: 0
---- !u!114 &4817508075187088658
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6985612461591888822}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!1001 &755253568986070075
 PrefabInstance:
   m_ObjectHideFlags: 0

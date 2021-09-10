@@ -20,6 +20,7 @@ public class CameraDisabler : MonoBehaviourPunCallbacks
     {
         if (!photonView.IsMine)
         {
+            camera.enabled = false;
             camera.GetComponent<AudioListener>().enabled = false;
         }
     }
