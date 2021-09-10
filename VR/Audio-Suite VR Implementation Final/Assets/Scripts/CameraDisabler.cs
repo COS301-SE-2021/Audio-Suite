@@ -31,5 +31,6 @@ public class CameraDisabler : MonoBehaviourPunCallbacks
             XRRig.SetActive(false);
             inputManager.SetActive(false);
         }
+
     }
 }
