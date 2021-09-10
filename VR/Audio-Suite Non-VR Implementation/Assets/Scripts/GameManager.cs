@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         // Check which level should be called
         if (userInRoom <= 2)
         {
-            PhotonNetwork.LoadLevel("OfficeSmall");
+            PhotonNetwork.LoadLevel("TestingOffice");
         }
         else if (userInRoom <= 6)
         {

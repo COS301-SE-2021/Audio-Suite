@@ -109,7 +109,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         if(PhotonNetwork.CurrentRoom.PlayerCount == 1)
         {
             Debug.Log("Loading Small Office");
-            PhotonNetwork.LoadLevel("OfficeSmall");
+            PhotonNetwork.LoadLevel("TestingOffice");
         }
     }
 }
