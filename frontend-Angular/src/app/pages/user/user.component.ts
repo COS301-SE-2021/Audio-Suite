@@ -106,6 +106,10 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   officeList: Office[] = [];
   roomUsersList: RoomUsersList[] = [];
 
+  showTimeTrackerTab: string = 'dashboard';
+  timeTrackerProjectSelected: boolean = false;
+  selectedProject: string = '';
+
   officeTextChannelMessages: textMessage[] = [];
   roomTextChannelMessages: textMessage[] = [];
 
@@ -899,6 +903,16 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.newOfficeAlertMsg = "Error - You could not be added to the office, the invite may be invalid. Please try again.";
       this.sendNewOfficeAlert = true;
     })
+  }
+
+  setTimeTrackerTab(tab: string){
+    console.log('New tab: ', tab);
+    this.showTimeTrackerTab = tab;
+  }
+
+  setTimeTrackerProject(project: string){
+    this.timeTrackerProjectSelected = true;
+    this.selectedProject = project;
   }
 
   showSendInviteModal(): void{
