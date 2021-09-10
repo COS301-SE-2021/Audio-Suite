@@ -381,30 +381,115 @@
             <div class="timeTrackerContent" id="timeTrackerContent">
                 <div class="row">
                     <div class="col-lg-8 col-xl-8" style="height: 85vh">
-                        <div class="newTrackerForm">
-                            <input type="text" name="workDescription" id="workDescription">
-                            <button id="project-btn"><i class="tim-icons icon-app"> </i></button>
-                            <button id="tag-btn"><i class="tim-icons icon-tag"> </i></button>
-                            <div id="timer">
-                                <p>
-                                    00:00:00
-                                </p>
+                        <div *ngIf="showTimeTrackerTab == 'dashboard'" class="TimeTrackDashboard" id="TimeTrackDashboard">
+                            <div class="newTrackerForm">
+                                <input type="text" name="workDescription" id="workDescription">
+                                <div id="ProjectDiv">
+                                    <div *ngIf="timeTrackerProjectSelected; then showSelectedProject else showDropdown"></div>
+                                    <ng-template #showSelectedProject>
+                                        <div id="selectedProject">
+                                            <p>
+                                                {{ selectedProject }}
+                                            </p>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template #showDropdown>
+                                        <div class=" btn-group dropdown" id="ProjectDropdown" dropdown>
+                                            <button 
+                                                aria-expanded="false" 
+                                                aria-haspopup="true" 
+                                                class=" btn btn-primary dropdown-toggle dropdown-toggle" 
+                                                data-toggle="dropdown" 
+                                                dropdownToggle 
+                                                id="project-btn"
+                                                type="button"
+                                            >
+                                                + Project
+                                            </button>
+                                            <div class=" dropdown-menu" *dropdownMenu aria-labelledby="dropdownMenuLink">
+                                              <button class=" dropdown-item" (click)="setTimeTrackerProject('Action')">
+                                                Action
+                                              </button>
+                                              <button class=" dropdown-item" (click)="setTimeTrackerProject('Another')">
+                                                Another action
+                                              </button>
+                                              <button class=" dropdown-item" (click)="setTimeTrackerProject('something')">
+                                                Something else here
+                                              </button>
+                                              <div class=" dropdown-divider">
+                                              </div>
+                                              <button class=" dropdown-item" (click)="setTimeTrackerProject('link')">
+                                                Separated link
+                                              </button>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </div>
+                                <div class=" btn-group dropdown" id="AddTagDiv" dropdown>
+                                    <button 
+                                        aria-expanded="false" 
+                                        aria-haspopup="true" 
+                                        class=" btn btn-primary dropdown-toggle dropdown-toggle" 
+                                        data-toggle="dropdown" 
+                                        dropdownToggle 
+                                        id="tag-btn"
+                                        type="button"
+                                    >
+                                        <i class="tim-icons icon-tag"></i>
+                                    </button>
+                                    <div class=" dropdown-menu" *dropdownMenu aria-labelledby="dropdownMenuLink">
+                                      <a class=" dropdown-item" href="#">
+                                        Action
+                                      </a>
+                                      <a class=" dropdown-item" href="#">
+                                        Another action
+                                      </a>
+                                      <a class=" dropdown-item" href="#">
+                                        Something else here
+                                      </a>
+                                      <div class=" dropdown-divider">
+                                      </div>
+                                      <a class=" dropdown-item" href="#">
+                                        Separated link
+                                      </a>
+                                    </div>
+                                </div>
+                                <div id="timer">
+                                    <p>
+                                        00:00:00
+                                    </p>
+                                </div>
+                                <button id="startTimer-btn">Start</button>
                             </div>
-                            <button id="startTimer-btn">Start</button>
+                            <div class="userTimeTrackerList" id="userTimeTrackerList">
+    
+                            </div>
                         </div>
-                        <div class="userTimeTrackerList" id="userTimeTrackerList">
+                        <div *ngIf="showTimeTrackerTab == 'projects'" class="TimeTrackProjects">
+
+                        </div>
+                        <div *ngIf="showTimeTrackerTab == 'tags'" class="TimeTrackTags">
 
                         </div>
                     </div>
                     <div class="col-lg-4 col-xl-4" style="height: 85vh">
                         <div id="timeTrackerOptions">
-                            <button class="sidebar-timeTrackerOption">
+                            <button 
+                                class="sidebar-timeTrackerOption"
+                                (click)="setTimeTrackerTab('dashboard')"
+                            >
                                 <i class="tim-icons icon-minimal-down"></i>  Dashboard
                             </button>
-                            <button class="sidebar-timeTrackerOption">
+                            <button 
+                                class="sidebar-timeTrackerOption"
+                                (click)="setTimeTrackerTab('projects')"
+                            >
                                 <i class="tim-icons icon-minimal-down"></i>  Projects
                             </button>
-                            <button class="sidebar-timeTrackerOption">
+                            <button 
+                                class="sidebar-timeTrackerOption"
+                                (click)="setTimeTrackerTab('tags')"
+                            >
                                 <i class="tim-icons icon-minimal-down"></i>  Tags
                             </button>
                         </div>
