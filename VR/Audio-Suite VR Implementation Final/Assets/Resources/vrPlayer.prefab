@@ -1543,6 +1543,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 755253568870179578}
+  XRInteraction: {fileID: 755253570733091234}
+  XRRig: {fileID: 755253568797683047}
+  inputManager: {fileID: 4332616057936130404}
 --- !u!114 &2352789902433488118
 MonoBehaviour:
   m_ObjectHideFlags: 0
