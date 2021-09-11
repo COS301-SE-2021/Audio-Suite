@@ -8,7 +8,7 @@
     <div class="sections">
         <h2 class="section-header">Edit Username</h2>
         <h4 class="subheading" >Enter your new username below.</h4>
-        <input class="edit-input" id="update-username" type="text" value={{userUsername}}>
+        <input class="edit-input" id="update-username" type="text" placeholder={{userUsername}}>
         <button class="section-button" (click)="updateUsername()" >Edit Username</button>
     </div>
 
@@ -19,6 +19,15 @@
         <h4 class="subheading" >Enter your new password below.</h4>
         <input class="edit-input" id="update-password" type="text" >
         <button class="section-button" (click)="updatePassword()" >Edit Password</button>
+    </div>
+
+    <br>
+
+    <div class="sections">
+        <h2 class="section-header">Change Email</h2>
+        <h4 class="subheading" >Enter your new email below.</h4>
+        <input class="edit-input" id="update-email" type="text" placeholder={{userEmail}}>
+        <button class="section-button" (click)="updateEmail()" >Change Email</button>
     </div>
 
     <br>

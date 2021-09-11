@@ -100,6 +100,33 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   }
 
+  updateEmail(): void{
+    var jwt = sessionStorage.getItem('jwt');
+    // var newUsername = document.getElementById('update-username').value;
+    var newEmail = (<HTMLInputElement>document.getElementById('update-email')).value;
+
+    this.userService.getUserDetails(jwt).subscribe((response) => {
+      this.userID = response.id;
+      this.userFirstName = response.firstName;
+      this.userLastName = response.lastName;
+      this.userUsername = response.userName;
+      this.userEmail = response.email;
+      this.userService.updateEmail(jwt, this.userID, String(newEmail)).subscribe((response) => {
+        // this.userID = response.id;
+        // this.userFirstName = response.firstName;
+        // this.userLastName = response.lastName;
+        // this.userUsername = response.userName;
+        // this.userEmail = response.email;
+      },
+      (error) => {
+        console.log(error);
+      })
+    },
+    (error) => {
+      console.log(error);
+    })
+  }
+
   updatePassword(): void{
     var jwt = sessionStorage.getItem('jwt');
     // var newUsername = document.getElementById('update-username').value;

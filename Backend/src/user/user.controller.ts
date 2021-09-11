@@ -57,6 +57,16 @@ export class UserController {
         return await this.userService.updateUsername(jwt, id, newUsername);
     }
 
+    @Post('user/updateEmail')
+    async updateEmail(
+        @Body('jwt') jwt: string,
+        @Body('id') id: string,
+        @Body('newEmail') newEmail: string
+    )
+    {
+        return await this.userService.updateEmail(jwt, id, newEmail);
+    }
+
     @Post('user/updatePassword')
     async updatePassword(
         @Body('jwt') jwt: string,

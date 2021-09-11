@@ -73,6 +73,20 @@ export class UserService {
     return this.http.post<any>(updateUsernameURL, body, httpOptions);
   }
 
+  updateEmail(
+    jwt: string,
+    id: string,
+    newEmail: string
+  ): Observable<any>{
+    const body = {
+      jwt: jwt,
+      id: id,
+      newEmail: newEmail
+    }
+    var updateEmailURL = this.baseUrl + '/api/user/updateEmail'
+    return this.http.post<any>(updateEmailURL, body, httpOptions);
+  }
+
   updatePassword(
     jwt: string,
     id: string,

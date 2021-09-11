@@ -101,6 +101,18 @@ export class UserService {
         }
     }
 
+    async updateEmail(jwt: string, id: string, newEmail: string): Promise<any>{
+        try{
+            const user = await this.usersRepository.findOne({id: Number(id)});
+            user.email = newEmail;
+            await this.usersRepository.save(user);
+            const {password, ...result} = user;
+            return result;
+        }catch(err){
+            throw new NotFoundException('User Not Found.');
+        }
+    }
+
     async updatePassword(jwt: string, id: string, newPassword: string): Promise<any>{
         try{
             const user = await this.usersRepository.findOne({id: Number(id)});
