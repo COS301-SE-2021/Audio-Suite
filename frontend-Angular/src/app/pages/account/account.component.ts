@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { fromEvent, merge, Subscription } from 'rxjs';
 import { debounceTime, filter } from 'rxjs/operators';
 import { OfficeRoomService } from 'src/app/services/office-room.service';
@@ -23,6 +25,20 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   userLastName: string = '';
   userUsername: string = '';
   userEmail: string = '';
+  newEmail: string = '';
+
+  otp: string = "";
+  userOTPInput: string = "";
+  otpAlert: boolean = false;
+  otpMessage: string = "";
+  isCollapsed = true;
+  focus1;
+  focus2;
+  focus3;
+  focus4;
+  focus5;
+  focus6
+  showModal = false;
 
   dragStartThreshold = 0;
   inFloorPlanEditorMode = false;
@@ -103,7 +119,22 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   updateEmail(): void{
     var jwt = sessionStorage.getItem('jwt');
     // var newUsername = document.getElementById('update-username').value;
-    var newEmail = (<HTMLInputElement>document.getElementById('update-email')).value;
+    this.newEmail = (<HTMLInputElement>document.getElementById('update-email')).value;
+    var inputBox = (<HTMLInputElement>document.getElementById('update-email'));
+    var message = (<HTMLInputElement>document.getElementById('email-sub'));
+
+    if(this.newEmail == ""){
+      inputBox.placeholder = "Email is required.";
+      return
+    }
+    else{
+      const emailControl = new FormControl(this.newEmail, Validators.email);
+      if(emailControl.status == "INVALID"){
+        message.innerText = "Email given is invalid.";
+        inputBox.value="";
+        return
+      }
+    }
 
     this.userService.getUserDetails(jwt).subscribe((response) => {
       this.userID = response.id;
@@ -111,7 +142,30 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       this.userLastName = response.lastName;
       this.userUsername = response.userName;
       this.userEmail = response.email;
-      this.userService.updateEmail(jwt, this.userID, String(newEmail)).subscribe((response) => {
+
+      this.userService.sendOTPVerificationEmail(this.userEmail, this.userUsername).subscribe(response => {
+        console.log(response)
+        this.otp = response.otp;
+      })
+  
+      this.showModal = true;
+    },
+    (error) => {
+      console.log(error);
+    })
+  }
+
+  hideFormModal(): void{
+    this.showModal = false;
+  }
+
+  validateOTP(): void{
+    var jwt = sessionStorage.getItem('jwt');
+    if(this.otp == this.userOTPInput)
+    {
+       this.showModal = false;
+       
+       this.userService.updateEmail(jwt, this.userID, String(this.newEmail)).subscribe((response) => {
         // this.userID = response.id;
         // this.userFirstName = response.firstName;
         // this.userLastName = response.lastName;
@@ -121,11 +175,21 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       (error) => {
         console.log(error);
       })
-    },
-    (error) => {
-      console.log(error);
-    })
+    }
+    else
+    {
+      this.otpMessage = "Incorrect otp entered, Please try again.";
+      this.otpAlert = true;
+    }
   }
+
+
+
+
+
+
+
+
 
   updatePassword(): void{
     var jwt = sessionStorage.getItem('jwt');

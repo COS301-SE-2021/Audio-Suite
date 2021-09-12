@@ -25,7 +25,7 @@
 
     <div class="sections">
         <h2 class="section-header">Change Email</h2>
-        <h4 class="subheading" >Enter your new email below.</h4>
+        <h4 class="subheading" id="email-sub" >Enter your new email below.</h4>
         <input class="edit-input" id="update-email" type="text" placeholder={{userEmail}}>
         <button class="section-button" (click)="updateEmail()" >Change Email</button>
     </div>
@@ -40,4 +40,17 @@
         <button class="section-button" (click)="deleteUser()" >Delete</button>
     </div>
 
+
+    <div *ngIf="showModal ? formModal.show() : formModal.hide()" ></div>
+    <div 
+        aria-hidden="true"
+        aria-labelledby="myModalLabel"
+        class="modal fade modal-black"
+        id="formModal"
+        role="dialog"
+        tabindex="-1"
+        >
+        <h3>Hello Hello Hello</h3>
+        
+    </div>
 </div>
