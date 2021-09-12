@@ -11,6 +11,7 @@ import { ListSchema } from '../listschema';
 import { AudioComponent } from 'src/app/audio/audio.component';
 import { AngularAgoraRtcService, Stream, AgoraConfig } from 'angular-agora-rtc';
 import { KanbanService } from 'src/app/services/kanban.service';
+import { TimeTrackingService } from 'src/app/services/time-tracking.service';
 
 interface Office{
   id: string,
@@ -38,6 +39,29 @@ interface textMessage{
   message: string
 }
 
+interface TimeTrackingUserInstance{
+  id: number,
+  userID: number,
+  officeID: number, 
+  description: string,
+  projectID: number,
+  tagID: number,
+  startTime: Date,
+  endTime: Date
+}
+
+interface TimeTrackingProject{
+  id: number,
+  officeID: number,
+  project: string
+}
+
+interface TimeTrackingTag{
+  id: number,
+  officeID: number,
+  tag: string
+}
+
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -46,45 +70,56 @@ interface textMessage{
 
 export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  //#region Variables
   parentMessage = "message from parent"
 
-  @ViewChild('scrollframe', {static: false}) scrollFrame: ElementRef;
-  @ViewChildren('messageitem') itemElements: QueryList<any>;
-  @ViewChild('scrollRoomframe', {static: false}) scrollRoomFrame: ElementRef;
-  @ViewChildren('messageRoomitem') itemRoomElements: QueryList<any>;
-  @ViewChild(KtdGridComponent, { static: true }) grid: KtdGridComponent;
-  scrollContainer: any;
-  scrollRoomContainer: any;
-
+  //Agora Audio Variables
   agoraConfig: AgoraConfig = {
     AppID: '023766436b244044ab85f65470dcbae2',
   };
-  
   agoraService:AngularAgoraRtcService = new AngularAgoraRtcService(this.agoraConfig);
   audioComponent: AudioComponent;
   
+  //Sidebar Varibales
   sidebarOpened: boolean = true;
   showOfficeList: boolean = true;
   showQuickSettingsList: boolean = true;
   showOfficeSettingsList: boolean = true;
+
+  //Current Office Variables
   officeSelected: boolean = false;
-  roomSelected: boolean = false;
-  sendNewOfficeAlert: boolean = false;
-  sendJoinOfficeAlert: boolean = false;
-  sendFormModalAlert: boolean = false;
   officeListLoaded: boolean = false;
+  selectedOffice: string = '';
+  selectedOfficeID: number = null;
+  selectedOfficeInvite: string = '';
+  selectedOfficeRole: string = '';
+  officeList: Office[] = [];
+
+  //Current Room Variables
+  roomSelected: boolean = false;
+  selectedRoom: string = '';
+  selectedRoomID: string = '';
+
+  //Current User Details
+  userID: string = '';
+  userFirstName: string = '';
+  userLastName: string = '';
+  userUsername: string = '';
+  userEmail: string = '';
+
+  //Modal Variables
+  sendInviteToEmail: string = '';
+  sendInviteToName: string = '';
+  newRoomName: string = '';
+  newRoomType: string = '';
   displayFormModal: boolean = false;
   showInviteModal: boolean = false;
   showAddRoomModal: boolean = false;
   focus6: boolean = false;
   focus7: boolean = false;
-
-  selectedOffice: string = '';
-  selectedOfficeID: number = null;
-  selectedOfficeInvite: string = '';
-  selectedOfficeRole: string = '';
-  selectedRoom: string = '';
-  selectedRoomID: string = '';
+  sendNewOfficeAlert: boolean = false;
+  sendJoinOfficeAlert: boolean = false;
+  sendFormModalAlert: boolean = false;
   newOfficeName: string = '';
   joinOfficeCode: string = '';
   newMessageInput: string = '';
@@ -92,35 +127,44 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   joinOfficeAlertMsg: string = '';
   formModalAlertMsg: string = '';
 
-  userID: string = '';
-  userFirstName: string = '';
-  userLastName: string = '';
-  userUsername: string = '';
-  userEmail: string = '';
-
-  sendInviteToEmail: string = '';
-  sendInviteToName: string = '';
-  newRoomName: string = '';
-  newRoomType: string = '';
-
-  officeList: Office[] = [];
-  roomUsersList: RoomUsersList[] = [];
-
+  //Time Tracker Variables
   showTimeTrackerTab: string = 'dashboard';
+  displayBigScreenTracker: boolean = true;
+  timeTrackerDescription: string = '';
   timeTrackerProjectSelected: boolean = false;
   selectedProject: string = '';
+  selectedProjectID: number;
+  timeTrackerTagSelected: boolean = false;
+  selectedTag: string = '';
+  selectedTagID: number;
+  trackingTimerInterval: any = null;
+  timeTrackingUserInstances: TimeTrackingUserInstance[] = [];
+  timeTrackingProjects: TimeTrackingProject[] = [];
+  timeTrackingTags: TimeTrackingTag[] = [];
 
+  //Text Channel Variables
   officeTextChannelMessages: textMessage[] = [];
   roomTextChannelMessages: textMessage[] = [];
+    //Text Channel auto scrolling Variables
+    @ViewChild('scrollframe', {static: false}) scrollFrame: ElementRef;
+    @ViewChildren('messageitem') itemElements: QueryList<any>;
+    @ViewChild('scrollRoomframe', {static: false}) scrollRoomFrame: ElementRef;
+    @ViewChildren('messageRoomitem') itemRoomElements: QueryList<any>;
+    @ViewChild(KtdGridComponent, { static: true }) grid: KtdGridComponent;
+    scrollContainer: any;
+    scrollRoomContainer: any;
 
+  //Kanban Variables
   cardStore: CardStore;
   lists: ListSchema[];
 
+  //FloorPlan Variables
   cols = 12;
   rowHeight = 50;
   compactType: 'vertical' | 'horizontal' | null = null;
   floorPlan: FloorPlan[] = [];
   layout: KtdGridLayout = [];
+  roomUsersList: RoomUsersList[] = [];
   transitions: { name: string; value: string }[] = [
     {
       name: 'ease',
@@ -152,7 +196,6 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     { name: 'transform-only', value: 'transform 500ms ease' }
   ];
   currentTransition: string = this.transitions[0].value;
-
   dragStartThreshold = 0;
   inFloorPlanEditorMode = false;
   disableDrag = true;
@@ -164,12 +207,14 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   isDragging = false;
   isResizing = false;
   resizeSubscription: Subscription;
+  //#endregion
 
   constructor(
     private textChannelsService: TextChannelsService,
     private officeRoomService: OfficeRoomService,
     private userService: UserService,
     private kanbanService: KanbanService,
+    private timeTrackingService: TimeTrackingService,
     private router: Router) { }
 
   setListData(): void {
@@ -906,13 +951,130 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   setTimeTrackerTab(tab: string){
-    console.log('New tab: ', tab);
     this.showTimeTrackerTab = tab;
   }
 
-  setTimeTrackerProject(project: string){
+  getOfficeTagList(){
+    let jwt = sessionStorage.getItem('jwt');
+    this.timeTrackingService.getAllTimeTrackingTags(jwt, this.selectedOfficeID).subscribe((response) => {
+      let tagList: TimeTrackingTag[] = [];
+      response.Tags.forEach((tag) => {
+        let newTag: TimeTrackingTag = {
+          id: tag.id,
+          officeID: tag.officeID,
+          tag: tag.tag
+        };
+        tagList.push(newTag);
+      })
+      this.timeTrackingTags = tagList;
+    },
+    (error) => {
+      console.log(error);
+    })
+  }
+
+  getOfficeProjectList(){
+    let jwt = sessionStorage.getItem('jwt');
+    this.timeTrackingService.getAllTimeTrackingProjects(jwt, this.selectedOfficeID).subscribe((response) => {
+      let projectList: TimeTrackingProject[] = [];
+      response.Projects.forEach((project) => {
+        let newProject: TimeTrackingProject = {
+          id: project.id,
+          officeID: project.officeID,
+          project: project.project
+        }
+        projectList.push(newProject);
+      })
+      this.timeTrackingProjects = projectList;
+    })
+  }
+
+  startTrackingTimer(){
+    this.startTimerInterval();
+    let today = new Date();
+    let date = {
+      Day: today.getDate(),
+      Month: today.getMonth(),
+      Year: today.getFullYear(),
+      MilliSeconds: today.getMilliseconds(),
+      Seconds: today.getSeconds(),
+      Minutes: today.getMinutes(),
+      Hours: today.getHours()
+    }
+    let sessionStorageID = "startDateTime_" + this.selectedOffice;
+    window.sessionStorage.setItem(sessionStorageID, JSON.stringify(date));
+  }
+
+  startTimerInterval(){
+    this.trackingTimerInterval = setInterval(() => {
+      let seconds = document.getElementById('timerSecond');
+      let minutes = document.getElementById('timerMinute');
+      let hours = document.getElementById('timerHour');
+
+      if(Number(seconds.innerText) == 59){
+        seconds.innerText = "00";
+        if(Number(minutes.innerText) == 59){
+          minutes.innerText = "00";
+          let newHours = String(Number(hours.innerText) + 1);
+          if(newHours.length == 1){
+            hours.innerText = "0" + newHours;
+          }
+          else{
+            hours.innerText = newHours;
+          }
+        }
+        else{
+          let newMinutes = String(Number(minutes.innerText) + 1);
+          if(newMinutes.length == 1){
+            minutes.innerText = "0" + newMinutes;
+          }
+          else{
+            minutes.innerText = newMinutes;
+          } 
+        }
+      }
+      else{
+        let newSeconds = String(Number(seconds.innerText) + 1);
+        if(newSeconds.length == 1){
+          seconds.innerText = "0" + newSeconds;
+        }
+        else{
+          seconds.innerText = newSeconds;
+        }
+      }
+    }, 1000);
+  }
+
+  stopTrackingTimer(){
+    clearInterval(this.trackingTimerInterval);
+    document.getElementById('timerSecond').innerText = "00";
+    document.getElementById('timerMinute').innerText = "00";
+    document.getElementById('timerHour').innerText = "00";
+
+    let sessionStorageID = "startDateTime_" + this.selectedOffice;
+    let storedStartDate = JSON.parse(window.sessionStorage.getItem(sessionStorageID));
+    let startDate = new Date(
+      storedStartDate.Year, 
+      storedStartDate.Month, 
+      storedStartDate.Day, 
+      storedStartDate.Hours, 
+      storedStartDate.Minutes, 
+      storedStartDate.Seconds, 
+      storedStartDate.MilliSeconds
+    );
+    window.sessionStorage.removeItem(sessionStorageID)
+    let endDate = new Date();
+  }
+
+  setTimeTrackerProject(projectID: number, project: string){
     this.timeTrackerProjectSelected = true;
+    this.selectedProjectID = projectID;
     this.selectedProject = project;
+  }
+
+  setTimeTrackerTag(tagID: number, tag: string){
+    this.timeTrackerTagSelected = true;
+    
   }
 
   showSendInviteModal(): void{
