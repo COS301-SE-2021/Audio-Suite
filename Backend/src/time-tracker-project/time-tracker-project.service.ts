@@ -74,4 +74,29 @@ export class TimeTrackerProjectService {
             throw new BadRequestException('Could not find a project with the given name in the given office.')
         }
     }
+
+    async getAllOfficeProject(jwt: string, officeID: number): Promise<any>{
+        //Validate whether the jwt belongs to a valid user.
+        try{
+            const user = await this.userService.validateUser(jwt);
+            if(user == null){
+                throw new UnauthorizedException();
+            }
+        }catch(err){
+            throw new UnauthorizedException();
+        }
+
+        //gets all the projects belonging to an office and returning them
+        try{
+            const projects = await this.timeTrackerProjectRepository.find({officeID});
+
+            return {
+                Response: "Success",
+                Projects: projects
+            }
+        }
+        catch(err){
+            throw new BadRequestException('Could not find any projects with the officeID')
+        }
+    }
 }
