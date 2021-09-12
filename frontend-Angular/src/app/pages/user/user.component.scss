@@ -443,10 +443,14 @@
 
         #workDescription{
             width: 50%;
+            background-color: transparent;
+            border-radius: 15px;
+            //border: 2px solid 
         }
 
         #ProjectDiv{
-            width: 15%;
+            width: 10%;
+            height: 100%;
 
             #selectedProject{
                 width: 100%;
@@ -460,33 +464,129 @@
 
             #ProjectDropdown{
                 width: 100%;
+                height: 100%;
 
                 #project-btn{
                     width: 100%;
+                    height: 100%;
+                    margin-bottom: 0px;
                 }
             }
         }
 
         #AddTagDiv{
-            width: 5%;
+            width: 10%;
+            height: 100%;
 
             #tag-btn{
                 width: 100%;
+                height: 100%;
+                margin-bottom: 0px;
             }
+        }
+
+        #startTimer-btn{
+            width: 7%;
+            margin-right: 0.5%;
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+
+        #stopTimer-btn{
+            width: 7%;
+            margin-left: 0.5%;
+            margin-top: 0px;
+            margin-bottom: 0px;
         }
 
         #timer{
             width: 15%;
-            height: 100%;
+            height: inherit;
 
             p{
                 width: 100%;
                 height: 100%;
             }
+        } 
+    }
+
+    .newTrackerFormTop{
+        display: inline-flex;
+        justify-content: center;
+        width: 100%;
+
+        #workDescription{
+            width: 80%;
+            background-color: transparent;
+            border-radius: 15px;
+            //border: 2px solid 
+        }
+
+        #timer{
+            width: 20%;
+            height: inherit;
+
+            p{
+                width: 100%;
+                height: 100%;
+            }
+        } 
+    }
+
+    .newTrackerFormBottom{
+        display: inline-flex;
+        justify-content: center;
+        width: 100%;
+
+        #ProjectDiv{
+            width: 25%;
+            height: 100%;
+
+            #selectedProject{
+                width: 100%;
+                height: 100%;
+
+                 p{
+                    width: 100%;
+                    height: 100%;
+                 }
+            }
+
+            #ProjectDropdown{
+                width: 100%;
+                height: 100%;
+
+                #project-btn{
+                    width: 100%;
+                    height: 100%;
+                    margin-bottom: 0px;
+                }
+            }
+        }
+
+        #AddTagDiv{
+            width: 25%;
+            height: 100%;
+
+            #tag-btn{
+                width: 100%;
+                height: 100%;
+                margin-bottom: 0px;
+            }
         }
 
         #startTimer-btn{
-            width: 15%;
+            width: 25%;
+            margin-right: 0.5%;
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+
+        #stopTimer-btn{
+            width: 25%;
+            margin-left: 0.5%;
+            margin-top: 0px;
+            margin-bottom: 0px;
         }
     }
 
