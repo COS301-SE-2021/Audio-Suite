@@ -27,8 +27,6 @@ export class TimeTrackerUser{
     @Column()
     startTime: Date;
 
-    @Column({
-        nullable: true
-    })
+    @Column()
     endTime: Date;
 }
