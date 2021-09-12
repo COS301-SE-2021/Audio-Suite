@@ -14,12 +14,20 @@ export class TimeTrackerTagController {
         return await this.timeTrackerTagService.registerNewTag(jwt, officeID, tagName);
     }
 
-    @Post('reomove')
+    @Post('remove')
     async removeProject(
         @Body('jwt') jwt: string,
         @Body('officeID') officeID: number,
         @Body('tagName') tagName: string
     ){
         return await this.timeTrackerTagService.removeTag(jwt, officeID, tagName);
+    }
+
+    @Post('getOfficeTags')
+    async getOfficeTags(
+        @Body('jwt') jwt: string,
+        @Body('officeID') officeID: number
+    ){
+        return await this.timeTrackerTagService.getAllOfficeTags(jwt, officeID);
     }
 }

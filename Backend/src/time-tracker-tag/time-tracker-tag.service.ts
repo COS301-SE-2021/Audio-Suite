@@ -86,6 +86,7 @@ export class TimeTrackerTagService {
             throw new UnauthorizedException();
         }
 
+        //gets all the tags belonging to an office and returning them
         try{
             const tags = await this.timeTrackerTagRepository.find({officeID});
 
