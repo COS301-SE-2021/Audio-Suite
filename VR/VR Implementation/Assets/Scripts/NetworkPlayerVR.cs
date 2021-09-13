@@ -34,6 +34,10 @@ public class NetworkPlayerVR : MonoBehaviour
     {
         if (photonView.IsMine)
         {
+            rightHand.gameObject.SetActive(false);
+            leftHand.gameObject.SetActive(false);
+            head.gameObject.SetActive(false);
+
             MapPositions(head, headRig);
             MapPositions(leftHand, leftHandRig);
             MapPositions(rightHand, rightHandRig);

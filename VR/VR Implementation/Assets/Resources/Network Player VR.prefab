@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 870565622002819305}
-  - component: {fileID: 3634325478448073112}
+  - component: {fileID: 1087853654770661415}
   m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Father: {fileID: 1852572520905321609}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3634325478448073112
+--- !u!114 &1087853654770661415
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
-  m_UseLocal: 1
+  m_UseLocal: 0
 --- !u!1 &2570040793809041930
 GameObject:
   m_ObjectHideFlags: 0
@@ -57,7 +57,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6678095644177700085}
-  - component: {fileID: 6873145975349924836}
+  - component: {fileID: 5242153189885878717}
   m_Layer: 0
   m_Name: Right Hand
   m_TagString: Untagged
@@ -79,7 +79,7 @@ Transform:
   m_Father: {fileID: 1852572520905321609}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6873145975349924836
+--- !u!114 &5242153189885878717
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
-  m_UseLocal: 1
+  m_UseLocal: 0
 --- !u!1 &4139416207325820618
 GameObject:
   m_ObjectHideFlags: 0
@@ -197,7 +197,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3100881039626873751}
-  - component: {fileID: 7449387521957168517}
+  - component: {fileID: 1552011854342498882}
   m_Layer: 0
   m_Name: Left Hand
   m_TagString: Untagged
@@ -219,7 +219,7 @@ Transform:
   m_Father: {fileID: 1852572520905321609}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7449387521957168517
+--- !u!114 &1552011854342498882
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -234,7 +234,7 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
-  m_UseLocal: 1
+  m_UseLocal: 0
 --- !u!1 &8190208182561131386
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,7 +304,10 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 1087853654770661415}
+  - {fileID: 1552011854342498882}
+  - {fileID: 5242153189885878717}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
