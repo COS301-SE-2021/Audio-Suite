@@ -11,9 +11,7 @@ public class CameraDisabler : MonoBehaviourPunCallbacks
 
     [SerializeField] private Camera camera;
 
-    public GameObject XRInteraction;
     public GameObject XRRig;
-    public GameObject inputManager;
 
     #endregion
 
@@ -26,10 +24,6 @@ public class CameraDisabler : MonoBehaviourPunCallbacks
         {
             camera.enabled = false;
             camera.GetComponent<AudioListener>().enabled = false;
-
-            XRInteraction.SetActive(false);
-            XRRig.SetActive(false);
-            inputManager.SetActive(false);
         }
 
     }
