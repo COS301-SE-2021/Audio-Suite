@@ -300,7 +300,7 @@
         </tab>
         <tab>
             <ng-template tabHeading>
-                <i class="tim-icons icon-email-85"> </i> Text Channel
+                <i class="tim-icons icon-chat-33"> </i> Text Channel
             </ng-template>
             <div class="TextChannelContent" id="TextChannelContent">
                 <div class="messageBoard" id="messageBoard" #scrollframe>
@@ -338,7 +338,7 @@
         </tab>
         <tab *ngIf="roomSelected">
             <ng-template tabHeading>
-                <i class="tim-icons icon-email-85"> </i> {{ selectedRoom }} Channel
+                <i class="tim-icons icon-chat-33"> </i> {{ selectedRoom }} Channel
             </ng-template>
             <div class="TextChannelContent">
                 <div class="messageBoard" id="messageBoardRoom" #scrollRoomframe>
@@ -573,10 +573,106 @@
                             </div>
                         </div>
                         <div *ngIf="showTimeTrackerTab == 'projects'" class="TimeTrackProjects">
+                            <div class="timeTrackerProjectForms">
+                                <div id="filterProjectListForm">
+                                    <div style="width: 100%;" class=" btn-group dropdown" dropdown>
+                                        <button aria-expanded="false" aria-haspopup="true" style="width: 100%;" class=" btn btn-primary dropdown-toggle dropdown-toggle" data-toggle="dropdown" dropdownToggle id="filter-dropdown" type="button">
+                                          Filter By
+                                        </button>
+                                        <div class=" dropdown-menu" *dropdownMenu aria-labelledby="dropdownMenuLink">
+                                          <button class=" dropdown-item">
+                                            A-Z
+                                          </button>
+                                          <button class=" dropdown-item">
+                                            Z-A
+                                          </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="SeparatingSpace">
 
+                                </div>
+                                <div id="addNewProjectForm">
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        name="newProjectName" 
+                                        id="newProjectNameInput"
+                                        [(ngModel)]="newProjectName"
+                                    >
+                                    <button id="addNewProject-btn" class="btn btn-primary" (click)="addNewProject()">Add</button>
+                                </div>
+                            </div>
+                            <div class="timeTrackerProjectList">
+                                <div id="projectListHeader">
+                                    <p id="projectNameHeader">
+                                        Project Name
+                                    </p>
+                                </div>
+                                <div *ngFor="let project of timeTrackingProjects">
+                                    <div class="projectItem">
+                                        <p class="projectName">
+                                            {{ project.project }}
+                                        </p>
+                                        <div class="spacer">
+
+                                        </div>
+                                        <button class="btn btn-success projectEditBtn" (click)="editProject(project.id)"><i class="tim-icons icon-pencil"></i></button>
+                                        <button class="btn btn-danger projectDeleteBtn" (click)="deleteProject(project.id)"><i class="tim-icons icon-simple-remove"></i></button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div *ngIf="showTimeTrackerTab == 'tags'" class="TimeTrackTags">
+                            <div class="timeTrackerTagForms">
+                                <div id="filterTagListForm">
+                                    <div style="width: 100%;" class=" btn-group dropdown" dropdown>
+                                        <button aria-expanded="false" aria-haspopup="true" style="width: 100%;" class=" btn btn-primary dropdown-toggle dropdown-toggle" data-toggle="dropdown" dropdownToggle id="filter-dropdown" type="button">
+                                          Filter By
+                                        </button>
+                                        <div class=" dropdown-menu" *dropdownMenu aria-labelledby="dropdownMenuLink">
+                                          <button class=" dropdown-item">
+                                            A-Z
+                                          </button>
+                                          <button class=" dropdown-item">
+                                            Z-A
+                                          </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="SeparatingSpace">
 
+                                </div>
+                                <div id="addNewTagForm">
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        name="newTagName" 
+                                        id="newTagNameInput"
+                                        [(ngModel)]="newTagName"
+                                    >
+                                    <button id="addNewTag-btn" class="btn btn-primary" (click)="addNewTag()">Add</button>
+                                </div>
+                            </div>
+                            <div class="timeTrackerTagList">
+                                <div id="tagListHeader">
+                                    <p id="tagNameHeader">
+                                        Tag Name
+                                    </p>
+                                </div>
+                                <div *ngFor="let tag of timeTrackingTags">
+                                    <div class="tagItem">
+                                        <p class="tagName">
+                                            {{ tag.tag }}
+                                        </p>
+                                        <div class="spacer">
+
+                                        </div>
+                                        <button class="btn btn-success tagEditBtn" (click)="editTag(tag.id)"><i class="tim-icons icon-pencil"></i></button>
+                                        <button class="btn btn-danger tagDeleteBtn" (click)="deleteTag(tag.id)"><i class="tim-icons icon-simple-remove"></i></button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-xl-4" style="height: 85vh">
