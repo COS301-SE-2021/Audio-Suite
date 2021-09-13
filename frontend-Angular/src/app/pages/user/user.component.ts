@@ -137,6 +137,8 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   timeTrackerTagSelected: boolean = false;
   selectedTag: string = '';
   selectedTagID: number;
+  newProjectName: string = '';
+  newTagName: string = '';
   trackingTimerInterval: any = null;
   timeTrackingUserInstances: TimeTrackingUserInstance[] = [];
   timeTrackingProjects: TimeTrackingProject[] = [];
@@ -503,7 +505,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  selectOffice(officeID, office, officeInvite, role): void{
+  async selectOffice(officeID, office, officeInvite, role){
     var officeId = sessionStorage.setItem('officeID', officeID);
     if(this.officeSelected){
       if(this.selectedOffice != office){
@@ -553,6 +555,8 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         var jwt = sessionStorage.getItem('jwt');
         this.textChannelsService.joinRoom(jwt, officeID, office, office, false);
         this.setListData();
+        this.getOfficeProjectList();
+        this.getOfficeTagList();
       }
     }
     else{
@@ -589,7 +593,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log(error);
       });
 
-      this.getRoomUsersByOfficeID(jwt, officeID);
+      this.getRoomUsersByOfficeID(jwt, officeID)
 
       //this.audioComponent.join(this.userID, officeID);
       this.selectedOffice = office;
@@ -600,6 +604,8 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       var jwt = sessionStorage.getItem('jwt');
       this.textChannelsService.joinRoom(jwt, officeID, office, office, false);
       this.setListData();
+      this.getOfficeProjectList();
+      this.getOfficeTagList();
     }
   }
 
@@ -967,6 +973,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         tagList.push(newTag);
       })
       this.timeTrackingTags = tagList;
+      console.log("Tags: ", this.timeTrackingTags)
     },
     (error) => {
       console.log(error);
@@ -976,6 +983,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   getOfficeProjectList(){
     let jwt = sessionStorage.getItem('jwt');
     this.timeTrackingService.getAllTimeTrackingProjects(jwt, this.selectedOfficeID).subscribe((response) => {
+      console.log("Project Response: ", response)
       let projectList: TimeTrackingProject[] = [];
       response.Projects.forEach((project) => {
         let newProject: TimeTrackingProject = {
@@ -986,6 +994,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         projectList.push(newProject);
       })
       this.timeTrackingProjects = projectList;
+      console.log("Projects: ", this.timeTrackingProjects)
     })
   }
 
@@ -1074,7 +1083,81 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
   setTimeTrackerTag(tagID: number, tag: string){
     this.timeTrackerTagSelected = true;
-    
+    this.selectedTagID = tagID;
+    this.selectedTag = tag;
+  }
+
+  addNewProject(){
+    let jwt = sessionStorage.getItem('jwt');
+    this.timeTrackingService.registerNewTimeTrackingProject(jwt, this.selectedOfficeID, this.newProjectName).subscribe((response) => {
+      this.newProjectName = "";
+      let newProject: TimeTrackingProject = {
+        id: response.Project.id,
+        officeID: response.Project.officeID,
+        project: response.Project.project
+      };
+      let tempArray: TimeTrackingProject[] = [];
+      tempArray.push(newProject);
+      this.timeTrackingProjects.forEach((project) => {
+        let tempProject: TimeTrackingProject = {
+          id: project.id,
+          officeID: project.officeID,
+          project: project.project
+        };
+        tempArray.push(tempProject);
+      })
+      this.timeTrackingProjects = tempArray;
+    },
+    (error) => {
+      console.log(error)
+    })
+  }
+
+  deleteProject(id: number){
+    let jwt = sessionStorage.getItem('jwt');
+    this.timeTrackingService.removeTimeTrackingProjectByID(jwt, id).subscribe((response) => {
+      let tempArray: TimeTrackingProject[] = [];
+      this.timeTrackingProjects.forEach((project) => {
+        if(project.id != id){
+          let tempProject: TimeTrackingProject = {
+            id: project.id,
+            officeID: project.officeID,
+            project: project.project
+          };
+          tempArray.push(tempProject);
+        }
+      })
+      this.timeTrackingProjects = tempArray;
+    },
+    (error) => {
+      console.log(error)
+    })
+  }
+
+  addNewTag(){
+    let jwt = sessionStorage.getItem('jwt');
+    this.timeTrackingService.registerNewTimeTrackingTag(jwt, this.selectedOfficeID, this.newTagName).subscribe((response) => {
+      this.newTagName = "";
+      let newTag: TimeTrackingTag = {
+        id: response.Tag.id,
+        officeID: response.Tag.officeID,
+        tag: response.Tag.tag
+      };
+      let tempArray: TimeTrackingTag[] = [];
+      tempArray.push(newTag);
+      this.timeTrackingTags.forEach((tag) => {
+        let tempTag: TimeTrackingTag = {
+          id: tag.id,
+          officeID: tag.officeID,
+          tag: tag.tag
+        };
+        tempArray.push(tempTag);
+      })
+      this.timeTrackingTags = tempArray;
+    },
+    (error) => {
+      console.log(error)
+    })
   }
 
   showSendInviteModal(): void{
