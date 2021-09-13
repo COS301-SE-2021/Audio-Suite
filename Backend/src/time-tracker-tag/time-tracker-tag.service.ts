@@ -27,11 +27,11 @@ export class TimeTrackerTagService {
         try{
             const tags = await this.timeTrackerTagRepository.find({officeID, tag});
             if(tags.length > 0){
-                throw new BadRequestException('Project already exists in current office.');
+                throw new BadRequestException('Tag already exists in current office.');
             }
         }
         catch(err){
-            throw new BadRequestException('Project already exists in current office.')
+            throw new BadRequestException('Tag already exists in current office.')
         }
 
         //Add Tag to the database
@@ -45,7 +45,7 @@ export class TimeTrackerTagService {
             }
         }
         catch(err){
-            throw new BadRequestException('Unable to save project')
+            throw new BadRequestException('Unable to save Tag')
         }
     }
 
@@ -71,7 +71,7 @@ export class TimeTrackerTagService {
             }
         }
         catch(err){
-            throw new BadRequestException('Could not find a project with the given name in the given office.')
+            throw new BadRequestException('Could not find a tag with the given name in the given office.')
         }
     }
 
