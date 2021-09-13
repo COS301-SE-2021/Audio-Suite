@@ -36,8 +36,8 @@ export class TimeTrackerProjectService {
 
         //Add project to the database
         try{
-            const project = await this.timeTrackerProjectRepository.create({officeID, project: projectName});
-            const savedProject = await this.timeTrackerProjectRepository.save(project);
+            const newProject = await this.timeTrackerProjectRepository.create({officeID, project: projectName});
+            const savedProject = await this.timeTrackerProjectRepository.save(newProject);
 
             return {
                 Response: "Success",
@@ -45,11 +45,37 @@ export class TimeTrackerProjectService {
             }
         }
         catch(err){
-            throw new BadRequestException('Unable to save project')
+            throw new BadRequestException(err)
         }
     }
 
-    async removeProject(jwt: string, officeID: number, projectName: string): Promise<any>{
+    async removeProjectByID(jwt: string, id: number): Promise<any>{
+        //Validate whether the jwt belongs to a valid user.
+        try{
+            const user = await this.userService.validateUser(jwt);
+            if(user == null){
+                throw new UnauthorizedException();
+            }
+        }catch(err){
+            throw new UnauthorizedException();
+        }
+
+        //Remove project from given office
+        try{
+            const project = await this.timeTrackerProjectRepository.findOneOrFail({id});
+            const deletedProject = await this.timeTrackerProjectRepository.remove(project);
+            
+            return {
+                Response: "Success",
+                DeletedProject: deletedProject
+            }
+        }
+        catch(err){
+            throw new BadRequestException('Could not find a project with the given id.')
+        }
+    }
+
+    async removeProjectByName(jwt: string, officeID: number, projectName: string): Promise<any>{
         //Validate whether the jwt belongs to a valid user.
         try{
             const user = await this.userService.validateUser(jwt);

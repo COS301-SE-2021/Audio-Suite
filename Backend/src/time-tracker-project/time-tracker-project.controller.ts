@@ -14,13 +14,21 @@ export class TimeTrackerProjectController {
         return await this.timeTrackerProjectService.registerNewProject(jwt, officeID, projectName);
     }
 
-    @Post('remove')
-    async removeProject(
+    @Post('removeByID')
+    async removeProjectByID(
+        @Body('jwt') jwt: string,
+        @Body('id') id: number,
+    ){
+        return await this.timeTrackerProjectService.removeProjectByID(jwt, id);
+    }
+
+    @Post('removeByName')
+    async removeProjectByName(
         @Body('jwt') jwt: string,
         @Body('officeID') officeID: number,
         @Body('projectName') projectName: string
     ){
-        return await this.timeTrackerProjectService.removeProject(jwt, officeID, projectName);
+        return await this.timeTrackerProjectService.removeProjectByName(jwt, officeID, projectName);
     }
 
     @Post('getOfficeProjects')
