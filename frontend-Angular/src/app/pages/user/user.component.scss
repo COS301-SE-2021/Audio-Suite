@@ -590,6 +590,209 @@
         }
     }
 
+    .TimeTrackProjects{
+
+        .timeTrackerProjectForms{
+            display: inline-flex;
+            justify-content: center;
+            width: 95%;
+
+            #filterProjectListForm{
+                width: 15%;
+                height: 100%;
+
+                #filter-dropdown{
+                    width: 100%;
+                    height: 100%;
+                    margin: 0px;
+                }
+            }
+
+            #SeparatingSpace{
+                width: 35%;
+            }
+
+            #addNewProjectForm{
+                display: inline-flex;
+                justify-content: center;
+                width: 50%;
+                height: 100%;
+
+                #newProjectNameInput{
+                    width: 79%;
+                    height: 100%;
+                    margin: 0px;
+                    margin-right: 0.5%;
+                }
+
+                #addNewProject-btn{
+                    width: 20%;
+                    height: 100%;
+                    margin: 0px;
+                    margin-left: 0.5%;
+                }
+            }
+        }
+
+        .timeTrackerProjectList{
+            #projectListHeader{
+                display: inline-flex;
+                justify-content: left;
+                width: 95%;
+                //border-top: 1px solid white;
+                margin-top: 3%;
+                border-bottom: 1px solid white;
+
+                #projectNameHeader{
+                    width: 75%;
+                    height: 100%;
+                    padding-left: 3%;
+                    text-align: left;
+                }
+            }
+
+            .projectItem{
+                margin-top: 2%;
+                display: inline-flex;
+                justify-content: center;
+                width: 95%;
+                background-color: #141537;
+
+                .projectName{
+                    width: 75%;
+                    height: 100%;
+                    padding-left: 3%;
+                    text-align: left;
+                    //word-wrap: break-word;
+
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .spacer{
+                    width: 5%;
+                    height: 100%;
+                }
+
+                .projectEditBtn{
+                    width: 9%;
+                    height: 100%;
+                    margin: 0px;
+                    margin-right: 0.5%;
+                }
+
+                .projectDeleteBtn{
+                    width: 9%;
+                    height: 100%;
+                    margin: 0px;
+                    margin-left: 0.5%;
+                }
+            }
+        }
+    }
+
+    .TimeTrackTags{
+        .timeTrackerTagForms{
+            display: inline-flex;
+            justify-content: center;
+            width: 95%;
+
+            #filterTagListForm{
+                width: 15%;
+                height: 100%;
+
+                #filter-dropdown{
+                    width: 100%;
+                    height: 100%;
+                    margin: 0px;
+                }
+            }
+
+            #SeparatingSpace{
+                width: 35%;
+            }
+
+            #addNewTagForm{
+                display: inline-flex;
+                justify-content: center;
+                width: 50%;
+                height: 100%;
+
+                #newTagNameInput{
+                    width: 79%;
+                    height: 100%;
+                    margin: 0px;
+                    margin-right: 0.5%;
+                }
+
+                #addNewTag-btn{
+                    width: 20%;
+                    height: 100%;
+                    margin: 0px;
+                    margin-left: 0.5%;
+                }
+            }
+        }
+
+        .timeTrackerTagList{
+            #tagListHeader{
+                display: inline-flex;
+                justify-content: left;
+                width: 95%;
+                //border-top: 1px solid white;
+                margin-top: 3%;
+                border-bottom: 1px solid white;
+
+                #tagNameHeader{
+                    width: 75%;
+                    height: 100%;
+                    padding-left: 3%;
+                    text-align: left;
+                }
+            }
+
+            .tagItem{
+                margin-top: 2%;
+                display: inline-flex;
+                justify-content: center;
+                width: 95%;
+                background-color: #141537;
+
+                .tagName{
+                    width: 75%;
+                    height: 100%;
+                    padding-left: 3%;
+                    text-align: left;
+                    //word-wrap: break-word;
+
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .spacer{
+                    width: 5%;
+                    height: 100%;
+                }
+
+                .tagEditBtn{
+                    width: 9%;
+                    height: 100%;
+                    margin: 0px;
+                    margin-right: 0.5%;
+                }
+
+                .tagDeleteBtn{
+                    width: 9%;
+                    height: 100%;
+                    margin: 0px;
+                    margin-left: 0.5%;
+                }
+            }
+        }
+    }
+
     #timeTrackerOptions{
         min-height: 85vh;
         border-radius: 50px;
