@@ -158,7 +158,7 @@ export class AudioComponent {
     });
 
     this.agoraService.client.on('onTokenPrivilegeWillExpire', (evt) => {
-      this.agoraService.client.renewChannelKey(() => {
+        this.agoraService.client.renewChannelKey(() => {
         // ---- RENEW CHANNEL KEY FUNCTION ----
         // 1) Get details
         var channel = this.channelName;
@@ -167,11 +167,12 @@ export class AudioComponent {
         // 2) Make request
         this.officeRoomService.fetchToken(userID, this.channelName, 1).subscribe((res) => {
           token = res.token;
-        });
-        
+
         // 3) Return new token
-        this.token = token;
-        return token;
+          this.token = token;
+          console.log(token);
+          return token;
+        });
       }, () => {
         console.log("Renew channel key successfully");
       }, (err) => {
