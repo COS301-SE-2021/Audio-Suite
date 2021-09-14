@@ -45,12 +45,23 @@ export class AudioComponent {
     this.agoraService.createClient('rtc');
   }
 
-  join(userID:string, officeID:number, room:string): void{
+  join(userID:string, officeID:number, room:string, officeName:string): void{
     this.officeRoomService.getOfficeRoomList(this.jwt, officeID).subscribe((res) => {
       console.log("------ ROOMS ------");
       console.log(res.Rooms);
       this.rooms = res.Rooms;
       console.log("Entered room");
+      var temp;
+      this.rooms.forEach(roomName => {
+        if(roomName.roomName == room){
+          temp = room;
+        }
+      });
+      if(temp.roomType == "Normal"){
+        this.channelName = officeName;
+      }else{
+        this.channelName = officeName+temp.roomName;
+      }
       this.agoraService.client.join(null, this.channelName, userID);
       this.localStream = this.agoraService.createStream(userID, true, null, null, false, false);
       setTimeout(() => {this.assignRemoteHandlers(Number(userID))},1000);
