@@ -82,9 +82,6 @@ export class AudioComponent {
       }, 
       errr => { 
         console.log(errr); 
-      },
-      () => { 
-        console.log("this is the finally block");
       });
     });
   }
@@ -111,7 +108,7 @@ export class AudioComponent {
     // ---------------------------------------------------
     // NEEDS TO BE RUN AFTER PUBLISH IS COMPLETE
     tempRooms.forEach((room) => {
-      if(room.roomName === this.currentRoom){
+      if(room.roomName == this.currentRoom){
         this.currentRoomDetails = room;
       }
     });
@@ -138,7 +135,6 @@ export class AudioComponent {
         this.agoraService.client.renewChannelKey(() => {
           // ---- RENEW CHANNEL KEY FUNCTION ----
           // 1) Get details
-          var channel = this.channelName;
           var token: string = "";
 
           // 2) Make request
@@ -155,29 +151,6 @@ export class AudioComponent {
           console.log("Renew channel key failed: ", err);
         });
       }
-    });
-
-    this.agoraService.client.on('onTokenPrivilegeWillExpire', (evt) => {
-        this.agoraService.client.renewChannelKey(() => {
-        // ---- RENEW CHANNEL KEY FUNCTION ----
-        // 1) Get details
-        var channel = this.channelName;
-        var token: string = "";
-
-        // 2) Make request
-        this.officeRoomService.fetchToken(userID, this.channelName, 1).subscribe((res) => {
-          token = res.token;
-
-        // 3) Return new token
-          this.token = token;
-          console.log(token);
-          return token;
-        });
-      }, () => {
-        console.log("Renew channel key successfully");
-      }, (err) => {
-        console.log("Renew channel key failed: ", err);
-      });
     });
 
     this.agoraService.client.on('stream-added', (evt) => {
@@ -265,7 +238,7 @@ export class AudioComponent {
           // --------------- Get Rooms details ----------------
           var remoteRoomDetails: Room;
           rooms.forEach((room) => {
-            if(room.id === stream[2]){
+            if(room.id == stream[2]){
               remoteRoomDetails = room;
             }
           });
@@ -274,14 +247,12 @@ export class AudioComponent {
           // --------------- Calculate Centers ----------------
           var remoteRoomCenter = [((remoteRoomDetails.width/2)+remoteRoomDetails.xCoordinate), ((remoteRoomDetails.height/2)+remoteRoomDetails.yCoordinate)];
           // --------------------------------------------------
-          // --------------- Calculate Distance ---------------
-          var euclideanDistance = Math.sqrt(Math.pow((remoteRoomCenter[0]-this.currentRoomCenter[0]),2)+Math.pow((remoteRoomCenter[1]-this.currentRoomCenter[1]),2));
-          const distConst = 10;
-          // --------------------------------------------------
-          // -------------- Calculate Direction ---------------
+          // -------------- Calculate Panning ---------------
           // Orientation of listener: Facing toward the top floorplan
           var standardDistx = Number(remoteRoomCenter[0]) - Number(this.currentRoomCenter[0]);
           var standardDistz = Number(remoteRoomCenter[1]) - Number(this.currentRoomCenter[1]);
+
+          const distConst = 10;
 
           pannerX = standardDistx * distConst;
           pannerZ = standardDistz * distConst;
@@ -301,13 +272,11 @@ export class AudioComponent {
         let audioStream = this.audioContext.createMediaStreamSource(audioStreamTrack);
         let volumeControl = this.audioContext.createGain();
         let panner = this.audioContext.createPanner();
-        let compressor = this.audioContext.createDynamicsCompressor();
 
         // Connect AudioNodes in Sequence (RemoteMediaStream -> VolumeController -> Panner -> Compressor -> Destination(Output))
         audioStream.connect(volumeControl);
         volumeControl.connect(panner);
-        panner.connect(compressor);
-        compressor.connect(this.audioContext.destination);
+        panner.connect(this.audioContext.destination);
 
         // Configure AudioNodes
         volumeControl.gain.setValueAtTime( volume, this.audioContext.currentTime );
