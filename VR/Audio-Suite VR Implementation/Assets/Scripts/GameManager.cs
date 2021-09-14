@@ -97,6 +97,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     /// </summary>
     public override void OnLeftRoom()
     {
+        Debug.Log("Network Disconnected");
         PhotonNetwork.Destroy(spawnedPlayer);
         Application.Quit();
     }
@@ -115,4 +116,5 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     #endregion
+    //8c5a46
 }
