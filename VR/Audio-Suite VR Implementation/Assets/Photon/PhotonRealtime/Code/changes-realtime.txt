@@ -3,6 +3,10 @@ Photon Realtime C# Client - Changelog
 Exit Games GmbH - www.photonengine.com - forum.photonengine.com
 
 
+Version 4.1.6.5
+    Updated: The default name server host to "ns.photonengine.io". When using WSS on this, it expects TLS1.2 (Win 7 and old Unity versions may not support this).
+    Fixed: Internally used OpJoinRoom() will now send custom room properties (all RoomOptions set) to the Master Server, too. This allows the Master Server to immediately find the room, even if property filtering is used. This was affecting matchmaking with OpJoinOrCreateRoom.
+
 Version 4.1.6.4 (26. July 2021)
     Internal: Added PhotonEditorTools.HasFusion value and added AppSettings.AppIdFusion as well as ClientAppType.Fusion.
     Added: ConnectionHandler.DisconnectAfterKeepAlive to let the fallback thread call Disconnect after the KeepAliveInBackground time. Default: false.

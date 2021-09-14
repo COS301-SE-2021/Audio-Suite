@@ -366,11 +366,11 @@ namespace Photon.Realtime
                     op[ParameterCode.PlayerProperties] = opParams.PlayerProperties;
                 }
                 op[ParameterCode.Broadcast] = true; // broadcast actor properties
+            }
 
-                if (opParams.JoinMode == JoinMode.CreateIfNotExists)
-                {
-                    this.RoomOptionsToOpParameters(op, opParams.RoomOptions);
-                }
+            if (opParams.OnGameServer || opParams.JoinMode == JoinMode.CreateIfNotExists)
+            {
+                this.RoomOptionsToOpParameters(op, opParams.RoomOptions);
             }
 
             //this.Listener.DebugReturn(DebugLevel.INFO, "OpJoinRoom: " + SupportClass.DictionaryToString(op));

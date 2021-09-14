@@ -64,7 +64,7 @@ namespace Photon.Pun
     public static partial class PhotonNetwork
     {
         /// <summary>Version number of PUN. Used in the AppVersion, which separates your playerbase in matchmaking.</summary>
-        public const string PunVersion = "2.34.1";
+        public const string PunVersion = "2.35";
 
         /// <summary>Version number of your game. Setting this updates the AppVersion, which separates your playerbase in matchmaking.</summary>
         /// <remarks>
@@ -1142,7 +1142,9 @@ namespace Photon.Pun
 
 
             NetworkingClient.LoadBalancingPeer.TransportProtocol = appSettings.Protocol;
+            NetworkingClient.ExpectedProtocol = null;
             NetworkingClient.EnableProtocolFallback = appSettings.EnableProtocolFallback;
+            NetworkingClient.AuthMode = appSettings.AuthMode;
 
 
             IsMessageQueueRunning = true;

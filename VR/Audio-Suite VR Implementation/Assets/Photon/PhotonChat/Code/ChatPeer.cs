@@ -27,7 +27,7 @@ namespace Photon.Chat
     public class ChatPeer : PhotonPeer
     {
         /// <summary>Name Server Host Name for Photon Cloud. Without port and without any prefix.</summary>
-        public string NameServerHost = "ns.exitgames.com";
+        public string NameServerHost = "ns.photonengine.io";
 
         /// <summary>Name Server port per protocol (the UDP port is different than TCP, etc).</summary>
         private static readonly Dictionary<ConnectionProtocol, int> ProtocolToNameServerPort = new Dictionary<ConnectionProtocol, int>() { { ConnectionProtocol.Udp, 5058 }, { ConnectionProtocol.Tcp, 4533 }, { ConnectionProtocol.WebSocket, 9093 }, { ConnectionProtocol.WebSocketSecure, 19093 } }; //, { ConnectionProtocol.RHttp, 6063 } };

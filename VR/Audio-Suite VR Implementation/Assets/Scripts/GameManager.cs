@@ -1,13 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 
 using Photon.Pun;
 using Photon.Realtime;
-
-using System;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -22,6 +16,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     /// The player prefab used for the playere to interact with the office space
     /// </summary>
     public GameObject playerPrefab;
+
+    /// <summary>
+    /// The player that is spawned when the scene 
+    /// </summary>
+    private GameObject spawnedPlayer;
 
     #endregion
 
@@ -46,29 +45,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            // Check to make sure we dont create multiple instances of the users
-            if(UserManager.LocalPlayerInstance == null)
-            {
-                // Get the number of users currently in the room
-                int userInRoom = PhotonNetwork.CurrentRoom.PlayerCount;
+            // Get the number of users currently in the room
+            int userInRoom = PhotonNetwork.CurrentRoom.PlayerCount;
 
-                // Check the current amount of players to decide where to spawn
-                if (userInRoom <= 2)
-                {
-                    // Spawn the player
-                    PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(2f, 0f, -3f), Quaternion.identity, 0);
-                }
-                else if (userInRoom <= 6)
-                {
-                    // Spawn the player
-                    PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(4f, 0f, -3f), Quaternion.identity, 0);
-                }
-                else if (userInRoom <= 10)
-                {
-                    // Spawn the player
-                    PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(6f, 0f, -3f), Quaternion.identity, 0);
-                }
-            }
+            // Spawn player prefab
+            spawnedPlayer = PhotonNetwork.Instantiate("Network Player VR", new Vector3(0f, 0f, 0f), Quaternion.identity, 0);
+
         }
     }
 
@@ -115,6 +97,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     /// </summary>
     public override void OnLeftRoom()
     {
+        PhotonNetwork.Destroy(spawnedPlayer);
         Application.Quit();
     }
 
@@ -129,20 +112,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         // Get the number of users currently in the room
         int userInRoom = PhotonNetwork.CurrentRoom.PlayerCount;
-
-        // Check which level should be called
-        if (userInRoom <= 2)
-        {
-            PhotonNetwork.LoadLevel("OfficeSmall");
-        }
-        else if (userInRoom <= 6)
-        {
-            PhotonNetwork.LoadLevel("OfficeMeduim");
-        }
-        else if(userInRoom <= 10)
-        {
-            PhotonNetwork.LoadLevel("OfficeLarge");
-        }
     }
 
     #endregion

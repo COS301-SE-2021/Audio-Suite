@@ -3,6 +3,17 @@ PUN 2 - Changelog
 Exit Games GmbH - www.photonengine.com - forum.photonengine.com
 
 
+v2.35 (24. August 2021)
+Changed: CheckConnectSetupXboxOne() to allow AuthOnceWss and Datagram Encryption (GCM mode). It will set ExpectedProtocol and EncryptionMode silently. Datagram Encryption is only possible with a native plugin.
+Changed: Interest Culling in UtilityScripts/Culling/.
+    Added: Rate limiting for interest group changes per second. No matter what the algorithm tells us, it makes sense to not change interest groups more than 4-6x per second.
+    Changed: The GetActiveCells method to sort the "nearby" part of the cells list. This allows us to not change interest groups if just the order changed (due to "nearby" calculation, that could happen).
+    Changed: The scene view grid now displaces the various area-indexes for cells that overlap (root, node and leaf).
+    Note: Overall, the algorithm to select cells is just a quick showcase. It should avoid unsubscribing groups one by one and also avoid subscribing nearby groups one by one (while moving only along one axis of the areas).
+Fixed: A potential NullReferenceException for OwnershipUpdate events. If the PhotonView is unknown, this gets logged now. This is caused most frequently by loading scenes (or initializing them) without pausing the incoming message queue (dispatch). If ownership changed for objects, the Master Client will let new players know this but that failed, if the joining client didn't know the objects yet.
+Updated: Realtime API. Check out changes-realtime.txt.
+Updated: Library to 4.1.6.5. More details in changes-library.txt.
+
 v2.34.1 (28. July 2021)
 Updated: PhotonNetwork.PunVersion to "2.34.1" now. The previous version accidentally used "2.33.3" still.
 Updated: For Unity 2021, the obsoltete CompilationPipeline.assemblyCompilationStarted got replaced with CompilationPipeline.compilationStarted.
@@ -13,7 +24,6 @@ Changed: PUN needs to exit play mode in Editor, if there is a recompilation (due
 Changed: The PhotonNetwork constructor creates a NetworkingClient (in Editor) to avoid exceptions due to possible recompilation.
 Changed: PhotonNetwork.StaticReset was running as RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad) but will run earlier now, using AfterAssembliesLoaded.
 Updated: Library to 4.1.6.4. More details in changes-library.txt.
-
 
 v2.33.3 (07. July 2021)
 Fixed: Skipping cleanup of PhotonViews if they never had a legit ViewID. This could result in a NullReferenceException (e.g. when exiting play mode).

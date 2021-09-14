@@ -215,7 +215,7 @@
         <member name="T:ExitGames.Client.Photon.Encryption.IPhotonEncryptor">
             <summary>Interface for DatagramEncryptor implementations.</summary>
         </member>
-        <member name="M:ExitGames.Client.Photon.Encryption.IPhotonEncryptor.Init(System.Byte[],System.Byte[],System.Byte[],System.Boolean)">
+        <member name="M:ExitGames.Client.Photon.Encryption.IPhotonEncryptor.Init(System.Byte[],System.Byte[],System.Byte[],System.Boolean,System.Int32)">
             <summary>Initialize the encryptor.</summary>
         </member>
         <member name="F:ExitGames.Client.Photon.Encryption.EncryptorNet.encryptorIn">
@@ -233,7 +233,7 @@
             Implementation of encryption for "Datagram Encryption".
             </summary>
         </member>
-        <member name="M:ExitGames.Client.Photon.Encryption.EncryptorNative.Init(System.Byte[],System.Byte[],System.Byte[],System.Boolean)">
+        <member name="M:ExitGames.Client.Photon.Encryption.EncryptorNative.Init(System.Byte[],System.Byte[],System.Byte[],System.Boolean,System.Int32)">
             <summary>
             Initialize
             </summary>
@@ -1881,8 +1881,10 @@
             <summary>
             Initializes Datagram Encryption. Optionally, the EncryptorType is being used, if set.
             </summary>
-            <param name="encryptionSecret">secret used to cipher udp packets</param>
-            <param name="hmacSecret">secret used for authentication of udp packets</param>
+            <param name="encryptionSecret">Secret used to cipher udp packets.</param>
+            <param name="hmacSecret">Secret used for authentication of udp packets.</param>
+            <param name="randomizedSequenceNumbers">Sets if enet Sequence Numbers will be randomized or not. Preferably should be true.</param>
+            <param name="chainingModeGCM">Sets if the chaining mode should be CBC (false, default) or GCM (true). GCM mode is only available with a native encryption plugin.</param>
         </member>
         <member name="M:ExitGames.Client.Photon.PhotonPeer.InitPayloadEncryption(System.Byte[])">
             <summary>

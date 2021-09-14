@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-
-using UnityEngine;
+﻿using UnityEngine;
 
 using Photon.Pun;
 using Photon.Realtime;
-using UnityEngine.UI;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
@@ -19,7 +15,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// </summary>
     private bool isConnected;
 
-    [SerializeField] InputField roomCode;
+    //[SerializeField] InputField roomCode;
 
     // Method called before start
     void Awake()
@@ -32,7 +28,6 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// </summary>
     void Start()
     {
-        roomCode.text = "test";
         Connect();
     }
 
@@ -45,12 +40,12 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// </summary>
     public void Connect()
     {
-        Debug.Log(roomCode.text);
+        //Debug.Log(roomCode.text);
         // Check if we need to connect to the network
         if (isConnected)
         {
             // Create or join the room
-            PhotonNetwork.JoinOrCreateRoom(roomCode.text, new RoomOptions { MaxPlayers = 10 }, TypedLobby.Default);
+            PhotonNetwork.JoinOrCreateRoom("test", new RoomOptions { MaxPlayers = 10 }, TypedLobby.Default);
         }
         else
         {
@@ -58,7 +53,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             isConnected = PhotonNetwork.ConnectUsingSettings();
             PhotonNetwork.GameVersion = gameVersion;
         }
-        
+
     }
 
     /// <summary>
@@ -71,8 +66,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         // Create or join a room after connecting
         if (isConnected)
-        {            
-            PhotonNetwork.JoinOrCreateRoom(roomCode.text, new RoomOptions { MaxPlayers = 10 }, TypedLobby.Default);
+        {
+            PhotonNetwork.JoinOrCreateRoom("test", new RoomOptions { MaxPlayers = 10 }, TypedLobby.Default);
             isConnected = false;
         }
     }
@@ -107,10 +102,10 @@ public class Launcher : MonoBehaviourPunCallbacks
         Debug.Log("Joined the room");
 
         // If we are the first people in the room load the level for that room
-        if(PhotonNetwork.CurrentRoom.PlayerCount == 1)
+        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
         {
             Debug.Log("Loading Small Office");
-            PhotonNetwork.LoadLevel("OfficeSmall");
+            PhotonNetwork.LoadLevel("Office");
         }
     }
 }
