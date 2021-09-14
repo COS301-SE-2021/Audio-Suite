@@ -11,7 +11,8 @@ interface Room{
   xCoordinate: number,
   yCoordinate: number,
   width: number,
-  height: number
+  height: number,
+  roomType: string
 };
 
 @Component({
@@ -51,10 +52,10 @@ export class AudioComponent {
       console.log(res.Rooms);
       this.rooms = res.Rooms;
       console.log("Entered room");
-      var temp;
+      var temp: Room;
       this.rooms.forEach(roomName => {
         if(roomName.roomName == room){
-          temp = room;
+          temp = roomName;
         }
       });
       if(temp.roomType == "Normal"){
