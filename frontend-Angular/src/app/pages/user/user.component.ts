@@ -770,7 +770,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
           this.selectedRoom = id;
           var jwt = sessionStorage.getItem('jwt');
           this.textChannelsService.joinRoom(jwt, this.selectedOfficeID, this.selectedOffice, id, true);
-          this.audioComponent.join(this.userID, this.selectedOfficeID, this.selectedRoom);
+          this.audioComponent.join(this.userID, this.selectedOfficeID, this.selectedRoom, this.selectedOffice);
         }
       }
       else{
@@ -778,7 +778,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         this.selectedRoom = id;
         var jwt = sessionStorage.getItem('jwt');
         this.textChannelsService.joinRoom(jwt, this.selectedOfficeID, this.selectedOffice, id, true);
-        this.audioComponent.join(this.userID, this.selectedOfficeID, this.selectedRoom);
+        this.audioComponent.join(this.userID, this.selectedOfficeID, this.selectedRoom, this.selectedOffice);
       }
     }
   }
