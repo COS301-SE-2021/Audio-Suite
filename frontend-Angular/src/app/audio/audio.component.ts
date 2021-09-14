@@ -157,6 +157,28 @@ export class AudioComponent {
       }
     });
 
+    this.agoraService.client.on('onTokenPrivilegeWillExpire', (evt) => {
+      this.agoraService.client.renewChannelKey(() => {
+        // ---- RENEW CHANNEL KEY FUNCTION ----
+        // 1) Get details
+        var channel = this.channelName;
+        var token: string = "";
+
+        // 2) Make request
+        this.officeRoomService.fetchToken(userID, this.channelName, 1).subscribe((res) => {
+          token = res.token;
+        });
+        
+        // 3) Return new token
+        this.token = token;
+        return token;
+      }, () => {
+        console.log("Renew channel key successfully");
+      }, (err) => {
+        console.log("Renew channel key failed: ", err);
+      });
+    });
+
     this.agoraService.client.on('stream-added', (evt) => {
       const stream = evt.stream;
       this.agoraService.client.subscribe(stream, (err) => {
