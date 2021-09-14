@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.XR;
 
 using Photon.Pun;
 
@@ -11,9 +10,6 @@ public class NetworkPlayerVR : MonoBehaviour
     public Transform head;
     public Transform leftHand;
     public Transform rightHand;
-
-    public Animator leftHandAnimator;
-    public Animator rightHandAnimator;
 
     private PhotonView photonView;
 
@@ -34,7 +30,7 @@ public class NetworkPlayerVR : MonoBehaviour
 
         if (photonView.IsMine)
         {
-            foreach(var item in GetComponentsInChildren<Renderer>())
+            foreach (var item in GetComponentsInChildren<Renderer>())
             {
                 item.enabled = false;
             }
@@ -49,30 +45,6 @@ public class NetworkPlayerVR : MonoBehaviour
             MapPositions(head, headRig);
             MapPositions(leftHand, leftHandRig);
             MapPositions(rightHand, rightHandRig);
-
-            UpdateHandAnimation(InputDevices.GetDeviceAtXRNode(XRNode.LeftHand), leftHandAnimator);
-            UpdateHandAnimation(InputDevices.GetDeviceAtXRNode(XRNode.RightHand), rightHandAnimator);
-        }
-    }
-
-    void UpdateHandAnimation(InputDevice targetDevice, Animator handAnimator)
-    {
-        if (targetDevice.TryGetFeatureValue(CommonUsages.trigger, out float triggerValue))
-        {
-            handAnimator.SetFloat("Trigger", triggerValue);
-        }
-        else
-        {
-            handAnimator.SetFloat("Trigger", 0);
-        }
-
-        if (targetDevice.TryGetFeatureValue(CommonUsages.grip, out float gripValue))
-        {
-            handAnimator.SetFloat("Grip", gripValue);
-        }
-        else
-        {
-            handAnimator.SetFloat("Grip", 0);
         }
     }
 

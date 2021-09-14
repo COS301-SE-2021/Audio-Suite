@@ -27,6 +27,14 @@ public class NetworkPlayerVR : MonoBehaviour
         headRig = rig.transform.Find("Camera Offset/Main Camera");
         leftHandRig = rig.transform.Find("Camera Offset/LeftHand Controller");
         rightHandRig = rig.transform.Find("Camera Offset/RightHand Controller");
+
+        if (photonView.IsMine)
+        {
+            foreach (var item in GetComponentsInChildren<Renderer>())
+            {
+                item.enabled = false;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -34,10 +42,6 @@ public class NetworkPlayerVR : MonoBehaviour
     {
         if (photonView.IsMine)
         {
-            rightHand.gameObject.SetActive(false);
-            leftHand.gameObject.SetActive(false);
-            head.gameObject.SetActive(false);
-
             MapPositions(head, headRig);
             MapPositions(leftHand, leftHandRig);
             MapPositions(rightHand, rightHandRig);
