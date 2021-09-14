@@ -14,13 +14,8 @@ const httpOptions = {
 })
 export class OfficeRoomService {
 
-<<<<<<< HEAD
   baseUrl = environment.apiUrl;
   tokenUrl = environment.tokenUrl;
-=======
-  baseUrl = 'http://localhost:3001'
-  tokenUrl = 'http://139.162.248.140:8082/fetch_rtc_token'
->>>>>>> feature-frontend-angular-tokens
 
   constructor(private http: HttpClient) { }
 
@@ -164,7 +159,6 @@ export class OfficeRoomService {
       return this.http.post<any>(userRoom, body, httpOptions);
   }
 
-<<<<<<< HEAD
   getRoomUsersByOfficeID(
     jwt: string, 
     officeID: number
@@ -190,19 +184,4 @@ export class OfficeRoomService {
       var fetchTokenURL = this.tokenUrl;
       return this.http.post<any>(fetchTokenURL, body, httpOptions);
   }
-=======
-  fetchToken(
-    uid: number, 
-    channelName: string,
-    role: number
-    ): Observable<any>{
-    const body = {
-      uid: uid, 
-      channelName: channelName,
-      role: role
-    }
-
-    return this.http.post<any>(this.tokenUrl, body, httpOptions);
-    }
->>>>>>> feature-frontend-angular-tokens
 }
