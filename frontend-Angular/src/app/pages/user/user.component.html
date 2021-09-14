@@ -100,6 +100,43 @@
     <button id="showTaskBar" (click)="toggleSidebar()">
         <i class="tim-icons icon-align-center"></i>
     </button>
+    <!-- GlobalAlert -->
+    <!-- Success Alert -->
+    <alert 
+        *ngIf="showSuccessGlobalAlert" 
+        class="alert-with-icon" 
+        [type]="'success alert-with-icon'" 
+        style="width: 75%; margin-left: 15%; margin-bottom: 5px; margin-top: 16px; z-index: 5;" 
+        [dismissible]="true"
+        (click)="closeAlert()"
+        >
+        <span class="tim-icons icon-trophy" data-notify="icon">
+        </span>
+        <span>
+        <b>
+            {{ globalAlertType }}
+        </b>
+        {{ globalAlertMsg }}
+        </span>
+    </alert>
+    <!-- Primary Alert -->
+    <alert 
+        *ngIf="showPrimaryGlobalAlert" 
+        class="alert-with-icon" 
+        [type]="'primary alert-with-icon'" 
+        style="width: 75%; margin-left: 15%; margin-bottom: 5px; margin-top: 16px; z-index: 5;" 
+        [dismissible]="true"
+        (click)="closeAlert()"
+        >
+        <span class="tim-icons icon-trophy" data-notify="icon">
+        </span>
+        <span>
+        <b>
+            {{ globalAlertType }}
+        </b>
+        {{ globalAlertMsg }}
+        </span>
+    </alert>
 </div>
 
 <!-- Page content -->
@@ -396,9 +433,13 @@
                                         <div *ngIf="timeTrackerProjectSelected; then showSelectedProject else showDropdown"></div>
                                         <ng-template #showSelectedProject>
                                             <div id="selectedProject">
-                                                <p>
-                                                    {{ selectedProject }}
-                                                </p>
+                                                <button 
+                                                    class=" btn btn-primary" 
+                                                    id="removeProject-btn"
+                                                    (click)="removeSelectedProject()"
+                                                    type="button"
+                                                >{{ selectedProject }} <i class="tim-icons icon-simple-remove"></i>
+                                                </button>
                                             </div>
                                         </ng-template>
                                         <ng-template #showDropdown>
@@ -436,34 +477,53 @@
                                             </div>
                                         </ng-template>
                                     </div>
-                                    <div class="btn-group dropdown" id="AddTagDiv" dropdown>
-                                        <button 
-                                            aria-expanded="false" 
-                                            aria-haspopup="true" 
-                                            class="btn btn-primary dropdown-toggle dropdown-toggle" 
-                                            data-toggle="dropdown" 
-                                            dropdownToggle 
-                                            id="tag-btn"
-                                            type="button"
-                                        >
-                                            <i class="tim-icons icon-tag"></i>
-                                        </button>
-                                        <div class=" dropdown-menu" *dropdownMenu aria-labelledby="dropdownMenuLink">
-                                          <a class=" dropdown-item" href="#">
-                                            Action
-                                          </a>
-                                          <a class=" dropdown-item" href="#">
-                                            Another action
-                                          </a>
-                                          <a class=" dropdown-item" href="#">
-                                            Something else here
-                                          </a>
-                                          <div class=" dropdown-divider">
-                                          </div>
-                                          <a class=" dropdown-item" href="#">
-                                            Separated link
-                                          </a>
-                                        </div>
+                                    <div id="TagDiv">
+                                        <div *ngIf="timeTrackerTagSelected; then showSelectedTag else showTagDropdown"></div>
+                                        <ng-template #showSelectedTag>
+                                            <div id="selectedTag">
+                                                <button 
+                                                    class=" btn btn-primary" 
+                                                    id="removeTag-btn"
+                                                    (click)="removeSelectedTag()"
+                                                    type="button"
+                                                >{{ selectedTag }} <i class="tim-icons icon-simple-remove"></i>
+                                                </button>
+                                            </div>
+                                        </ng-template>
+                                        <ng-template #showTagDropdown>
+                                            <div class="btn-group dropdown" id="TagDropdown" dropdown>
+                                                <button 
+                                                    aria-expanded="false" 
+                                                    aria-haspopup="true" 
+                                                    class="btn btn-primary dropdown-toggle dropdown-toggle" 
+                                                    data-toggle="dropdown" 
+                                                    dropdownToggle 
+                                                    id="tag-btn"
+                                                    type="button"
+                                                >
+                                                    <i class="tim-icons icon-tag"></i>
+                                                </button>
+                                                <div class=" dropdown-menu" *dropdownMenu aria-labelledby="dropdownMenuLink">
+                                                    <div *ngIf="timeTrackingTags.length == 0; then NoTags else displayTags"></div>
+                                                    <ng-template #NoTags>
+                                                        <p style="color: black; text-align: center;">
+                                                            No Tags found.
+                                                        </p>
+                                                        <div class=" dropdown-divider"></div>
+                                                        <button class=" dropdown-item" style="cursor: pointer;" (click)="setTimeTrackerTab('tags')">
+                                                            Add Tag
+                                                        </button>
+                                                    </ng-template>
+                                                    <ng-template #displayTags>
+                                                        <div *ngFor="let tag of timeTrackingTags">
+                                                            <button class=" dropdown-item" (click)="setTimeTrackerTag(tag.id, tag.tag)">
+                                                                {{ tag.tag }}
+                                                            </button>
+                                                        </div>
+                                                    </ng-template>
+                                                </div>
+                                            </div>
+                                        </ng-template>
                                     </div>
                                     <div id="timer">
                                         <p>
