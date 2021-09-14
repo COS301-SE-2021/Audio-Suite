@@ -34,6 +34,7 @@ export class AudioComponent {
   jwt = sessionStorage.getItem('jwt');
   UserID : number;
   rooms: any;
+  token: any;
   currentRoom: string = "NO-ROOM-SELECTED";
   currentRoomDetails: Room;
   currentRoomCenter = [];
@@ -52,6 +53,7 @@ export class AudioComponent {
       console.log(res.Rooms);
       this.rooms = res.Rooms;
       console.log("Entered room");
+
       var temp: Room;
       this.rooms.forEach(roomName => {
         if(roomName.roomName == room){
@@ -63,10 +65,27 @@ export class AudioComponent {
       }else{
         this.channelName = officeName+temp.roomName;
       }
-      this.agoraService.client.join(null, this.channelName, userID);
-      this.localStream = this.agoraService.createStream(userID, true, null, null, false, false);
-      setTimeout(() => {this.assignRemoteHandlers(Number(userID))},1000);
-      setTimeout(() => {this.publish(room)},3000);
+
+      this.officeRoomService.fetchToken(Number(userID), this.channelName, 1).subscribe((res) => {
+        this.token = res.token;
+        console.log("-------- JOIN AGORA WITH DETAILS --------");
+        console.log("TOKEN:");
+        console.log(this.token);
+        console.log("CHANNEL:");
+        console.log(this.channelName);
+        console.log("UID:");
+        console.log(userID);
+        this.agoraService.client.join(this.token, this.channelName, userID);
+        this.localStream = this.agoraService.createStream(userID, true, null, null, false, false);
+        setTimeout(() => {this.assignRemoteHandlers(Number(userID))},1000);
+        setTimeout(() => {this.publish(room)},3000);
+      }, 
+      errr => { 
+        console.log(errr); 
+      },
+      () => { 
+        console.log("this is the finally block");
+      });
     });
   }
 
@@ -124,10 +143,11 @@ export class AudioComponent {
 
           // 2) Make request
           this.officeRoomService.fetchToken(userID, this.channelName, 1).subscribe((res) => {
-            token = res.json().token;
+            token = res.token;
           });
-        
+          
           // 3) Return new token
+          this.token = token;
           return token;
         }, () => {
           console.log("Renew channel key successfully");

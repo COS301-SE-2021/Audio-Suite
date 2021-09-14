@@ -560,7 +560,6 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.getRoomUsersByOfficeID(jwt, officeID);
 
-        //this.audioComponent.join(this.userID, officeID);
         this.selectedOffice = office;
         this.selectedOfficeID = officeID;
         this.selectedOfficeInvite = officeInvite;
@@ -609,7 +608,6 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
       this.getRoomUsersByOfficeID(jwt, officeID)
 
-      //this.audioComponent.join(this.userID, officeID);
       this.selectedOffice = office;
       this.selectedOfficeID = officeID;
       this.selectedOfficeInvite = officeInvite;

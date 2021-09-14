@@ -171,11 +171,7 @@ export class OfficeRoomService {
       return this.http.post<any>(getRoomUsersByOfficeID_URL, body, httpOptions);
   }
 
-  fetchToken(
-    uid: number,
-    channelName: string,
-    role: number
-    ): Observable<any>{
+  fetchToken( uid: number, channelName: string, role: number): Observable<any>{
       const body = {
         uid: uid,
         channelName: channelName,
@@ -184,4 +180,5 @@ export class OfficeRoomService {
       var fetchTokenURL = this.tokenUrl;
       return this.http.post<any>(fetchTokenURL, body, httpOptions);
   }
+
 }
