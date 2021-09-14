@@ -158,12 +158,12 @@ MonoBehaviour:
     m_Name: Main Camera - TPD - Position
     m_Type: 0
     m_ExpectedControlType: Vector3
-    m_Id: 
+    m_Id: 34376c43-11ce-4759-83a8-16b275ecf82f
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings:
     - m_Name: 
-      m_Id: 
+      m_Id: 192f5b54-e583-494d-a649-eb33bf0320da
       m_Path: <XRHMD>/centerEyePosition
       m_Interactions: 
       m_Processors: 
@@ -174,12 +174,12 @@ MonoBehaviour:
     m_Name: Main Camera - TPD - Rotation
     m_Type: 0
     m_ExpectedControlType: Quaternion
-    m_Id: 
+    m_Id: fdb3ecea-d14a-40f6-b54e-9782ce8dfc4f
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings:
     - m_Name: 
-      m_Id: 
+      m_Id: c43e51c3-3b60-442c-a59f-4a949b9c0c9e
       m_Path: <XRHMD>/centerEyeRotation
       m_Interactions: 
       m_Processors: 
@@ -381,13 +381,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 732710651}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1997382872}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &778002906
 GameObject:
@@ -1431,7 +1431,7 @@ PrefabInstance:
     - target: {fileID: 335505026229082102, guid: d9a3e8650a082724d864349cfb8ae696,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 335505026229082102, guid: d9a3e8650a082724d864349cfb8ae696,
         type: 3}
