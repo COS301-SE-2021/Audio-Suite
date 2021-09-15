@@ -79,17 +79,21 @@ public class Whiteboard : MonoBehaviour, IPunObservable
         this.color = Enumerable.Repeat<Color>(color, penSize * penSize).ToArray<Color>();
     }
 
+    public void ApplyTexture()
+    {
+        texture.Apply();
+    }
+
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
         {
-            float[] array = new float[] { posX, posY };
-            stream.SendNext(array);
+            stream.SendNext(texture);
         }
         else
         {
-            var test = stream.ReceiveNext();
-            Debug.Log(test);
+            texture = (Texture2D) stream.ReceiveNext();
+            ApplyTexture();
         }
     }
 }
