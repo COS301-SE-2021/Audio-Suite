@@ -88,12 +88,15 @@ public class Whiteboard : MonoBehaviour, IPunObservable
     {
         if (stream.IsWriting)
         {
-            stream.SendNext(texture);
+            stream.SendNext(posX);
+            stream.SendNext(posY);
+            stream.SendNext(touchingLast);
         }
         else
         {
-            texture = (Texture2D) stream.ReceiveNext();
-            ApplyTexture();
+            posX = (float)stream.ReceiveNext();
+            posY = (float)stream.ReceiveNext();
+            touchingLast = (bool)stream.ReceiveNext();
         }
     }
 }
