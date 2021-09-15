@@ -45,7 +45,6 @@ public class Whiteboard : MonoBehaviour, IPunObservable
 
         if (touchingLast)
         {
-            photonView.RequestOwnership();
             texture.SetPixels(x, y, penSize, penSize, color);
 
             for (float t = 0.01f; t < 1.00f; t += 0.01f)
@@ -67,6 +66,7 @@ public class Whiteboard : MonoBehaviour, IPunObservable
     public void ToggleTouch(bool touching)
     {
         this.touching = touching;
+        photonView.RequestOwnership();
     }
 
     public void SetTouchPosition(float x, float y)
