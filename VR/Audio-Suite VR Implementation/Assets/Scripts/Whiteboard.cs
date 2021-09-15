@@ -45,6 +45,7 @@ public class Whiteboard : MonoBehaviour, IPunObservable
 
         if (touchingLast)
         {
+            photonView.RequestOwnership();
             texture.SetPixels(x, y, penSize, penSize, color);
 
             for (float t = 0.01f; t < 1.00f; t += 0.01f)
@@ -77,11 +78,6 @@ public class Whiteboard : MonoBehaviour, IPunObservable
     public void SetColor(Color color)
     {
         this.color = Enumerable.Repeat<Color>(color, penSize * penSize).ToArray<Color>();
-    }
-
-    public void ApplyTexture()
-    {
-        texture.Apply();
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
