@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Whiteboard : MonoBehaviour
+using Photon.Pun;
+
+public class Whiteboard : MonoBehaviour, IPunObservable
 {
     public int textureSize = 2048;
     public int penSize = 10;
@@ -14,12 +16,25 @@ public class Whiteboard : MonoBehaviour
     private float posX, posY;
     private float lastX, lastY;
 
+    private PhotonView photonView;
+
     // Start is called before the first frame update
     void Start()
     {
         Renderer renderer = GetComponent<Renderer>();
         texture = new Texture2D(textureSize, textureSize);
         renderer.material.mainTexture = texture;
+
+        photonView = GetComponent<PhotonView>();
+        AddObservable();
+    }
+
+    private void AddObservable()
+    {
+        if (!photonView.ObservedComponents.Contains(this))
+        {
+            photonView.ObservedComponents.Add(this);
+        }
     }
 
     // Update is called once per frame
@@ -62,5 +77,19 @@ public class Whiteboard : MonoBehaviour
     public void SetColor(Color color)
     {
         this.color = Enumerable.Repeat<Color>(color, penSize * penSize).ToArray<Color>();
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            float[] array = new float[] { posX, posY };
+            stream.SendNext(array);
+        }
+        else
+        {
+            var test = stream.ReceiveNext();
+            Debug.Log(test);
+        }
     }
 }
