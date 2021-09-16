@@ -230,7 +230,7 @@ export class AudioComponent {
     console.log("------------------------ MIX AUDIO ------------------------");
     console.log("REMOTE STREAMS: ");
     console.log(this.remoteMediaStreams);
-    this.audioContext.listener.setOrientation(1, 0, 0, 0, 1, 0);
+    this.audioContext.listener.setOrientation(1, 0, 0, 0, 1.5, 0);
 
     // --------- Loop through remote audio streams ----------
     this.remoteMediaStreams.forEach( (stream) => {
@@ -290,4 +290,9 @@ export class AudioComponent {
     // ------------------------------------------------------
   }
   // --------------------------------------------------------------------
+  setUserOrientation( direction: number) :void{
+    console.log (direction);
+
+  }
+    
 }
