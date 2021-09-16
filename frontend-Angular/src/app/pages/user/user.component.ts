@@ -462,6 +462,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
           valueChange: function (e) {
           var color = e.isInvertedRange ? "#FF5722" : "#8BC34A";
         $("#slider").roundSlider({ "rangeColor": color, "tooltipColor": color });
+        console.log(e.value);
       }
   });
   
