@@ -449,6 +449,8 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       document.getElementById('Content').style.width = "100%";
       document.getElementById('TextChannelContent').style.width = "100%";
     }
+    
+    const component = this;
 
     $("#slider").roundSlider({
       sliderType: "min-range",
@@ -462,7 +464,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
           valueChange: function (e) {
           var color = e.isInvertedRange ? "#FF5722" : "#8BC34A";
         $("#slider").roundSlider({ "rangeColor": color, "tooltipColor": color });
-        console.log(e.value);
+        component.audioComponent.setUserOrientation(e.value);
       }
   });
   
