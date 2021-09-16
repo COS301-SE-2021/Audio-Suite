@@ -291,8 +291,20 @@ export class AudioComponent {
   // --------------------------------------------------------------------
   setUserOrientation( direction: number) :void{
     console.log (direction);
-      
-    this.audioContext.listener.setOrientation(1, 0, 0, 0, 1.5, 0);
+    
+    if ((direction >= 90 && direction <= 100) || (direction >= 0 && direction <= 11)){
+      this.audioContext.listener.setOrientation(0, 0, -1, 0, 1, 0);
+    }
+    else if (direction >= 12 && direction <= 37){
+      this.audioContext.listener.setOrientation(1, 0, 0, 0, 1, 0);
+    }
+    else if (direction >= 38 && direction <= 63){
+      this.audioContext.listener.setOrientation(0, 0, 1, 0, 1, 0);
+    }
+    else if (direction >= 64 && direction <= 89){
+      this.audioContext.listener.setOrientation(-1, 0, 0, 0, 1, 0);
+    }
+    
   }
     
 }
