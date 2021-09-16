@@ -41,16 +41,173 @@
     </div>
 
 
-    <div *ngIf="showModal ? formModal.show() : formModal.hide()" ></div>
-    <div 
+
+    <div
+    aria-hidden="true"
+    aria-labelledby="myModalLabel"
+    bsModal
+    class="modal fade modal-black"
+    #myModal2="bs-modal"
+    id="myModal2"
+    role="dialog"
+    tabindex="-1"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header justify-content-center">
+          <button
+            aria-hidden="true"
+            class="close"
+            data-dismiss="modal"
+            (click)="myModal2.hide()"
+            type="button"
+          >
+            <i class="tim-icons icon-simple-remove text-white"> </i>
+          </button>
+          <div class="text-muted text-center ml-auto mr-auto">
+            <h3 class="mb-0">Sign in with</h3>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="btn-wrapper text-center">
+            <a class="btn btn-neutral btn-icon mr-1" href="javascript:void(0)">
+              <img src="assets/img/github.svg" />
+            </a>
+            <a class="btn btn-neutral btn-icon" href="javascript:void(0)">
+              <img src="assets/img/google.svg" />
+            </a>
+          </div>
+          <div class="text-center text-muted mb-4 mt-3">
+            <small> Or sign in with credentials </small>
+          </div>
+          <form role="form">
+            <div class="form-group mb-3">
+              <div class="input-group input-group-alternative" [ngClass]="{'input-group-focus':focus1===true}">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="tim-icons icon-email-85"> </i>
+                  </span>
+                </div>
+                <input
+                  class="form-control"
+                  placeholder="Email"
+                  type="email"
+                  (focus)="focus1=true" (blur)="focus1=false"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group input-group-alternative" [ngClass]="{'input-group-focus':focus2===true}">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="tim-icons icon-key-25"> </i>
+                  </span>
+                </div>
+                <input
+                  class="form-control"
+                  placeholder="Password"
+                  type="password"
+                  (focus)="focus2=true" (blur)="focus2=false"
+                />
+              </div>
+            </div>
+            <div class="form-check mt-3">
+              <label class="form-check-label">
+                <input
+                  checked="checked"
+                  class="form-check-input"
+                  type="checkbox"
+                />
+
+                <span class="form-check-sign"> </span> Remember me!
+              </label>
+            </div>
+            <div class="text-center">
+              <button class="btn btn-primary my-4" type="button">
+                Sign in
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+    
+
+    <!-- <div *ngIf="showModal ? formModal.show() : formModal.hide()" ></div> -->
+    <!-- <div 
         aria-hidden="true"
         aria-labelledby="myModalLabel"
+        bsModal
         class="modal fade modal-black"
+        #formModal="bs-modal"
         id="formModal"
         role="dialog"
         tabindex="-1"
         >
-        <h3>Hello Hello Hello</h3>
-        
-    </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header justify-content-center">
+                    <button
+                        aria-hidden="true"
+                        class="close"
+                        data-dismiss="modal"
+                        (click)="hideFormModal()"
+                        type="button"
+                    >
+                        <i class="tim-icons icon-simple-remove text-white"> </i>
+                    </button>
+                    <div class="text-muted text-center ml-auto mr-auto">
+                        <h3 class="mb-0">Enter You OTP:</h3>
+                    </div>
+                </div>
+                <div class="modal-body">
+                <form role="form">
+                    <div *ngIf="otpAlert">
+                        <alert class="alert-with-icon" [type]="'primary alert-with-icon'">
+                            <span class=" tim-icons icon-trophy" data-notify="icon">
+                            </span>
+                            <span>
+                            <b>
+                                Error -
+                            </b>
+                            {{ otpMessage }}
+                            </span>
+                        </alert>
+                    </div>
+                    <div class="form-group mb-3">
+                        <div class="input-group input-group-alternative" [ngClass]="{'input-group-focus':focus6===true}">
+                            <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="tim-icons icon-email-85"> </i>
+                            </span>
+                            </div>
+                            <input
+                                class="form-control"
+                                placeholder="OTP"
+                                name="userOTPInput"
+                                [(ngModel)]="userOTPInput"
+                                type="text"
+                                (focus)="focus6=true" 
+                                (blur)="focus6=false"
+                            />
+                        </div>
+                    </div>
+                    <div class="text-center">
+                    <button 
+                        class="btn btn-success my-4" 
+                        type="button"
+                        (click)="validateOTP()"
+                    >
+                        Submit
+                    </button>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div> -->
 </div>

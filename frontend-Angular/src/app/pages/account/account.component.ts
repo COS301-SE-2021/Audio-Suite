@@ -37,7 +37,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
   focus3;
   focus4;
   focus5;
-  focus6
+  focus6;
   showModal = false;
 
   dragStartThreshold = 0;
@@ -149,6 +149,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       })
   
       this.showModal = true;
+      var formModal = document.getElementById('formModal').style.display = 'block';
     },
     (error) => {
       console.log(error);
