@@ -12,8 +12,8 @@ export class TimeTrackerUserController {
         @Body('description') description: string,
         @Body('projectID') projectID: number,
         @Body('tagID') tagID: number,
-        @Body('startTime') startTime: Date,
-        @Body('endTime') endTime: Date,
+        @Body('startTime') startTime: string,
+        @Body('endTime') endTime: string,
     ){
         return await this.timeTrackerUserService.addNewTimeTrackingInstance(
             jwt, 

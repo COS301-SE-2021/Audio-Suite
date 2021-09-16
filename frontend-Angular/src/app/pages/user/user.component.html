@@ -418,7 +418,7 @@
             <div class="timeTrackerContent" id="timeTrackerContent">
                 <div class="row">
                     <div class="col-lg-8 col-xl-8" style="height: 85vh">
-                        <div *ngIf="showTimeTrackerTab == 'dashboard'" class="TimeTrackDashboard" id="TimeTrackDashboard">
+                        <div *ngIf="showTimeTrackerTab == 'timeTracker'" class="TimeTrackDashboard" id="TimeTrackDashboard">
                             <div *ngIf="displayBigScreenTracker; then bigScreen else smallScreen"></div>
                             <ng-template #bigScreen>
                                 <div class="newTrackerForm">
@@ -629,7 +629,35 @@
                                 </div>
                             </ng-template>
                             <div class="userTimeTrackerList" id="userTimeTrackerList">
-    
+                                <div id="instanceListHeader">
+                                    <p id="instanceHeader">
+                                        Description
+                                    </p>
+                                    <p id="instanceHeaderDate">
+                                        Date
+                                    </p>
+                                    <p id="instanceHeaderDuration">
+                                        Duration
+                                    </p>
+                                </div>
+                                <div *ngFor="let instance of timeTrackingUserInstances">
+                                    <div class="instanceItem">
+                                        <p class="instanceDescription">
+                                            {{ instance.description }}
+                                        </p>
+                                        <button class="btn btn-success projectDisabledBtn" disabled>{{ instance.projectName }}</button>
+                                        <button class="btn btn-success tagDisabledBtn" disabled>{{ instance.tagName }}</button>
+                                        <p class="instanceDate">
+                                            {{ instance.date }}
+                                        </p>
+                                        <p class="instanceStartEnd">
+                                            {{ instance.startEnd }}
+                                        </p>
+                                        <p class="instanceDuration">
+                                            {{ instance.duration }}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div *ngIf="showTimeTrackerTab == 'projects'" class="TimeTrackProjects">
@@ -671,9 +699,11 @@
                                 </div>
                                 <div *ngFor="let project of timeTrackingProjects">
                                     <div class="projectItem">
-                                        <p class="projectName">
-                                            {{ project.project }}
-                                        </p>
+                                        <div class="projectNameDiv">
+                                            <p class="projectName">
+                                                {{ project.project }}
+                                            </p>
+                                        </div>
                                         <div class="spacer">
 
                                         </div>
@@ -739,9 +769,9 @@
                         <div id="timeTrackerOptions">
                             <button 
                                 class="sidebar-timeTrackerOption"
-                                (click)="setTimeTrackerTab('dashboard')"
+                                (click)="setTimeTrackerTab('timeTracker')"
                             >
-                                <i class="tim-icons icon-minimal-down"></i>  Dashboard
+                                <i class="tim-icons icon-minimal-down"></i>  Time Tracker
                             </button>
                             <button 
                                 class="sidebar-timeTrackerOption"
@@ -754,6 +784,12 @@
                                 (click)="setTimeTrackerTab('tags')"
                             >
                                 <i class="tim-icons icon-minimal-down"></i>  Tags
+                            </button>
+                            <button 
+                                class="sidebar-timeTrackerOption"
+                                (click)="setTimeTrackerTab('dashboard')"
+                            >
+                                <i class="tim-icons icon-minimal-down"></i>  Dashboard
                             </button>
                         </div>
                     </div>

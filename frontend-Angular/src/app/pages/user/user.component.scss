@@ -541,6 +541,9 @@
             p{
                 width: 100%;
                 height: 100%;
+                position: relative;
+                top: 25%;
+                font-size: medium;
             }
         } 
     }
@@ -637,6 +640,103 @@
         }
     }
 
+    #userTimeTrackerList{
+        #instanceListHeader{
+            display: inline-flex;
+            justify-content: left;
+            width: 95%;
+            //border-top: 1px solid white;
+            margin-top: 3%;
+            border-bottom: 1px solid white;
+
+            #instanceHeader{
+                width: 65%;
+                height: 100%;
+                padding-left: 3%;
+                text-align: left;   
+            }
+
+            #instanceHeaderDate{
+                width: 15%;
+                height: 100%;
+                padding-left: 0px;
+                text-align: center;   
+            }
+
+            #instanceHeaderDuration{
+                width: 20%;
+                height: 100%;
+                padding-left: 0px;
+                text-align: center;   
+            }
+        }
+
+        .instanceItem{
+            margin-top: 2%;
+            display: inline-flex;
+            justify-content: center;
+            width: 95%;
+            height: 5vh;
+            background-color: #141537;
+
+            .instanceDescription{
+                width: 45%;
+                height: 100%;
+                padding-left: 3%;
+                text-align: left;
+                position: relative;
+                top: 25%;
+                //word-wrap: break-word;
+
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .projectDisabledBtn{
+                width: 10%;
+                height: 100%;
+                margin-bottom: 0px;
+                padding-left: 10px;
+                padding-right: 10px;
+                text-align: center;
+            }
+
+            .tagDisabledBtn{
+                width: 10%;
+                height: 100%;
+                margin-bottom: 0px;
+                padding-left: 10px;
+                padding-right: 10px;
+                text-align: center;
+            }
+
+            .instanceDate{
+                width: 15%;
+                height: 100%;
+                text-align: center;
+                position: relative;
+                top: 25%;
+            }
+
+            .instanceStartEnd{
+                width: 10%;
+                height: 100%;
+                text-align: center;
+                position: relative;
+                top: 25%;
+            }
+
+            .instanceDuration{
+                width: 10%;
+                height: 100%;
+                text-align: center;
+                position: relative;
+                top: 25%;
+            }
+        }
+    }
+
     .TimeTrackProjects{
 
         .timeTrackerProjectForms{
@@ -706,19 +806,28 @@
                 display: inline-flex;
                 justify-content: center;
                 width: 95%;
+                height: 5vh;
                 background-color: #141537;
 
-                .projectName{
+                .projectNameDiv{
                     width: 75%;
                     height: 100%;
-                    padding-left: 3%;
-                    text-align: left;
-                    //word-wrap: break-word;
-
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                }
+                    .projectName{
+                        width: 100%;
+                        height: 100%;
+                        padding-left: 3%;
+                        text-align: left;
+                        margin-bottom: 0px;
+                        position: relative;
+                        top: 25%;
+                        
+                        //word-wrap: break-word;
+    
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                }   
 
                 .spacer{
                     width: 5%;
@@ -816,6 +925,7 @@
                 display: inline-flex;
                 justify-content: center;
                 width: 95%;
+                height: 5vh;
                 background-color: #141537;
 
                 .tagName{
@@ -823,6 +933,8 @@
                     height: 100%;
                     padding-left: 3%;
                     text-align: left;
+                    position: relative;
+                    top: 25%;
                     //word-wrap: break-word;
 
                     white-space: nowrap;

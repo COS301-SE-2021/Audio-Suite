@@ -29,8 +29,8 @@ export class TimeTrackingService {
     description: string, 
     projectID: number, 
     tagID: number, 
-    startTime: Date, 
-    endTime: Date
+    startTime: string, 
+    endTime: string
   ): Observable<any>{
     const body = {
       jwt: jwt,
