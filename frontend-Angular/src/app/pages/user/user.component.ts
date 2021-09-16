@@ -12,6 +12,8 @@ import { AudioComponent } from 'src/app/audio/audio.component';
 import { AngularAgoraRtcService, Stream, AgoraConfig } from 'angular-agora-rtc';
 import { KanbanService } from 'src/app/services/kanban.service';
 import { TimeTrackingService } from 'src/app/services/time-tracking.service';
+import * as $ from "jquery";
+import 'round-slider';
 
 interface Office{
   id: string,
@@ -447,6 +449,13 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       document.getElementById('Content').style.width = "100%";
       document.getElementById('TextChannelContent').style.width = "100%";
     }
+
+    $("#slider").roundSlider({
+      radius: 85,
+      sliderType: "default",
+      value: 40
+  });
+
   }
 
   getUserOfficeList(): void{
@@ -527,6 +536,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   async selectOffice(officeID, office, officeInvite, role){
     var officeId = sessionStorage.setItem('officeID', officeID);
     if(this.officeSelected){
+      
       if(this.selectedOffice != office){
         this.leaveOffice();
         this.layout = [];
