@@ -450,11 +450,23 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       document.getElementById('TextChannelContent').style.width = "100%";
     }
 
-    $("#slider").roundSlider({
-      radius: 85,
-      sliderType: "default",
-      value: 40
+    $("slider").roundSlider({
+      sliderType: "min-range",
+      radius: 130,
+      showTooltip: false,
+      width: 16,
+      value: 100,
+      handleSize: 0,
+      handleShape: "square",
+      circleShape: "full",
+          valueChange: function (e) {
+          var color = e.isInvertedRange ? "#FF5722" : "#8BC34A";
+        $("#slider").roundSlider({ "rangeColor": color, "tooltipColor": color });
+      }
   });
+  
+  var sliderObj = $("#slider").data("roundSlider");
+  sliderObj.setValue(25);
 
   }
 
