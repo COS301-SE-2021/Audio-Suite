@@ -1,48 +1,64 @@
 <div class="content">
 
+
     <div id="header">
-        <button id="back-button" (click)="userNav()"> Back </button>
+        <!-- <button id="back-button" (click)="userNav()"> Back </button> -->
+        <button id="back-button" (click)="userNav()" class="btn btn-default btn-round">Back</button>
         <h1 id="header-text"> Account Settings </h1>
     </div>
 
-    <div class="sections">
-        <h2 class="section-header">Edit Username</h2>
-        <h4 class="subheading" >Enter your new username below.</h4>
-        <input class="edit-input" id="update-username" type="text" placeholder={{userUsername}}>
-        <button class="section-button" (click)="updateUsername()" >Edit Username</button>
+    <div class="row">
+        <div class="new-sections">
+            <h2 class="section-header">Edit Username</h2>
+            <h4 class="subheading" >Enter your new username below.</h4>
+            <form>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="update-username" placeholder={{userUsername}}>
+                    <button type="submit" class="btn btn-primary" (click)="updateUsername()" >Edit Username</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="new-sections">
+            <h2 class="section-header">Edit Password</h2>
+            <h4 class="subheading" >Enter your new password below.</h4>
+            <form>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="update-password">
+                    <button type="submit" class="btn btn-primary" (click)="updatePassword()" >Edit Password</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <br>
 
-    <div class="sections">
-        <h2 class="section-header">Edit Password</h2>
-        <h4 class="subheading" >Enter your new password below.</h4>
-        <input class="edit-input" id="update-password" type="text" >
-        <button class="section-button" (click)="updatePassword()" >Edit Password</button>
-    </div>
+    <div class="row">
+        <div class="new-sections">
+            <h2 class="section-header">Change Email</h2>
+            <h4 class="subheading" >Enter your new email below.</h4>
+            <form>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="update-password">
+                    <button type="submit" class="btn btn-primary" (click)="updateEmail()" >Change Email</button>
+                </div>
+            </form>
+        </div>
 
-    <br>
-
-    <div class="sections">
-        <h2 class="section-header">Change Email</h2>
-        <h4 class="subheading" id="email-sub" >Enter your new email below.</h4>
-        <input class="edit-input" id="update-email" type="text" placeholder={{userEmail}}>
-        <button class="section-button" (click)="updateEmail()" >Change Email</button>
-    </div>
-
-    <br>
-
-    <div class="sections">
-        <h2 class="section-header-delete">Delete Account</h2>
-        <h4 class="subheading">Please be careful. All data saved on this account will not be retrievable once 
-            you delete your account.
-        </h4>
-        <button class="section-button" (click)="deleteUser()" >Delete</button>
+        <div class="new-sections">
+            <h2 class="section-header">Delete Account</h2>
+            <h4 class="subheading">All data saved on this account will not be retrievable once you delete your account.</h4>
+            <form>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" (click)="deleteUser()" >Delete</button>
+                </div>
+            </form>
+        </div>
     </div>
 
 
 
-    <div
+    <!-- <div
     aria-hidden="true"
     aria-labelledby="myModalLabel"
     bsModal
@@ -131,7 +147,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
 
 

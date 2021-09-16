@@ -93,6 +93,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     var jwt = sessionStorage.getItem('jwt');
     // var newUsername = document.getElementById('update-username').value;
     var newUsername = (<HTMLInputElement>document.getElementById('update-username')).value;
+    console.log(newUsername);
 
     this.userService.getUserDetails(jwt).subscribe((response) => {
       this.userID = response.id;
@@ -149,7 +150,6 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       })
   
       this.showModal = true;
-      var formModal = document.getElementById('formModal').style.display = 'block';
     },
     (error) => {
       console.log(error);
