@@ -771,7 +771,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
           this.selectedRoom = id;
           var jwt = sessionStorage.getItem('jwt');
           this.textChannelsService.joinRoom(jwt, this.selectedOfficeID, this.selectedOffice, id, true);
-          this.audioComponent.join(this.userID, this.selectedOfficeID, this.selectedRoom, this.selectedOffice);
+          setTimeout(() => {this.audioComponent.join(this.userID, this.selectedOfficeID, this.selectedRoom, this.selectedOffice)}, 2000);
         }
       }
       else{
@@ -779,7 +779,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         this.selectedRoom = id;
         var jwt = sessionStorage.getItem('jwt');
         this.textChannelsService.joinRoom(jwt, this.selectedOfficeID, this.selectedOffice, id, true);
-        this.audioComponent.join(this.userID, this.selectedOfficeID, this.selectedRoom, this.selectedOffice);
+        setTimeout(() => {this.audioComponent.join(this.userID, this.selectedOfficeID, this.selectedRoom, this.selectedOffice)}, 2000);
       }
     }
   }
