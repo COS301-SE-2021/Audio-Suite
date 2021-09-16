@@ -550,3 +550,7 @@
 #slider .rs-path-color  {
   background-color: #000;
 }
+
+#slider .rs-border {
+  border-color: #000;
+}
