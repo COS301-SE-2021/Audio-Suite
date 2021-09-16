@@ -450,11 +450,11 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       document.getElementById('TextChannelContent').style.width = "100%";
     }
 
-    $("slider").roundSlider({
+    $("#slider").roundSlider({
       sliderType: "min-range",
       radius: 130,
       showTooltip: false,
-      width: 16,
+      width: 25,
       value: 100,
       handleSize: 0,
       handleShape: "square",
