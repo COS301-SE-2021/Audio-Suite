@@ -449,7 +449,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       document.getElementById('Content').style.width = "100%";
       document.getElementById('TextChannelContent').style.width = "100%";
     }
-    
+
     const component = this;
 
     $("#slider").roundSlider({
@@ -457,19 +457,18 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       radius: 130,
       showTooltip: false,
       width: 25,
-      value: 100,
+      //value: 100,
       handleSize: 0,
       handleShape: "square",
       circleShape: "full",
+      value: 100,
+      startAngle: 90,
           valueChange: function (e) {
           var color = e.isInvertedRange ? "#FF5722" : "#8BC34A";
         $("#slider").roundSlider({ "rangeColor": color, "tooltipColor": color });
         component.audioComponent.setUserOrientation(e.value);
       }
   });
-  
-  var sliderObj = $("#slider").data("roundSlider");
-  sliderObj.setValue(25);
 
   }
 
