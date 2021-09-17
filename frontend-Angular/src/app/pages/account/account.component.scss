@@ -15,9 +15,13 @@
     display: flex;
     justify-content: center;
     position: relative;
+	padding-top:22px;
 }
+
 .row{
 	position: relative;
+	margin-right: 0;
+	margin-left: 0;
 }
 
 #back-button{
@@ -28,6 +32,8 @@
     height: 41px;
 	text-align: center;
 	padding-right: 75px;
+	margin-top: 22px;
+	// margin-left: 35px;
 }
 
 // #back-button {
