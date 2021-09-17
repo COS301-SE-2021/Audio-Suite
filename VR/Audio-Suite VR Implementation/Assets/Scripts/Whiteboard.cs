@@ -91,12 +91,14 @@ public class Whiteboard : MonoBehaviour, IPunObservable
     {
         if (stream.IsWriting)
         {
+            Debug.Log("I am drawing");
             stream.SendNext(touching);
             stream.SendNext(posX);
             stream.SendNext(posY);
         }
         else
         {
+            Debug.Log("I am not drawing");
             touching = (bool)stream.ReceiveNext();
             posX = (float)stream.ReceiveNext();
             posY = (float)stream.ReceiveNext();
