@@ -63,7 +63,7 @@ public class Whiteboard : MonoBehaviour, IPunObservable
         this.lastX = (float)x;
         this.lastY = (float)y;
 
-        Debug.Log(touchingLast);
+        Debug.Log(touching);
         this.touchingLast = this.touching;
 
         if (photonViewPen.IsMine)
@@ -95,14 +95,14 @@ public class Whiteboard : MonoBehaviour, IPunObservable
             Debug.Log("I am drawing");
             stream.SendNext(posX);
             stream.SendNext(posY);
-            stream.SendNext(touchingLast);
+            stream.SendNext(touching);
         }
         else
         {
             Debug.Log("I am not drawing");
             posX = (float)stream.ReceiveNext();
             posY = (float)stream.ReceiveNext();
-            touchingLast = (bool)stream.ReceiveNext();
+            touching = (bool)stream.ReceiveNext();
         }
     }
 }
