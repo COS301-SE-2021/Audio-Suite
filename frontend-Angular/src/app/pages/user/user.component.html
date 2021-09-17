@@ -321,8 +321,9 @@
                     <div class="col-lg-5 col-xl-5" style="height: 85vh">
                         <div id="UserRoomList-content">
                             <div *ngFor="let roomUserItem of roomUsersList">
-                                <button id="sidebar-roomHeader" (click)="toggleRoomListView(roomUserItem.IconID, roomUserItem.UserListID)">
-                                    <i id={{roomUserItem.IconID}} class="tim-icons icon-minimal-down"></i>  {{roomUserItem.Room}}
+                                <button id="sidebar-roomHeader"  class="underline" (click)="toggleRoomListView(roomUserItem.IconID, roomUserItem.UserListID)">
+                                    <!-- <i id={{roomUserItem.IconID}} class="tim-icons icon-minimal-down"></i>  {{roomUserItem.Room}} -->
+                                    <span>{{roomUserItem.Room}}</span><svg viewBox="0 0 13 20"><polyline points="0.5 19.5 3 19.5 12.5 10 3 0.5" /></svg>
                                 </button>
                                 <div id={{roomUserItem.UserListID}} class="userNameInRoomUserList" *ngFor="let user of roomUserItem.RoomUsers">
                                     <p
@@ -770,29 +771,35 @@
                     <div class="col-lg-4 col-xl-4" style="height: 85vh">
                         <div id="timeTrackerOptions">
                             <button 
-                                class="sidebar-timeTrackerOption"
+                                class="sidebar-timeTrackerOption underline"
+                                style="color: white;"
                                 (click)="setTimeTrackerTab('timeTracker')"
                             >
-                                <i class="tim-icons icon-minimal-down"></i>  Time Tracker
+                                <!-- <i class="tim-icons icon-minimal-down"></i>  Time Tracker -->
+                                <span>Time Tracker</span><svg viewBox="0 0 13 20"><polyline points="0.5 19.5 3 19.5 12.5 10 3 0.5" /></svg>
                             </button>
                             <button 
-                                class="sidebar-timeTrackerOption"
+                                class="sidebar-timeTrackerOption underline"
+                                style="color: white;"
                                 (click)="setTimeTrackerTab('projects')"
                             >
-                                <i class="tim-icons icon-minimal-down"></i>  Projects
+                                <!-- <i class="tim-icons icon-minimal-down"></i>  Projects -->
+                                <span>Projects</span><svg viewBox="0 0 13 20"><polyline points="0.5 19.5 3 19.5 12.5 10 3 0.5" /></svg>
                             </button>
                             <button 
-                                class="sidebar-timeTrackerOption"
+                                class="sidebar-timeTrackerOption underline"
+                                style="color: white;"
                                 (click)="setTimeTrackerTab('tags')"
                             >
-                                <i class="tim-icons icon-minimal-down"></i>  Tags
+                                <!-- <i class="tim-icons icon-minimal-down"></i>  Tags -->
+                                <span>Tags</span><svg viewBox="0 0 13 20"><polyline points="0.5 19.5 3 19.5 12.5 10 3 0.5" /></svg>
                             </button>
-                            <button 
+                            <!-- <button 
                                 class="sidebar-timeTrackerOption"
                                 (click)="setTimeTrackerTab('dashboard')"
                             >
                                 <i class="tim-icons icon-minimal-down"></i>  Dashboard
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                 </div>
