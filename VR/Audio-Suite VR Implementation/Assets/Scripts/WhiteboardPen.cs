@@ -8,11 +8,12 @@ public class WhiteboardPen : MonoBehaviour
     public GameObject pen;
 
     private RaycastHit touch;
+    private PhotonView photonView;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        photonView = GetComponent<PhotonView>(); 
     }
 
     // Update is called once per frame
@@ -36,7 +37,10 @@ public class WhiteboardPen : MonoBehaviour
         }
         else
         {
-            this.whiteboard.ToggleTouch(false);
+            if (photonView.IsMine)
+            {
+                this.whiteboard.ToggleTouch(false);
+            }
         }
     }
 }
