@@ -66,7 +66,6 @@ public class Whiteboard : MonoBehaviour, IPunObservable
     public void ToggleTouch(bool touching)
     {
         this.touching = touching;
-        photonView.RequestOwnership();
     }
 
     public void SetTouchPosition(float x, float y)
@@ -84,12 +83,14 @@ public class Whiteboard : MonoBehaviour, IPunObservable
     {
         if (stream.IsWriting)
         {
+            stream.SendNext(this.color);
             stream.SendNext(posX);
             stream.SendNext(posY);
             stream.SendNext(touchingLast);
         }
         else
         {
+            color = (Color[])stream.ReceiveNext();
             posX = (float)stream.ReceiveNext();
             posY = (float)stream.ReceiveNext();
             touchingLast = (bool)stream.ReceiveNext();
