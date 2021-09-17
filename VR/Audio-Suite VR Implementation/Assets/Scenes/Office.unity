@@ -2612,6 +2612,7 @@ GameObject:
   - component: {fileID: 1414740414}
   - component: {fileID: 1414740412}
   - component: {fileID: 1414740413}
+  - component: {fileID: 1414740417}
   m_Layer: 0
   m_Name: Whiteboard
   m_TagString: Whiteboard
@@ -2635,7 +2636,7 @@ MonoBehaviour:
   penSize: 10
   texture: {fileID: 0}
   color: []
-  pen: {fileID: 0}
+  pen: {fileID: 255731430}
 --- !u!64 &1414740413
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2711,6 +2712,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1414740417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414740411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 1
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 1414740412}
+  sceneViewId: 3
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1499164582
 GameObject:
   m_ObjectHideFlags: 0

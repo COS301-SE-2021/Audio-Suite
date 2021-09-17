@@ -17,7 +17,8 @@ public class Whiteboard : MonoBehaviour, IPunObservable
     private float lastX, lastY;
 
     public GameObject pen;
-    private PhotonView photonView;
+    private PhotonView photonViewWhiteboard;
+    private PhotonView photonViewPen;
 
     // Start is called before the first frame update
     void Start()
@@ -26,14 +27,16 @@ public class Whiteboard : MonoBehaviour, IPunObservable
         texture = new Texture2D(textureSize, textureSize);
         renderer.material.mainTexture = texture;
 
+        photonViewWhiteboard = GetComponent<PhotonView>();
+        photonViewPen = pen.GetComponent<PhotonView>();
         AddObservable();
     }
 
     private void AddObservable()
     {
-        if (!photonView.ObservedComponents.Contains(this))
+        if (!photonViewWhiteboard.ObservedComponents.Contains(this))
         {
-            photonView.ObservedComponents.Add(this);
+            photonViewWhiteboard.ObservedComponents.Add(this);
         }
     }
 
@@ -61,6 +64,11 @@ public class Whiteboard : MonoBehaviour, IPunObservable
         this.lastY = (float)y;
 
         this.touchingLast = this.touching;
+
+        if (photonViewPen.IsMine)
+        {
+            photonViewWhiteboard.RequestOwnership();
+        }
     }
 
     public void ToggleTouch(bool touching)
@@ -81,8 +89,10 @@ public class Whiteboard : MonoBehaviour, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
+        Debug.Log("Photon Called");
         if (stream.IsWriting)
         {
+            Debug.Log("I am drawing");
             stream.SendNext(this.color);
             stream.SendNext(posX);
             stream.SendNext(posY);
@@ -90,13 +100,11 @@ public class Whiteboard : MonoBehaviour, IPunObservable
         }
         else
         {
-            if (!photonView.IsMine)
-            {
-                color = (Color[])stream.ReceiveNext();
-                posX = (float)stream.ReceiveNext();
-                posY = (float)stream.ReceiveNext();
-                touchingLast = (bool)stream.ReceiveNext();
-            }
+            Debug.Log("Im not drawing");
+            color = (Color[])stream.ReceiveNext();
+            posX = (float)stream.ReceiveNext();
+            posY = (float)stream.ReceiveNext();
+            touchingLast = (bool)stream.ReceiveNext();
         }
     }
 }
