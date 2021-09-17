@@ -93,6 +93,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     var jwt = sessionStorage.getItem('jwt');
     // var newUsername = document.getElementById('update-username').value;
     var newUsername = (<HTMLInputElement>document.getElementById('update-username')).value;
+    var message = (<HTMLInputElement>document.getElementById('username-sub'));
     console.log(newUsername);
 
     this.userService.getUserDetails(jwt).subscribe((response) => {
@@ -102,6 +103,9 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       this.userUsername = response.userName;
       this.userEmail = response.email;
       this.userService.updateUsername(jwt, this.userID, String(newUsername)).subscribe((response) => {
+        message.style.color = '#e14eca' ;
+        message.innerText = "Username changed successful.";
+        location.reload();
         // this.userID = response.id;
         // this.userFirstName = response.firstName;
         // this.userLastName = response.lastName;
@@ -144,29 +148,10 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       this.userUsername = response.userName;
       this.userEmail = response.email;
 
-      this.userService.sendOTPVerificationEmail(this.userEmail, this.userUsername).subscribe(response => {
-        console.log(response)
-        this.otp = response.otp;
-      })
-  
-      this.showModal = true;
-    },
-    (error) => {
-      console.log(error);
-    })
-  }
-
-  hideFormModal(): void{
-    this.showModal = false;
-  }
-
-  validateOTP(): void{
-    var jwt = sessionStorage.getItem('jwt');
-    if(this.otp == this.userOTPInput)
-    {
-       this.showModal = false;
-       
-       this.userService.updateEmail(jwt, this.userID, String(this.newEmail)).subscribe((response) => {
+      this.userService.updateEmail(jwt, this.userID, String(this.newEmail)).subscribe((response) => {
+        message.style.color = '#e14eca' ;
+        message.innerText = "Email changed successful.";
+        location.reload();
         // this.userID = response.id;
         // this.userFirstName = response.firstName;
         // this.userLastName = response.lastName;
@@ -176,13 +161,46 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       (error) => {
         console.log(error);
       })
-    }
-    else
-    {
-      this.otpMessage = "Incorrect otp entered, Please try again.";
-      this.otpAlert = true;
-    }
+
+      // this.userService.sendOTPVerificationEmail(this.userEmail, this.userUsername).subscribe(response => {
+      //   console.log(response)
+      //   this.otp = response.otp;
+      // })
+  
+      // this.showModal = true;
+    },
+    (error) => {
+      console.log(error);
+    })
   }
+
+  // hideFormModal(): void{
+  //   this.showModal = false;
+  // }
+
+  // validateOTP(): void{
+  //   var jwt = sessionStorage.getItem('jwt');
+  //   if(this.otp == this.userOTPInput)
+  //   {
+  //      this.showModal = false;
+       
+  //      this.userService.updateEmail(jwt, this.userID, String(this.newEmail)).subscribe((response) => {
+  //       // this.userID = response.id;
+  //       // this.userFirstName = response.firstName;
+  //       // this.userLastName = response.lastName;
+  //       // this.userUsername = response.userName;
+  //       // this.userEmail = response.email;
+  //     },
+  //     (error) => {
+  //       console.log(error);
+  //     })
+  //   }
+  //   else
+  //   {
+  //     this.otpMessage = "Incorrect otp entered, Please try again.";
+  //     this.otpAlert = true;
+  //   }
+  // }
 
 
 
@@ -196,6 +214,7 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
     var jwt = sessionStorage.getItem('jwt');
     // var newUsername = document.getElementById('update-username').value;
     var newPassword = (<HTMLInputElement>document.getElementById('update-password')).value;
+    var message = (<HTMLInputElement>document.getElementById('password-sub'));
 
     this.userService.getUserDetails(jwt).subscribe((response) => {
       this.userID = response.id;
@@ -204,6 +223,9 @@ export class AccountComponent implements OnInit, OnDestroy, AfterViewInit {
       this.userUsername = response.userName;
       this.userEmail = response.email;
       this.userService.updatePassword(jwt, this.userID, String(newPassword)).subscribe((response) => {
+        message.style.color = '#e14eca' ;
+        message.innerText = "Password changed successful.";
+        location.reload();
         // this.userID = response.id;
         // this.userFirstName = response.firstName;
         // this.userLastName = response.lastName;

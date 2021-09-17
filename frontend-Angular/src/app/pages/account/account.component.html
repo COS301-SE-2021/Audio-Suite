@@ -10,7 +10,7 @@
     <div class="row">
         <div class="new-sections">
             <h2 class="section-header">Edit Username</h2>
-            <h4 class="subheading" >Enter your new username below.</h4>
+            <h4 id="username-sub" class="subheading" >Enter your new username below.</h4>
             <form>
                 <div class="form-group">
                     <input type="text" class="form-control" id="update-username" placeholder={{userUsername}}>
@@ -21,7 +21,7 @@
 
         <div class="new-sections">
             <h2 class="section-header">Edit Password</h2>
-            <h4 class="subheading" >Enter your new password below.</h4>
+            <h4 id="password-sub" class="subheading" >Enter your new password below.</h4>
             <form>
                 <div class="form-group">
                     <input type="text" class="form-control" id="update-password">
@@ -36,10 +36,10 @@
     <div class="row">
         <div class="new-sections">
             <h2 class="section-header">Change Email</h2>
-            <h4 class="subheading" >Enter your new email below.</h4>
+            <h4 id="email-sub" class="subheading" >Enter your new email below.</h4>
             <form>
                 <div class="form-group">
-                    <input type="text" class="form-control" id="update-password">
+                    <input type="text" class="form-control" id="update-email" placeholder={{userEmail}}>
                     <button type="submit" class="btn btn-primary" (click)="updateEmail()" >Change Email</button>
                 </div>
             </form>
