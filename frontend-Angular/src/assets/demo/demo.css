@@ -513,3 +513,44 @@
   content: "";
   background: rgba(0, 0, 0, .5);
 }
+
+#slider {
+  transform: scale(0.5, 0.5);
+}
+
+#slider .rs-handle  {
+  background-color: transparent;
+  border: 8px solid transparent;
+  border-right-color: red;
+  margin: -8px 0 0 14px !important;
+}
+#slider .rs-handle:before  {
+  display: block;
+  content: " ";
+  position: absolute;
+  height: 12px;
+  width: 12px;
+  background: red;
+  right: -6px;
+  bottom: -6px;
+  border-radius: 100%;
+}
+#slider .rs-handle:after  {
+  display: block;
+  content: " ";
+  width: 103px;
+  position: absolute;
+  top: -4px;
+  right: 0px;
+  border-top: 10px solid red;
+}
+#slider .rs-range-color  {
+  background-color: #000;
+}
+#slider .rs-path-color  {
+  background-color: #000;
+}
+
+#slider .rs-border {
+  border-color: #000;
+}

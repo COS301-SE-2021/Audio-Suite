@@ -1,6 +1,7 @@
 <!-- sidebar -->
 <div class="sidebar" id="Sidebar">
     <h1 id='sidebar-title' >Audio Suite</h1>
+    <div id="slider"></div>
 
     <button id="sidebar-officeHeader" (click)="toggleOfficeListView()">
         <i id="officeListIcon" class="tim-icons icon-minimal-down"></i>  Offices:
@@ -35,6 +36,7 @@
     </div>
 
     <div *ngIf="officeSelected">
+        
         <br>
         <button id="sidebar-officeHeader" (click)="toggleOfficeSettingsListView()">
             <i id="officeSettingsListIcon" class="tim-icons icon-minimal-down"></i> Office Settings:

@@ -12,6 +12,8 @@ import { AudioComponent } from 'src/app/audio/audio.component';
 import { AngularAgoraRtcService, Stream, AgoraConfig } from 'angular-agora-rtc';
 import { KanbanService } from 'src/app/services/kanban.service';
 import { TimeTrackingService } from 'src/app/services/time-tracking.service';
+import * as $ from "jquery";
+import 'round-slider';
 
 interface Office{
   id: string,
@@ -447,6 +449,27 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       document.getElementById('Content').style.width = "100%";
       document.getElementById('TextChannelContent').style.width = "100%";
     }
+
+    const component = this;
+
+    $("#slider").roundSlider({
+      sliderType: "min-range",
+      radius: 130,
+      showTooltip: false,
+      width: 25,
+      //value: 100,
+      handleSize: 0,
+      handleShape: "square",
+      circleShape: "full",
+      value: 100,
+      startAngle: 90,
+          valueChange: function (e) {
+          var color = e.isInvertedRange ? "#FF5722" : "#8BC34A";
+        $("#slider").roundSlider({ "rangeColor": color, "tooltipColor": color });
+        component.audioComponent.setUserOrientation(e.value);
+      }
+  });
+
   }
 
   getUserOfficeList(): void{
@@ -527,6 +550,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   async selectOffice(officeID, office, officeInvite, role){
     var officeId = sessionStorage.setItem('officeID', officeID);
     if(this.officeSelected){
+      
       if(this.selectedOffice != office){
         this.leaveOffice();
         this.layout = [];
@@ -565,7 +589,6 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.getRoomUsersByOfficeID(jwt, officeID);
 
-        //this.audioComponent.join(this.userID, officeID);
         this.selectedOffice = office;
         this.selectedOfficeID = officeID;
         this.selectedOfficeInvite = officeInvite;
@@ -613,7 +636,6 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
       this.getRoomUsersByOfficeID(jwt, officeID)
 
-      //this.audioComponent.join(this.userID, officeID);
       this.selectedOffice = office;
       this.selectedOfficeID = officeID;
       this.selectedOfficeInvite = officeInvite;
@@ -773,7 +795,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
           this.selectedRoom = id;
           var jwt = sessionStorage.getItem('jwt');
           this.textChannelsService.joinRoom(jwt, this.selectedOfficeID, this.selectedOffice, id, true);
-          this.audioComponent.join(this.userID, this.selectedOfficeID, this.selectedRoom);
+          setTimeout(() => {this.audioComponent.join(this.userID, this.selectedOfficeID, this.selectedRoom, this.selectedOffice)}, 2000);
         }
       }
       else{
@@ -781,7 +803,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         this.selectedRoom = id;
         var jwt = sessionStorage.getItem('jwt');
         this.textChannelsService.joinRoom(jwt, this.selectedOfficeID, this.selectedOffice, id, true);
-        this.audioComponent.join(this.userID, this.selectedOfficeID, this.selectedRoom);
+        setTimeout(() => {this.audioComponent.join(this.userID, this.selectedOfficeID, this.selectedRoom, this.selectedOffice)}, 2000);
       }
     }
   }
