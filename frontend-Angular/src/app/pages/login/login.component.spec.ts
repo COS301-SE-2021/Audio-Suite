@@ -24,6 +24,13 @@ describe('LoginComponent', () => {
           response: 'Success',
           jwt: "hgdskljhjglksdhglksdh893etylksddh9834ty.gshuis"
         })
+      },
+
+      getUserDetails(jwt: string): Observable<any>{
+        return of({
+          Response: "Success",
+          
+        })
       }
     };
 
