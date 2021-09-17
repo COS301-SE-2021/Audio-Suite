@@ -410,6 +410,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.getRoomUsersByOfficeID(jwt, this.selectedOfficeID);
     })
 
+
     window.addEventListener("resize", () => {
       if(window.innerWidth < 800){
         document.getElementById('Sidebar').style.display = "none";
@@ -450,26 +451,25 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       document.getElementById('TextChannelContent').style.width = "100%";
     }
 
-    const component = this;
+    // const component = this;
 
-    $("#slider").roundSlider({
-      sliderType: "min-range",
-      radius: 130,
-      showTooltip: false,
-      width: 25,
-      //value: 100,
-      handleSize: 0,
-      handleShape: "square",
-      circleShape: "full",
-      value: 100,
-      startAngle: 90,
-          valueChange: function (e) {
-          var color = e.isInvertedRange ? "#FF5722" : "#8BC34A";
-        $("#slider").roundSlider({ "rangeColor": color, "tooltipColor": color });
-        component.audioComponent.setUserOrientation(e.value);
-      }
-  });
-
+    // $("#slider").roundSlider({
+    //   sliderType: "min-range",
+    //   radius: 130,
+    //   showTooltip: false,
+    //   width: 25,
+    //   //value: 100,
+    //   handleSize: 0,
+    //   handleShape: "square",
+    //   circleShape: "full",
+    //   value: 100,
+    //   startAngle: 90,
+    //       valueChange: function (e) {
+    //       var color = e.isInvertedRange ? "#FF5722" : "#8BC34A";
+    //       $("#slider").roundSlider({ "rangeColor": color, "tooltipColor": color });
+    //       component.audioComponent.setUserOrientation(e.value);
+    //     }
+    // });
   }
 
   getUserOfficeList(): void{
@@ -646,6 +646,37 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.setListData();
       this.getOfficeProjectList();
     }
+  }
+
+  showChangeOrientation(){
+    document.getElementById('sidebar-openOrientationHeader').style.display = "none";
+    document.getElementById('sidebar-closeOrientationHeader').style.display = "block";
+    document.getElementById('slider').style.display = "block";
+    const component = this;
+
+    $("#slider").roundSlider({
+      sliderType: "min-range",
+      radius: 130,
+      showTooltip: false,
+      width: 25,
+      //value: 100,
+      handleSize: 0,
+      handleShape: "square",
+      circleShape: "full",
+      value: 100,
+      startAngle: 90,
+          valueChange: function (e) {
+          var color = e.isInvertedRange ? "#FF5722" : "#8BC34A";
+          $("#slider").roundSlider({ "rangeColor": color, "tooltipColor": color });
+          component.audioComponent.setUserOrientation(e.value);
+        }
+    });
+  }
+
+  hideChangeOrientation(){
+    document.getElementById('sidebar-openOrientationHeader').style.display = "block";
+    document.getElementById('sidebar-closeOrientationHeader').style.display = "none";
+    document.getElementById('slider').style.display = "none";
   }
 
   async getRoomUsersByOfficeID(jwt: string, officeID: number){

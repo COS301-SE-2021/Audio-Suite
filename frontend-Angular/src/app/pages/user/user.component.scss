@@ -339,6 +339,43 @@
         background: #171941;
         box-shadow: inset 20px 20px 60px #141537,
                     inset -20px -20px 60px #1a1d4b;
+
+        #sidebar-openOrientationHeader{
+            color: white;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            padding-left: 12%;
+            padding-top: 5%;
+            width: 100%;
+            text-align:start;
+            cursor: pointer;
+            padding-bottom: 5%;
+            border-bottom: 1px solid white;
+
+            .icon-minimal-down{
+                font-size: small;
+            }
+        }
+
+        #sidebar-closeOrientationHeader{
+            display: none;
+            color: white;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            padding-left: 12%;
+            padding-top: 5%;
+            width: 100%;
+            text-align:start;
+            cursor: pointer;
+            padding-bottom: 5%;
+            border-bottom: 1px solid white;
+
+            .icon-minimal-down{
+                font-size: small;
+            }
+        }
         
         #sidebar-roomHeader{
             color: white;
