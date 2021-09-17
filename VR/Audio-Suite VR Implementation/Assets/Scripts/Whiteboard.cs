@@ -16,6 +16,7 @@ public class Whiteboard : MonoBehaviour, IPunObservable
     private float posX, posY;
     private float lastX, lastY;
 
+    public GameObject pen;
     private PhotonView photonView;
 
     // Start is called before the first frame update
@@ -25,7 +26,6 @@ public class Whiteboard : MonoBehaviour, IPunObservable
         texture = new Texture2D(textureSize, textureSize);
         renderer.material.mainTexture = texture;
 
-        photonView = GetComponent<PhotonView>();
         AddObservable();
     }
 
@@ -90,10 +90,13 @@ public class Whiteboard : MonoBehaviour, IPunObservable
         }
         else
         {
-            color = (Color[])stream.ReceiveNext();
-            posX = (float)stream.ReceiveNext();
-            posY = (float)stream.ReceiveNext();
-            touchingLast = (bool)stream.ReceiveNext();
+            if (!photonView.IsMine)
+            {
+                color = (Color[])stream.ReceiveNext();
+                posX = (float)stream.ReceiveNext();
+                posY = (float)stream.ReceiveNext();
+                touchingLast = (bool)stream.ReceiveNext();
+            }
         }
     }
 }
