@@ -50,7 +50,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             // Spawn player prefab
             spawnedPlayer = PhotonNetwork.Instantiate("Network Player VR", new Vector3(0f, 0f, 0f), Quaternion.identity, 0);
-
         }
     }
 
