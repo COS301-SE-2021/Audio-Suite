@@ -89,20 +89,17 @@ public class Whiteboard : MonoBehaviour, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        Debug.Log("Photon Called");
         if (stream.IsWriting)
         {
-            Debug.Log("I am drawing");
+            stream.SendNext(touching);
             stream.SendNext(posX);
             stream.SendNext(posY);
-            stream.SendNext(touchingLast);
         }
         else
         {
-            Debug.Log("Im not drawing");
+            touching = (bool)stream.ReceiveNext();
             posX = (float)stream.ReceiveNext();
             posY = (float)stream.ReceiveNext();
-            touchingLast = (bool)stream.ReceiveNext();
         }
     }
 }
