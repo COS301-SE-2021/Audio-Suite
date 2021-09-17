@@ -15,13 +15,13 @@ public class XRGrabNetworkInteractable : XRGrabInteractable
 
     protected override void OnSelectEntered(XRBaseInteractor interactor)
     {
-        Application.Quit();
+        photonView.RequestOwnership();
         base.OnSelectEntered(interactor);
     }
 
     protected override void OnSelectEntering(XRBaseInteractor interactor)
     {
-        Application.Quit();
+        photonView.RequestOwnership();
         base.OnSelectEntering(interactor);
     }
 }
