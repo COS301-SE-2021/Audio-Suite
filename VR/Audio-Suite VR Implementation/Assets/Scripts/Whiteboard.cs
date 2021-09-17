@@ -93,7 +93,6 @@ public class Whiteboard : MonoBehaviour, IPunObservable
         if (stream.IsWriting)
         {
             Debug.Log("I am drawing");
-            stream.SendNext(this.color);
             stream.SendNext(posX);
             stream.SendNext(posY);
             stream.SendNext(touchingLast);
@@ -101,7 +100,6 @@ public class Whiteboard : MonoBehaviour, IPunObservable
         else
         {
             Debug.Log("Im not drawing");
-            color = (Color[])stream.ReceiveNext();
             posX = (float)stream.ReceiveNext();
             posY = (float)stream.ReceiveNext();
             touchingLast = (bool)stream.ReceiveNext();
