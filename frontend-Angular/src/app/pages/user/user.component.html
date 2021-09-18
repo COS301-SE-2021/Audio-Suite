@@ -35,6 +35,7 @@
     </div>
 
     <div *ngIf="officeSelected">
+        
         <br>
         <button id="sidebar-officeHeader" (click)="toggleOfficeSettingsListView()">
             <i id="officeSettingsListIcon" class="tim-icons icon-minimal-down"></i> Office Settings:
@@ -100,6 +101,43 @@
     <button id="showTaskBar" (click)="toggleSidebar()">
         <i class="tim-icons icon-align-center"></i>
     </button>
+    <!-- GlobalAlert -->
+    <!-- Success Alert -->
+    <alert 
+        *ngIf="showSuccessGlobalAlert" 
+        class="alert-with-icon" 
+        [type]="'success alert-with-icon'" 
+        style="width: 75%; margin-left: 15%; margin-bottom: 5px; margin-top: 16px; z-index: 5;" 
+        [dismissible]="true"
+        (click)="closeAlert()"
+        >
+        <span class="tim-icons icon-trophy" data-notify="icon">
+        </span>
+        <span>
+        <b>
+            {{ globalAlertType }}
+        </b>
+        {{ globalAlertMsg }}
+        </span>
+    </alert>
+    <!-- Primary Alert -->
+    <alert 
+        *ngIf="showPrimaryGlobalAlert" 
+        class="alert-with-icon" 
+        [type]="'primary alert-with-icon'" 
+        style="width: 75%; margin-left: 15%; margin-bottom: 5px; margin-top: 16px; z-index: 5;" 
+        [dismissible]="true"
+        (click)="closeAlert()"
+        >
+        <span class="tim-icons icon-trophy" data-notify="icon">
+        </span>
+        <span>
+        <b>
+            {{ globalAlertType }}
+        </b>
+        {{ globalAlertMsg }}
+        </span>
+    </alert>
 </div>
 
 <!-- Page content -->
@@ -281,9 +319,21 @@
                     </div>
                     <div class="col-lg-5 col-xl-5" style="height: 85vh">
                         <div id="UserRoomList-content">
+                            <button id="sidebar-openOrientationHeader"  class="underline" (click)="showChangeOrientation()">
+                                <!-- <i id={{roomUserItem.IconID}} class="tim-icons icon-minimal-down"></i>  {{roomUserItem.Room}} -->
+                                <span>Change Orientation</span><svg viewBox="0 0 13 20"><polyline points="0.5 19.5 3 19.5 12.5 10 3 0.5" /></svg>
+                            </button>
+                            <button id="sidebar-closeOrientationHeader"  class="underline" (click)="hideChangeOrientation()">
+                                <!-- <i id={{roomUserItem.IconID}} class="tim-icons icon-minimal-down"></i>  {{roomUserItem.Room}} -->
+                                <span>Close Orientation</span><svg viewBox="0 0 13 20"><polyline points="0.5 19.5 3 19.5 12.5 10 3 0.5" /></svg>
+                            </button>
+                            <div id="sliderDiv">
+                                <div id="slider"></div>
+                            </div>
                             <div *ngFor="let roomUserItem of roomUsersList">
-                                <button id="sidebar-roomHeader" (click)="toggleRoomListView(roomUserItem.IconID, roomUserItem.UserListID)">
-                                    <i id={{roomUserItem.IconID}} class="tim-icons icon-minimal-down"></i>  {{roomUserItem.Room}}
+                                <button id="sidebar-roomHeader"  class="underline" (click)="toggleRoomListView(roomUserItem.IconID, roomUserItem.UserListID)">
+                                    <!-- <i id={{roomUserItem.IconID}} class="tim-icons icon-minimal-down"></i>  {{roomUserItem.Room}} -->
+                                    <span>{{roomUserItem.Room}}</span><svg viewBox="0 0 13 20"><polyline points="0.5 19.5 3 19.5 12.5 10 3 0.5" /></svg>
                                 </button>
                                 <div id={{roomUserItem.UserListID}} class="userNameInRoomUserList" *ngFor="let user of roomUserItem.RoomUsers">
                                     <p
@@ -300,7 +350,7 @@
         </tab>
         <tab>
             <ng-template tabHeading>
-                <i class="tim-icons icon-email-85"> </i> Text Channel
+                <i class="tim-icons icon-chat-33"> </i> Text Channel
             </ng-template>
             <div class="TextChannelContent" id="TextChannelContent">
                 <div class="messageBoard" id="messageBoard" #scrollframe>
@@ -338,7 +388,7 @@
         </tab>
         <tab *ngIf="roomSelected">
             <ng-template tabHeading>
-                <i class="tim-icons icon-email-85"> </i> {{ selectedRoom }} Channel
+                <i class="tim-icons icon-chat-33"> </i> {{ selectedRoom }} Channel
             </ng-template>
             <div class="TextChannelContent">
                 <div class="messageBoard" id="messageBoardRoom" #scrollRoomframe>
@@ -381,7 +431,7 @@
             <div class="timeTrackerContent" id="timeTrackerContent">
                 <div class="row">
                     <div class="col-lg-8 col-xl-8" style="height: 85vh">
-                        <div *ngIf="showTimeTrackerTab == 'dashboard'" class="TimeTrackDashboard" id="TimeTrackDashboard">
+                        <div *ngIf="showTimeTrackerTab == 'timeTracker'" class="TimeTrackDashboard" id="TimeTrackDashboard">
                             <div *ngIf="displayBigScreenTracker; then bigScreen else smallScreen"></div>
                             <ng-template #bigScreen>
                                 <div class="newTrackerForm">
@@ -396,9 +446,13 @@
                                         <div *ngIf="timeTrackerProjectSelected; then showSelectedProject else showDropdown"></div>
                                         <ng-template #showSelectedProject>
                                             <div id="selectedProject">
-                                                <p>
-                                                    {{ selectedProject }}
-                                                </p>
+                                                <button 
+                                                    class=" btn btn-primary" 
+                                                    id="removeProject-btn"
+                                                    (click)="removeSelectedProject()"
+                                                    type="button"
+                                                >{{ selectedProject }} <i class="tim-icons icon-simple-remove"></i>
+                                                </button>
                                             </div>
                                         </ng-template>
                                         <ng-template #showDropdown>
@@ -436,34 +490,53 @@
                                             </div>
                                         </ng-template>
                                     </div>
-                                    <div class="btn-group dropdown" id="AddTagDiv" dropdown>
-                                        <button 
-                                            aria-expanded="false" 
-                                            aria-haspopup="true" 
-                                            class="btn btn-primary dropdown-toggle dropdown-toggle" 
-                                            data-toggle="dropdown" 
-                                            dropdownToggle 
-                                            id="tag-btn"
-                                            type="button"
-                                        >
-                                            <i class="tim-icons icon-tag"></i>
-                                        </button>
-                                        <div class=" dropdown-menu" *dropdownMenu aria-labelledby="dropdownMenuLink">
-                                          <a class=" dropdown-item" href="#">
-                                            Action
-                                          </a>
-                                          <a class=" dropdown-item" href="#">
-                                            Another action
-                                          </a>
-                                          <a class=" dropdown-item" href="#">
-                                            Something else here
-                                          </a>
-                                          <div class=" dropdown-divider">
-                                          </div>
-                                          <a class=" dropdown-item" href="#">
-                                            Separated link
-                                          </a>
-                                        </div>
+                                    <div id="TagDiv">
+                                        <div *ngIf="timeTrackerTagSelected; then showSelectedTag else showTagDropdown"></div>
+                                        <ng-template #showSelectedTag>
+                                            <div id="selectedTag">
+                                                <button 
+                                                    class=" btn btn-primary" 
+                                                    id="removeTag-btn"
+                                                    (click)="removeSelectedTag()"
+                                                    type="button"
+                                                >{{ selectedTag }} <i class="tim-icons icon-simple-remove"></i>
+                                                </button>
+                                            </div>
+                                        </ng-template>
+                                        <ng-template #showTagDropdown>
+                                            <div class="btn-group dropdown" id="TagDropdown" dropdown>
+                                                <button 
+                                                    aria-expanded="false" 
+                                                    aria-haspopup="true" 
+                                                    class="btn btn-primary dropdown-toggle dropdown-toggle" 
+                                                    data-toggle="dropdown" 
+                                                    dropdownToggle 
+                                                    id="tag-btn"
+                                                    type="button"
+                                                >
+                                                    <i class="tim-icons icon-tag"></i>
+                                                </button>
+                                                <div class=" dropdown-menu" *dropdownMenu aria-labelledby="dropdownMenuLink">
+                                                    <div *ngIf="timeTrackingTags.length == 0; then NoTags else displayTags"></div>
+                                                    <ng-template #NoTags>
+                                                        <p style="color: black; text-align: center;">
+                                                            No Tags found.
+                                                        </p>
+                                                        <div class=" dropdown-divider"></div>
+                                                        <button class=" dropdown-item" style="cursor: pointer;" (click)="setTimeTrackerTab('tags')">
+                                                            Add Tag
+                                                        </button>
+                                                    </ng-template>
+                                                    <ng-template #displayTags>
+                                                        <div *ngFor="let tag of timeTrackingTags">
+                                                            <button class=" dropdown-item" (click)="setTimeTrackerTag(tag.id, tag.tag)">
+                                                                {{ tag.tag }}
+                                                            </button>
+                                                        </div>
+                                                    </ng-template>
+                                                </div>
+                                            </div>
+                                        </ng-template>
                                     </div>
                                     <div id="timer">
                                         <p>
@@ -569,36 +642,174 @@
                                 </div>
                             </ng-template>
                             <div class="userTimeTrackerList" id="userTimeTrackerList">
-    
+                                <div id="instanceListHeader">
+                                    <p id="instanceHeader">
+                                        Description
+                                    </p>
+                                    <p id="instanceHeaderDate">
+                                        Date
+                                    </p>
+                                    <p id="instanceHeaderDuration">
+                                        Duration
+                                    </p>
+                                </div>
+                                <div *ngFor="let instance of timeTrackingUserInstances">
+                                    <div class="instanceItem">
+                                        <p class="instanceDescription">
+                                            {{ instance.description }}
+                                        </p>
+                                        <button class="btn btn-success projectDisabledBtn" disabled>{{ instance.projectName }}</button>
+                                        <button class="btn btn-success tagDisabledBtn" disabled>{{ instance.tagName }}</button>
+                                        <p class="instanceDate">
+                                            {{ instance.date }}
+                                        </p>
+                                        <p class="instanceStartEnd">
+                                            {{ instance.startEnd }}
+                                        </p>
+                                        <p class="instanceDuration">
+                                            {{ instance.duration }}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div *ngIf="showTimeTrackerTab == 'projects'" class="TimeTrackProjects">
+                            <div class="timeTrackerProjectForms">
+                                <div id="filterProjectListForm">
+                                    <div style="width: 100%;" class=" btn-group dropdown" dropdown>
+                                        <button aria-expanded="false" aria-haspopup="true" style="width: 100%;" class=" btn btn-primary dropdown-toggle dropdown-toggle" data-toggle="dropdown" dropdownToggle id="filter-dropdown" type="button">
+                                          Filter By
+                                        </button>
+                                        <div class=" dropdown-menu" *dropdownMenu aria-labelledby="dropdownMenuLink">
+                                          <button class=" dropdown-item">
+                                            A-Z
+                                          </button>
+                                          <button class=" dropdown-item">
+                                            Z-A
+                                          </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="SeparatingSpace">
 
+                                </div>
+                                <div id="addNewProjectForm">
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        name="newProjectName" 
+                                        id="newProjectNameInput"
+                                        [(ngModel)]="newProjectName"
+                                    >
+                                    <button id="addNewProject-btn" class="btn btn-primary" (click)="addNewProject()">Add</button>
+                                </div>
+                            </div>
+                            <div class="timeTrackerProjectList">
+                                <div id="projectListHeader">
+                                    <p id="projectNameHeader">
+                                        Project Name
+                                    </p>
+                                </div>
+                                <div *ngFor="let project of timeTrackingProjects">
+                                    <div class="projectItem">
+                                        <div class="projectNameDiv">
+                                            <p class="projectName">
+                                                {{ project.project }}
+                                            </p>
+                                        </div>
+                                        <div class="spacer">
+
+                                        </div>
+                                        <button class="btn btn-success projectEditBtn" (click)="editProject(project.id)"><i class="tim-icons icon-pencil"></i></button>
+                                        <button class="btn btn-danger projectDeleteBtn" (click)="deleteProject(project.id)"><i class="tim-icons icon-simple-remove"></i></button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div *ngIf="showTimeTrackerTab == 'tags'" class="TimeTrackTags">
+                            <div class="timeTrackerTagForms">
+                                <div id="filterTagListForm">
+                                    <div style="width: 100%;" class=" btn-group dropdown" dropdown>
+                                        <button aria-expanded="false" aria-haspopup="true" style="width: 100%;" class=" btn btn-primary dropdown-toggle dropdown-toggle" data-toggle="dropdown" dropdownToggle id="filter-dropdown" type="button">
+                                          Filter By
+                                        </button>
+                                        <div class=" dropdown-menu" *dropdownMenu aria-labelledby="dropdownMenuLink">
+                                          <button class=" dropdown-item">
+                                            A-Z
+                                          </button>
+                                          <button class=" dropdown-item">
+                                            Z-A
+                                          </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="SeparatingSpace">
 
+                                </div>
+                                <div id="addNewTagForm">
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        name="newTagName" 
+                                        id="newTagNameInput"
+                                        [(ngModel)]="newTagName"
+                                    >
+                                    <button id="addNewTag-btn" class="btn btn-primary" (click)="addNewTag()">Add</button>
+                                </div>
+                            </div>
+                            <div class="timeTrackerTagList">
+                                <div id="tagListHeader">
+                                    <p id="tagNameHeader">
+                                        Tag Name
+                                    </p>
+                                </div>
+                                <div *ngFor="let tag of timeTrackingTags">
+                                    <div class="tagItem">
+                                        <p class="tagName">
+                                            {{ tag.tag }}
+                                        </p>
+                                        <div class="spacer">
+
+                                        </div>
+                                        <button class="btn btn-success tagEditBtn" (click)="editTag(tag.id)"><i class="tim-icons icon-pencil"></i></button>
+                                        <button class="btn btn-danger tagDeleteBtn" (click)="deleteTag(tag.id)"><i class="tim-icons icon-simple-remove"></i></button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-xl-4" style="height: 85vh">
                         <div id="timeTrackerOptions">
                             <button 
+                                class="sidebar-timeTrackerOption underline"
+                                style="color: white;"
+                                (click)="setTimeTrackerTab('timeTracker')"
+                            >
+                                <!-- <i class="tim-icons icon-minimal-down"></i>  Time Tracker -->
+                                <span>Time Tracker</span><svg viewBox="0 0 13 20"><polyline points="0.5 19.5 3 19.5 12.5 10 3 0.5" /></svg>
+                            </button>
+                            <button 
+                                class="sidebar-timeTrackerOption underline"
+                                style="color: white;"
+                                (click)="setTimeTrackerTab('projects')"
+                            >
+                                <!-- <i class="tim-icons icon-minimal-down"></i>  Projects -->
+                                <span>Projects</span><svg viewBox="0 0 13 20"><polyline points="0.5 19.5 3 19.5 12.5 10 3 0.5" /></svg>
+                            </button>
+                            <button 
+                                class="sidebar-timeTrackerOption underline"
+                                style="color: white;"
+                                (click)="setTimeTrackerTab('tags')"
+                            >
+                                <!-- <i class="tim-icons icon-minimal-down"></i>  Tags -->
+                                <span>Tags</span><svg viewBox="0 0 13 20"><polyline points="0.5 19.5 3 19.5 12.5 10 3 0.5" /></svg>
+                            </button>
+                            <!-- <button 
                                 class="sidebar-timeTrackerOption"
                                 (click)="setTimeTrackerTab('dashboard')"
                             >
                                 <i class="tim-icons icon-minimal-down"></i>  Dashboard
-                            </button>
-                            <button 
-                                class="sidebar-timeTrackerOption"
-                                (click)="setTimeTrackerTab('projects')"
-                            >
-                                <i class="tim-icons icon-minimal-down"></i>  Projects
-                            </button>
-                            <button 
-                                class="sidebar-timeTrackerOption"
-                                (click)="setTimeTrackerTab('tags')"
-                            >
-                                <i class="tim-icons icon-minimal-down"></i>  Tags
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                 </div>
@@ -647,113 +858,138 @@
         </div>
         </div>
         <div class="modal-body">
-        <form role="form" *ngIf="showInviteModal">
-            <div *ngIf="sendFormModalAlert">
-                <alert class="alert-with-icon" [type]="'primary alert-with-icon'">
-                    <span class=" tim-icons icon-trophy" data-notify="icon">
-                    </span>
-                    <span>
-                        {{ formModalAlertMsg }}
-                    </span>
-                </alert>
-                </div>
-            <div class="form-group mb-3">
-                <div class="input-group input-group-alternative" [ngClass]="{'input-group-focus':focus6===true}">
-                    <div class="input-group-prepend">
-                    <span class="input-group-text">
-                        <i class="tim-icons icon-email-85"> </i>
-                    </span>
+            <form role="form" *ngIf="showVRCodeModal">
+                <div *ngIf="sendFormModalAlert">
+                    <alert class="alert-with-icon" [type]="'primary alert-with-icon'">
+                        <span class=" tim-icons icon-trophy" data-notify="icon">
+                        </span>
+                        <span>
+                            {{ formModalAlertMsg }}
+                        </span>
+                    </alert>
                     </div>
-                    <input
-                        class="form-control"
-                        placeholder="Name"
-                        name="sendInviteToName"
-                        [(ngModel)]="sendInviteToName"
-                        type="text"
-                        (focus)="focus6=true" 
-                        (blur)="focus6=false"
-                    />
+                <div class="form-group mb-3">
+                    <h4>
+                        Your VR room code is: <b>{{ VR_RoomCode }}</b>
+                    </h4>
                 </div>
-            </div>
-            <div class="form-group mb-3">
-                <div class="input-group input-group-alternative" [ngClass]="{'input-group-focus':focus7===true}">
-                    <div class="input-group-prepend">
-                    <span class="input-group-text">
-                        <i class="tim-icons icon-email-85"> </i>
-                    </span>
+                <div class="text-center">
+                    <button 
+                        class="btn btn-success my-4" 
+                        type="button"
+                        (click)="hideDisplayFormModal()"
+                    >
+                        Close
+                    </button>
+                </div>
+            </form>
+            <form role="form" *ngIf="showInviteModal">
+                <div *ngIf="sendFormModalAlert">
+                    <alert class="alert-with-icon" [type]="'primary alert-with-icon'">
+                        <span class=" tim-icons icon-trophy" data-notify="icon">
+                        </span>
+                        <span>
+                            {{ formModalAlertMsg }}
+                        </span>
+                    </alert>
                     </div>
-                    <input
-                        class="form-control"
-                        placeholder="Email"
-                        name="sendInviteToEmail"
-                        [(ngModel)]="sendInviteToEmail"
-                        type="email"
-                        (focus)="focus7=true" 
-                        (blur)="focus7=false"
-                    />
-                </div>
-            </div>
-            <div class="text-center">
-                <button 
-                    class="btn btn-success my-4" 
-                    type="button"
-                    (click)="sendOfficeInvite()"
-                >
-                    Submit
-                </button>
-            </div>
-        </form>
-        <form role="form" *ngIf="showAddRoomModal">
-            <div *ngIf="sendFormModalAlert">
-                <alert class="alert-with-icon" [type]="'primary alert-with-icon'">
-                    <span class=" tim-icons icon-trophy" data-notify="icon">
-                    </span>
-                    <span>
-                        {{ formModalAlertMsg }}
-                    </span>
-                </alert>
-                </div>
-            <div class="form-group mb-3">
-                <div class="input-group input-group-alternative" [ngClass]="{'input-group-focus':focus6===true}">
-                    <div class="input-group-prepend">
-                    <span class="input-group-text">
-                        <i class="tim-icons icon-email-85"> </i>
-                    </span>
+                <div class="form-group mb-3">
+                    <div class="input-group input-group-alternative" [ngClass]="{'input-group-focus':focus6===true}">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="tim-icons icon-email-85"> </i>
+                        </span>
+                        </div>
+                        <input
+                            class="form-control"
+                            placeholder="Name"
+                            name="sendInviteToName"
+                            [(ngModel)]="sendInviteToName"
+                            type="text"
+                            (focus)="focus6=true" 
+                            (blur)="focus6=false"
+                        />
                     </div>
-                    <input
-                        class="form-control"
-                        placeholder="Room Name"
-                        name="newRoomName"
-                        [(ngModel)]="newRoomName"
-                        type="text"
-                        (focus)="focus6=true" 
-                        (blur)="focus6=false"
-                    />
                 </div>
-            </div>
-            <div class="form-group mb-3">
-                <label for="roomTypeDropdown">Room Type</label>
-                <select 
-                    class="form-control"   
-                    id="roomTypeDropdown"
-                    name="newRoomType"
-                    [(ngModel)]="newRoomType"
-                >
-                  <option value="Normal" selected>Normal</option>
-                  <option value="Private">Private</option>
-                  <option value="VR">VR</option>
-                </select>
-              </div>
-            <div class="text-center">
-                <button 
-                    class="btn btn-success my-4" 
-                    type="button"
-                    (click)="addRoom()"
-                >
-                    Add Room
-                </button>
-            </div>
-        </form>
+                <div class="form-group mb-3">
+                    <div class="input-group input-group-alternative" [ngClass]="{'input-group-focus':focus7===true}">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="tim-icons icon-email-85"> </i>
+                        </span>
+                        </div>
+                        <input
+                            class="form-control"
+                            placeholder="Email"
+                            name="sendInviteToEmail"
+                            [(ngModel)]="sendInviteToEmail"
+                            type="email"
+                            (focus)="focus7=true" 
+                            (blur)="focus7=false"
+                        />
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button 
+                        class="btn btn-success my-4" 
+                        type="button"
+                        (click)="sendOfficeInvite()"
+                    >
+                        Submit
+                    </button>
+                </div>
+            </form>
+            <form role="form" *ngIf="showAddRoomModal">
+                <div *ngIf="sendFormModalAlert">
+                    <alert class="alert-with-icon" [type]="'primary alert-with-icon'">
+                        <span class=" tim-icons icon-trophy" data-notify="icon">
+                        </span>
+                        <span>
+                            {{ formModalAlertMsg }}
+                        </span>
+                    </alert>
+                    </div>
+                <div class="form-group mb-3">
+                    <div class="input-group input-group-alternative" [ngClass]="{'input-group-focus':focus6===true}">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="tim-icons icon-email-85"> </i>
+                        </span>
+                        </div>
+                        <input
+                            class="form-control"
+                            placeholder="Room Name"
+                            name="newRoomName"
+                            [(ngModel)]="newRoomName"
+                            type="text"
+                            (focus)="focus6=true" 
+                            (blur)="focus6=false"
+                        />
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="roomTypeDropdown">Room Type</label>
+                    <select 
+                        class="form-control"   
+                        id="roomTypeDropdown"
+                        name="newRoomType"
+                        [(ngModel)]="newRoomType"
+                    >
+                    <option value="Normal" selected>Normal</option>
+                    <option value="Private">Private</option>
+                    <option value="VR">VR</option>
+                    </select>
+                </div>
+                <div class="text-center">
+                    <button 
+                        class="btn btn-success my-4" 
+                        type="button"
+                        (click)="addRoom()"
+                    >
+                        Add Room
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
     </div>

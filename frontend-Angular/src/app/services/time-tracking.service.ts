@@ -29,8 +29,8 @@ export class TimeTrackingService {
     description: string, 
     projectID: number, 
     tagID: number, 
-    startTime: Date, 
-    endTime: Date
+    startTime: string, 
+    endTime: string
   ): Observable<any>{
     const body = {
       jwt: jwt,
@@ -78,7 +78,20 @@ export class TimeTrackingService {
   }
 
   //Observable function to remove an office project from the repository 
-  removeTimeTrackingProject(
+  removeTimeTrackingProjectByID(
+    jwt: string, 
+    id: number,
+  ): Observable<any>{
+    const body = {
+      jwt: jwt,
+      id: id
+    };
+    let removeTrackingProjectURL = this.baseUrl + '/api/time-tracker/project/removeByID';
+    return this.http.post<any>(removeTrackingProjectURL, body, httpOptions)
+  }
+
+  //Observable function to remove an office project from the repository 
+  removeTimeTrackingProjectByName(
     jwt: string, 
     officeID: number,
     projectName: string
@@ -88,7 +101,7 @@ export class TimeTrackingService {
       officeID: officeID,
       projectName: projectName
     };
-    let removeTrackingProjectURL = this.baseUrl + '/api/time-tracker/project/remove';
+    let removeTrackingProjectURL = this.baseUrl + '/api/time-tracker/project/removeByName';
     return this.http.post<any>(removeTrackingProjectURL, body, httpOptions)
   }
 

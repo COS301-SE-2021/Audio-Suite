@@ -6,6 +6,7 @@ import { Observable, of } from 'rxjs';
 import { KanbanService } from 'src/app/services/kanban.service';
 import { OfficeRoomService } from 'src/app/services/office-room.service';
 import { TextChannelsService } from 'src/app/services/text-channels.service';
+import { TimeTrackingService } from 'src/app/services/time-tracking.service';
 import { UserService } from 'src/app/services/user.service';
 import { LoginComponent } from '../login/login.component';
 
@@ -16,7 +17,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3001/serverSocket' };
 interface Office{
   id: string,
   name: string,
-  invite: string
+  invite: string,
+  role: string
 }
 
 describe('UserComponent', () => {
@@ -25,6 +27,7 @@ describe('UserComponent', () => {
   let userServiceStub: Partial<UserService>;
   let officeRoomServiceStub: Partial<OfficeRoomService>;
   let textChannelsServiceStub: Partial<TextChannelsService>;
+  let timeTrackingServiceStub: Partial<TimeTrackingService>;
   let kanbanServiceStub: Partial<KanbanService>;
 
   beforeEach(async () => {
@@ -48,9 +51,17 @@ describe('UserComponent', () => {
             {
               id: '1',
               name: 'Test_Office',
-              invite: 'ghsaghs343hkj34h'
+              invite: 'ghsaghs343hkj34h',
+              role: 'Manager'
             }
           ]
+        })
+      },
+
+      getRoomUsersByOfficeID(jwt: string, officeID: number): Observable<any>{
+        return of({
+          Response: "Success",
+          RoomUserList: []
         })
       }
     };
@@ -85,9 +96,16 @@ describe('UserComponent', () => {
             Response: "Success",
           })
         }
+        else if(eventName == 'updateRoomAttendance'){
+          return of({
+            Response: "Success",
+          })
+        }
       }
     };
     kanbanServiceStub = {};
+
+    timeTrackingServiceStub = {}; 
 
     await TestBed.configureTestingModule({
       declarations: [ UserComponent ],
@@ -109,6 +127,9 @@ describe('UserComponent', () => {
         },
         {
            provide: KanbanService, useValue: kanbanServiceStub
+        },
+        {
+          provide: TimeTrackingService, useValue: timeTrackingServiceStub
         }
       ]
     })
@@ -151,12 +172,14 @@ describe('UserComponent', () => {
       {
         id: '1',
         name: 'Test_Office',
-        invite: 'ghsaghs343hkj34h'
+        invite: 'ghsaghs343hkj34h',
+        role: 'Manager'
       },
       {
         id: '1',
         name: 'Test_Office',
-        invite: 'ghsaghs343hkj34h'
+        invite: 'ghsaghs343hkj34h',
+        role: 'Manager'
       }
     ];
     console.log(component.officeList);

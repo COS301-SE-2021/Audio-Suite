@@ -18,8 +18,8 @@ export class TimeTrackerUserService {
         description: string, 
         projectID: number, 
         tagID: number, 
-        startTime: Date,
-        endTime: Date)
+        startTime: string,
+        endTime: string)
     {
         //Validate whether the jwt belongs to a valid user.
         try{

@@ -339,6 +339,43 @@
         background: #171941;
         box-shadow: inset 20px 20px 60px #141537,
                     inset -20px -20px 60px #1a1d4b;
+
+        #sidebar-openOrientationHeader{
+            color: white;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            padding-left: 12%;
+            padding-top: 5%;
+            width: 100%;
+            text-align:start;
+            cursor: pointer;
+            padding-bottom: 5%;
+            border-bottom: 1px solid white;
+
+            .icon-minimal-down{
+                font-size: small;
+            }
+        }
+
+        #sidebar-closeOrientationHeader{
+            display: none;
+            color: white;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            padding-left: 12%;
+            padding-top: 5%;
+            width: 100%;
+            text-align:start;
+            cursor: pointer;
+            padding-bottom: 5%;
+            border-bottom: 1px solid white;
+
+            .icon-minimal-down{
+                font-size: small;
+            }
+        }
         
         #sidebar-roomHeader{
             color: white;
@@ -353,6 +390,49 @@
 
             .icon-minimal-down{
                 font-size: small;
+            }
+        }
+
+        .underline {
+            --line: #646B8C;
+            --color: #2B3044;
+            text-decoration: none;
+            color: var(--color);
+            position: relative;
+            span {
+                background-image: linear-gradient(0deg, var(--line) 0%, var(--line) 100%);
+                background-position: 100% 100%;
+                background-repeat: no-repeat;
+                background-size: var(--background-size, 100%) 1px;
+                transition: background-size .2s linear var(--background-delay, .15s);
+                font-size: 16px;
+                line-height: 20px;
+                transform: translateZ(0);
+            }
+            svg {
+                vertical-align: top;
+                display: inline;
+                line-height: 1;
+                width: 13px;
+                height: 20px;
+                position: relative;
+                left: -2px;
+                fill: none;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                stroke-width: 1px;
+                stroke: var(--line);
+                stroke-dasharray: 7.95 30;
+                stroke-dashoffset: var(--stroke-dashoffset, 46);
+                transition: stroke-dashoffset var(--stroke-duration, .15s) var(--stroke-easing, linear) var(--stroke-delay, 0s);
+            }
+            &:hover {
+                --background-size: 0%;
+                --background-delay: 0s;
+                --stroke-dashoffset: 26;
+                --stroke-duration: .3s;
+                --stroke-easing: cubic-bezier(.3, 1.5, .5, 1);
+                --stroke-delay: .195s;
             }
         }
     }
@@ -456,9 +536,13 @@
                 width: 100%;
                 height: 100%;
 
-                 p{
+                 #removeProject-btn{
                     width: 100%;
                     height: 100%;
+                    margin: 0px;
+                    padding-left: 0px;
+                    padding-right: 0px;
+                    text-align: center;
                  }
             }
 
@@ -470,18 +554,43 @@
                     width: 100%;
                     height: 100%;
                     margin-bottom: 0px;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    text-align: center;
                 }
             }
         }
 
-        #AddTagDiv{
+        #TagDiv{
             width: 10%;
             height: 100%;
 
-            #tag-btn{
+            #selectedTag{
                 width: 100%;
                 height: 100%;
-                margin-bottom: 0px;
+
+                 #removeTag-btn{
+                    width: 100%;
+                    height: 100%;
+                    margin: 0px;
+                    padding-left: 0px;
+                    padding-right: 0px;
+                    text-align: center;
+                 }
+            }
+
+            #TagDropdown{
+                width: 100%;
+                height: 100%;
+
+                #tag-btn{
+                    width: 100%;
+                    height: 100%;
+                    margin-bottom: 0px;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    text-align: center;
+                }
             }
         }
 
@@ -490,6 +599,9 @@
             margin-right: 0.5%;
             margin-top: 0px;
             margin-bottom: 0px;
+            padding-left: 10px;
+            padding-right: 10px;
+            text-align: center;
         }
 
         #stopTimer-btn{
@@ -497,6 +609,9 @@
             margin-left: 0.5%;
             margin-top: 0px;
             margin-bottom: 0px;
+            padding-left: 10px;
+            padding-right: 10px;
+            text-align: center;
         }
 
         #timer{
@@ -506,6 +621,9 @@
             p{
                 width: 100%;
                 height: 100%;
+                position: relative;
+                top: 25%;
+                font-size: medium;
             }
         } 
     }
@@ -560,6 +678,9 @@
                     width: 100%;
                     height: 100%;
                     margin-bottom: 0px;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    text-align: center;
                 }
             }
         }
@@ -572,6 +693,9 @@
                 width: 100%;
                 height: 100%;
                 margin-bottom: 0px;
+                padding-left: 10px;
+                padding-right: 10px;
+                text-align: center;
             }
         }
 
@@ -580,6 +704,9 @@
             margin-right: 0.5%;
             margin-top: 0px;
             margin-bottom: 0px;
+            padding-left: 10px;
+            padding-right: 10px;
+            text-align: center;
         }
 
         #stopTimer-btn{
@@ -587,6 +714,339 @@
             margin-left: 0.5%;
             margin-top: 0px;
             margin-bottom: 0px;
+            padding-left: 10px;
+            padding-right: 10px;
+            text-align: center;
+        }
+    }
+
+    #userTimeTrackerList{
+        #instanceListHeader{
+            display: inline-flex;
+            justify-content: left;
+            width: 95%;
+            //border-top: 1px solid white;
+            margin-top: 3%;
+            border-bottom: 1px solid white;
+
+            #instanceHeader{
+                width: 65%;
+                height: 100%;
+                padding-left: 3%;
+                text-align: left;   
+            }
+
+            #instanceHeaderDate{
+                width: 15%;
+                height: 100%;
+                padding-left: 0px;
+                text-align: center;   
+            }
+
+            #instanceHeaderDuration{
+                width: 20%;
+                height: 100%;
+                padding-left: 0px;
+                text-align: center;   
+            }
+        }
+
+        .instanceItem{
+            margin-top: 2%;
+            display: inline-flex;
+            justify-content: center;
+            width: 95%;
+            height: 5vh;
+            background-color: #141537;
+
+            .instanceDescription{
+                width: 45%;
+                height: 100%;
+                padding-left: 3%;
+                text-align: left;
+                position: relative;
+                top: 25%;
+                //word-wrap: break-word;
+
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .projectDisabledBtn{
+                width: 10%;
+                height: 100%;
+                margin-bottom: 0px;
+                padding-left: 10px;
+                padding-right: 10px;
+                text-align: center;
+            }
+
+            .tagDisabledBtn{
+                width: 10%;
+                height: 100%;
+                margin-bottom: 0px;
+                padding-left: 10px;
+                padding-right: 10px;
+                text-align: center;
+            }
+
+            .instanceDate{
+                width: 15%;
+                height: 100%;
+                text-align: center;
+                position: relative;
+                top: 25%;
+            }
+
+            .instanceStartEnd{
+                width: 10%;
+                height: 100%;
+                text-align: center;
+                position: relative;
+                top: 25%;
+            }
+
+            .instanceDuration{
+                width: 10%;
+                height: 100%;
+                text-align: center;
+                position: relative;
+                top: 25%;
+            }
+        }
+    }
+
+    .TimeTrackProjects{
+
+        .timeTrackerProjectForms{
+            display: inline-flex;
+            justify-content: center;
+            width: 95%;
+
+            #filterProjectListForm{
+                width: 15%;
+                height: 100%;
+
+                #filter-dropdown{
+                    width: 100%;
+                    height: 100%;
+                    margin: 0px;
+                }
+            }
+
+            #SeparatingSpace{
+                width: 35%;
+            }
+
+            #addNewProjectForm{
+                display: inline-flex;
+                justify-content: center;
+                width: 50%;
+                height: 100%;
+
+                #newProjectNameInput{
+                    width: 79%;
+                    height: 100%;
+                    margin: 0px;
+                    margin-right: 0.5%;
+                }
+
+                #addNewProject-btn{
+                    width: 20%;
+                    height: 100%;
+                    margin: 0px;
+                    margin-left: 0.5%;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    text-align: center;
+                }
+            }
+        }
+
+        .timeTrackerProjectList{
+            #projectListHeader{
+                display: inline-flex;
+                justify-content: left;
+                width: 95%;
+                //border-top: 1px solid white;
+                margin-top: 3%;
+                border-bottom: 1px solid white;
+
+                #projectNameHeader{
+                    width: 75%;
+                    height: 100%;
+                    padding-left: 3%;
+                    text-align: left;
+                }
+            }
+
+            .projectItem{
+                margin-top: 2%;
+                display: inline-flex;
+                justify-content: center;
+                width: 95%;
+                height: 5vh;
+                background-color: #141537;
+
+                .projectNameDiv{
+                    width: 75%;
+                    height: 100%;
+                    .projectName{
+                        width: 100%;
+                        height: 100%;
+                        padding-left: 3%;
+                        text-align: left;
+                        margin-bottom: 0px;
+                        position: relative;
+                        top: 25%;
+                        
+                        //word-wrap: break-word;
+    
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                }   
+
+                .spacer{
+                    width: 5%;
+                    height: 100%;
+                }
+
+                .projectEditBtn{
+                    width: 9%;
+                    height: 100%;
+                    margin: 0px;
+                    margin-right: 0.5%;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    text-align: center;
+                }
+
+                .projectDeleteBtn{
+                    width: 9%;
+                    height: 100%;
+                    margin: 0px;
+                    margin-left: 0.5%;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    text-align: center;
+                }
+            }
+        }
+    }
+
+    .TimeTrackTags{
+        .timeTrackerTagForms{
+            display: inline-flex;
+            justify-content: center;
+            width: 95%;
+
+            #filterTagListForm{
+                width: 15%;
+                height: 100%;
+
+                #filter-dropdown{
+                    width: 100%;
+                    height: 100%;
+                    margin: 0px;
+                }
+            }
+
+            #SeparatingSpace{
+                width: 35%;
+            }
+
+            #addNewTagForm{
+                display: inline-flex;
+                justify-content: center;
+                width: 50%;
+                height: 100%;
+
+                #newTagNameInput{
+                    width: 79%;
+                    height: 100%;
+                    margin: 0px;
+                    margin-right: 0.5%;
+                }
+
+                #addNewTag-btn{
+                    width: 20%;
+                    height: 100%;
+                    margin: 0px;
+                    margin-left: 0.5%;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    text-align: center;
+                }
+            }
+        }
+
+        .timeTrackerTagList{
+            #tagListHeader{
+                display: inline-flex;
+                justify-content: left;
+                width: 95%;
+                //border-top: 1px solid white;
+                margin-top: 3%;
+                border-bottom: 1px solid white;
+
+                #tagNameHeader{
+                    width: 75%;
+                    height: 100%;
+                    padding-left: 3%;
+                    text-align: left;
+                }
+            }
+
+            .tagItem{
+                margin-top: 2%;
+                display: inline-flex;
+                justify-content: center;
+                width: 95%;
+                height: 5vh;
+                background-color: #141537;
+
+                .tagName{
+                    width: 75%;
+                    height: 100%;
+                    padding-left: 3%;
+                    text-align: left;
+                    position: relative;
+                    top: 25%;
+                    //word-wrap: break-word;
+
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .spacer{
+                    width: 5%;
+                    height: 100%;
+                }
+
+                .tagEditBtn{
+                    width: 9%;
+                    height: 100%;
+                    margin: 0px;
+                    margin-right: 0.5%;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    text-align: center;
+                }
+
+                .tagDeleteBtn{
+                    width: 9%;
+                    height: 100%;
+                    margin: 0px;
+                    margin-left: 0.5%;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    text-align: center;
+                }
+            }
         }
     }
 
@@ -610,6 +1070,49 @@
 
             .icon-minimal-down{
                 font-size: small;
+            }
+        }
+
+        .underline {
+            --line: #646B8C;
+            --color: #2B3044;
+            text-decoration: none;
+            color: var(--color);
+            position: relative;
+            span {
+                background-image: linear-gradient(0deg, var(--line) 0%, var(--line) 100%);
+                background-position: 100% 100%;
+                background-repeat: no-repeat;
+                background-size: var(--background-size, 100%) 1px;
+                transition: background-size .2s linear var(--background-delay, .15s);
+                font-size: 16px;
+                line-height: 20px;
+                transform: translateZ(0);
+            }
+            svg {
+                vertical-align: top;
+                display: inline;
+                line-height: 1;
+                width: 13px;
+                height: 20px;
+                position: relative;
+                left: -2px;
+                fill: none;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                stroke-width: 1px;
+                stroke: var(--line);
+                stroke-dasharray: 7.95 30;
+                stroke-dashoffset: var(--stroke-dashoffset, 46);
+                transition: stroke-dashoffset var(--stroke-duration, .15s) var(--stroke-easing, linear) var(--stroke-delay, 0s);
+            }
+            &:hover {
+                --background-size: 0%;
+                --background-delay: 0s;
+                --stroke-dashoffset: 26;
+                --stroke-duration: .3s;
+                --stroke-easing: cubic-bezier(.3, 1.5, .5, 1);
+                --stroke-delay: .195s;
             }
         }
     }

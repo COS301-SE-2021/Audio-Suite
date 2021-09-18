@@ -12,6 +12,8 @@ import { AudioComponent } from 'src/app/audio/audio.component';
 import { AngularAgoraRtcService, Stream, AgoraConfig } from 'angular-agora-rtc';
 import { KanbanService } from 'src/app/services/kanban.service';
 import { TimeTrackingService } from 'src/app/services/time-tracking.service';
+import * as $ from "jquery";
+import 'round-slider';
 
 interface Office{
   id: string,
@@ -45,9 +47,14 @@ interface TimeTrackingUserInstance{
   officeID: number, 
   description: string,
   projectID: number,
+  projectName: string,
   tagID: number,
-  startTime: Date,
-  endTime: Date
+  tagName: string,
+  startTime: string,
+  endTime: string,
+  date: string,
+  startEnd: string,
+  duration: string
 }
 
 interface TimeTrackingProject{
@@ -79,6 +86,12 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   };
   agoraService:AngularAgoraRtcService = new AngularAgoraRtcService(this.agoraConfig);
   audioComponent: AudioComponent;
+
+  //Golbal Alert Variables
+  showSuccessGlobalAlert: boolean = false;
+  showPrimaryGlobalAlert: boolean = false;
+  globalAlertType: string = "";
+  globalAlertMsg: string = "";
   
   //Sidebar Varibales
   sidebarOpened: boolean = true;
@@ -115,6 +128,8 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   displayFormModal: boolean = false;
   showInviteModal: boolean = false;
   showAddRoomModal: boolean = false;
+  showVRCodeModal: boolean = false;
+  VR_RoomCode: string = '';
   focus6: boolean = false;
   focus7: boolean = false;
   sendNewOfficeAlert: boolean = false;
@@ -128,15 +143,19 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   formModalAlertMsg: string = '';
 
   //Time Tracker Variables
-  showTimeTrackerTab: string = 'dashboard';
+  showTimeTrackerTab: string = 'timeTracker';
+  trackerStarted: boolean = false;
   displayBigScreenTracker: boolean = true;
   timeTrackerDescription: string = '';
   timeTrackerProjectSelected: boolean = false;
   selectedProject: string = '';
-  selectedProjectID: number;
+  selectedProjectID: number = null;
   timeTrackerTagSelected: boolean = false;
   selectedTag: string = '';
-  selectedTagID: number;
+  selectedTagID: number = null;
+  newProjectName: string = '';
+  newTagName: string = '';
+  warningCount: number = 0;
   trackingTimerInterval: any = null;
   timeTrackingUserInstances: TimeTrackingUserInstance[] = [];
   timeTrackingProjects: TimeTrackingProject[] = [];
@@ -393,6 +412,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.getRoomUsersByOfficeID(jwt, this.selectedOfficeID);
     })
 
+
     window.addEventListener("resize", () => {
       if(window.innerWidth < 800){
         document.getElementById('Sidebar').style.display = "none";
@@ -459,6 +479,12 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   }
 
+  closeAlert(){
+    console.log("click working")
+    this.showSuccessGlobalAlert = false;
+    this.showPrimaryGlobalAlert = false;
+  }
+
   getUserDetails(): void{
     var jwt = sessionStorage.getItem('jwt');
     this.userService.getUserDetails(jwt).subscribe((response) => {
@@ -508,9 +534,10 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  selectOffice(officeID, office, officeInvite, role): void{
+  async selectOffice(officeID, office, officeInvite, role){
     var officeId = sessionStorage.setItem('officeID', officeID);
     if(this.officeSelected){
+      
       if(this.selectedOffice != office){
         this.leaveOffice();
         this.layout = [];
@@ -549,7 +576,6 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.getRoomUsersByOfficeID(jwt, officeID);
 
-        //this.audioComponent.join(this.userID, officeID);
         this.selectedOffice = office;
         this.selectedOfficeID = officeID;
         this.selectedOfficeInvite = officeInvite;
@@ -558,6 +584,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         var jwt = sessionStorage.getItem('jwt');
         this.textChannelsService.joinRoom(jwt, officeID, office, office, false);
         this.setListData();
+        this.getOfficeProjectList();
       }
     }
     else{
@@ -594,9 +621,8 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log(error);
       });
 
-      this.getRoomUsersByOfficeID(jwt, officeID);
+      this.getRoomUsersByOfficeID(jwt, officeID)
 
-      //this.audioComponent.join(this.userID, officeID);
       this.selectedOffice = office;
       this.selectedOfficeID = officeID;
       this.selectedOfficeInvite = officeInvite;
@@ -605,7 +631,39 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       var jwt = sessionStorage.getItem('jwt');
       this.textChannelsService.joinRoom(jwt, officeID, office, office, false);
       this.setListData();
+      this.getOfficeProjectList();
     }
+  }
+
+  showChangeOrientation(){
+    document.getElementById('sidebar-openOrientationHeader').style.display = "none";
+    document.getElementById('sidebar-closeOrientationHeader').style.display = "block";
+    document.getElementById('slider').style.display = "block";
+    const component = this;
+
+    $("#slider").roundSlider({
+      sliderType: "min-range",
+      radius: 130,
+      showTooltip: false,
+      width: 25,
+      //value: 100,
+      handleSize: 0,
+      handleShape: "square",
+      circleShape: "full",
+      value: 100,
+      startAngle: 90,
+          valueChange: function (e) {
+          var color = e.isInvertedRange ? "#FF5722" : "#8BC34A";
+          $("#slider").roundSlider({ "rangeColor": color, "tooltipColor": color });
+          component.audioComponent.setUserOrientation(e.value);
+        }
+    });
+  }
+
+  hideChangeOrientation(){
+    document.getElementById('sidebar-openOrientationHeader').style.display = "block";
+    document.getElementById('sidebar-closeOrientationHeader').style.display = "none";
+    document.getElementById('slider').style.display = "none";
   }
 
   async getRoomUsersByOfficeID(jwt: string, officeID: number){
@@ -650,6 +708,82 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     if(this.roomSelected){
       this.leaveRoom();
     }
+    
+    if(this.trackerStarted){
+      this.warningCount = 0;
+      this.closeAlert();
+
+      clearInterval(this.trackingTimerInterval);
+      this.trackerStarted = false;
+      document.getElementById('timerSecond').innerText = "00";
+      document.getElementById('timerMinute').innerText = "00";
+      document.getElementById('timerHour').innerText = "00";
+
+      let sessionStorageID = "startDateTime_" + this.selectedOffice;
+      let storedStartDate = JSON.parse(window.sessionStorage.getItem(sessionStorageID));
+      let startDate = new Date(
+        storedStartDate.Year, 
+        storedStartDate.Month, 
+        storedStartDate.Day, 
+        storedStartDate.Hours, 
+        storedStartDate.Minutes, 
+        storedStartDate.Seconds, 
+        storedStartDate.MilliSeconds
+      );
+      window.sessionStorage.removeItem(sessionStorageID)
+      let endDate = new Date();
+
+      if(this.timeTrackerDescription == ""){
+        let autoGeneratedDescription = 
+          this.userUsername + " - " + 
+          startDate.getFullYear() + ":" + 
+          startDate.getMonth() + ":" + 
+          startDate.getDate() + "-" + 
+          startDate.getHours() + ":" + 
+          startDate.getMinutes() + ":" + 
+          startDate.getSeconds();
+      
+        let jwt = sessionStorage.getItem('jwt');
+        this.timeTrackingService.registerNewTimeTrackingInstance(
+          jwt,
+          this.selectedOfficeID,
+          autoGeneratedDescription,
+          this.selectedProjectID,
+          this.selectedTagID,
+          startDate.getTime() + "",
+          endDate.getTime() + ""
+        ).subscribe((response) => {
+          console.log(response)
+        }, 
+        (error) => {
+          console.log(error)
+        })
+      }
+      else{
+        let jwt = sessionStorage.getItem('jwt');
+        this.timeTrackingService.registerNewTimeTrackingInstance(
+          jwt,
+          this.selectedOfficeID,
+          this.timeTrackerDescription,
+          this.selectedProjectID,
+          this.selectedTagID,
+          startDate.getTime() + "",
+          endDate.getTime() + ""
+        ).subscribe((response) => {
+          console.log(response)
+          this.timeTrackerDescription = "";
+          this.removeSelectedProject();
+          this.removeSelectedTag();
+        }, 
+        (error) => {
+          console.log(error)
+          this.timeTrackerDescription = "";
+          this.removeSelectedProject();
+          this.removeSelectedTag();
+        })
+      }
+    }
+
     this.selectedOffice = '';
     this.selectedOfficeID = null;
     this.selectedOfficeInvite = '';
@@ -661,7 +795,12 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
   selectRoom(id: string, roomType: string, leaveRoom: boolean): void{
     // console.log("Room Type: " + roomType)
-    if(leaveRoom){
+    if(roomType == "VR"){
+      this.VR_RoomCode = this.selectedOffice + "_" + id;
+      this.showVRCodeModal = true;
+      this.displayFormModal = true;
+    }
+    else if(leaveRoom){
       var jwt = sessionStorage.getItem('jwt');
       this.textChannelsService.leaveRoom(jwt, this.selectedOfficeID, this.selectedOffice, id);
       this.roomSelected = false;
@@ -679,7 +818,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
           this.selectedRoom = id;
           var jwt = sessionStorage.getItem('jwt');
           this.textChannelsService.joinRoom(jwt, this.selectedOfficeID, this.selectedOffice, id, true);
-          this.audioComponent.join(this.userID, this.selectedOfficeID, this.selectedRoom);
+          setTimeout(() => {this.audioComponent.join(this.userID, this.selectedOfficeID, this.selectedRoom, this.selectedOffice)}, 2000);
         }
       }
       else{
@@ -687,7 +826,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         this.selectedRoom = id;
         var jwt = sessionStorage.getItem('jwt');
         this.textChannelsService.joinRoom(jwt, this.selectedOfficeID, this.selectedOffice, id, true);
-        this.audioComponent.join(this.userID, this.selectedOfficeID, this.selectedRoom);
+        setTimeout(() => {this.audioComponent.join(this.userID, this.selectedOfficeID, this.selectedRoom, this.selectedOffice)}, 2000);
       }
     }
   }
@@ -959,7 +1098,97 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     this.showTimeTrackerTab = tab;
   }
 
-  getOfficeTagList(){
+  async getUserTrackingInstances(){
+    let jwt = sessionStorage.getItem('jwt');
+    this.timeTrackingService.getAllUserOfficeTimeTrackingInstances(jwt, this.selectedOfficeID).subscribe((response) => {
+      let tempArray: TimeTrackingUserInstance[] = [];
+      response.TrackingInstances.forEach((instance) => {
+        let projectName = "";
+        if(instance.projectID != null){
+          this.timeTrackingProjects.forEach((project) => {
+            if(project.id == instance.projectID){
+              projectName = project.project;
+            }
+          })
+        }
+        
+        let tagName = "";
+        if(instance.tagID != null){
+          this.timeTrackingTags.forEach((tag) => {
+            if(instance.tagID == tag.id){
+              tagName = tag.tag;
+            }
+          })
+        }
+
+
+        let startTime = new Date(Number(instance.startTime));
+        let endTime = new Date(Number(instance.endTime));
+
+        let date = 
+          startTime.getFullYear() + ":" + 
+          startTime.getMonth() + ":" + 
+          startTime.getDate();
+        let startEnd = 
+          startTime.getHours() + ":" + 
+          startTime.getMinutes() + " - " + 
+          endTime.getHours() + ":" + 
+          endTime.getMinutes();
+        
+        let time = endTime.getTime() - startTime.getTime();
+        let hours = "00";
+        let minutes = "00";
+        let seconds = "00";
+
+        time = Math.floor(time/1000);
+        if(time >= 3600){
+          let tempDuration = time;
+          let numHours = Math.floor(tempDuration/3600);
+          time = time - (numHours*3600);
+          hours = "" + numHours;
+        }
+        
+        if(time >= 60){
+          let tempDuration = time;
+          let numMinutes = Math.floor(tempDuration/60);
+          time = time - (numMinutes*60);
+          minutes = "" + numMinutes;
+        }
+
+        if(time > 0){
+          seconds = "" + time;
+        }
+
+        let duration = hours + ":" + minutes + ":" + seconds;
+
+        let newInstance:TimeTrackingUserInstance = {
+          id: instance.id,
+          userID: instance.userID,
+          officeID: instance.officeID, 
+          description: instance.description,
+          projectID: instance.projectID,
+          projectName: projectName,
+          tagID: instance.tagID,
+          tagName: tagName,
+          startTime: instance.startTime,
+          endTime: instance.endTime,
+          date: date,
+          startEnd: startEnd,
+          duration: duration
+        }
+
+        tempArray.push(newInstance);
+      })
+
+      this.timeTrackingUserInstances = tempArray.reverse();
+      console.log("Completed Instances: ", this.timeTrackingUserInstances)
+    },
+    (error) => {
+      console.log(error);
+    })
+  }
+
+  async getOfficeTagList(){
     let jwt = sessionStorage.getItem('jwt');
     this.timeTrackingService.getAllTimeTrackingTags(jwt, this.selectedOfficeID).subscribe((response) => {
       let tagList: TimeTrackingTag[] = [];
@@ -972,13 +1201,14 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         tagList.push(newTag);
       })
       this.timeTrackingTags = tagList;
+      this.getUserTrackingInstances();
     },
     (error) => {
       console.log(error);
     })
   }
 
-  getOfficeProjectList(){
+  async getOfficeProjectList(){
     let jwt = sessionStorage.getItem('jwt');
     this.timeTrackingService.getAllTimeTrackingProjects(jwt, this.selectedOfficeID).subscribe((response) => {
       let projectList: TimeTrackingProject[] = [];
@@ -991,23 +1221,32 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         projectList.push(newProject);
       })
       this.timeTrackingProjects = projectList;
+      this.getOfficeTagList();
     })
   }
 
   startTrackingTimer(){
-    this.startTimerInterval();
-    let today = new Date();
-    let date = {
-      Day: today.getDate(),
-      Month: today.getMonth(),
-      Year: today.getFullYear(),
-      MilliSeconds: today.getMilliseconds(),
-      Seconds: today.getSeconds(),
-      Minutes: today.getMinutes(),
-      Hours: today.getHours()
+    if(this.trackerStarted){
+      this.showPrimaryGlobalAlert = true;
+      this.globalAlertType = "Warning - ";
+      this.globalAlertMsg = "There is a timer already running."
+    }
+    else{
+      this.startTimerInterval();
+      this.trackerStarted = true;
+      let today = new Date();
+      let date = {
+        Day: today.getDate(),
+        Month: today.getMonth(),
+        Year: today.getFullYear(),
+        MilliSeconds: today.getMilliseconds(),
+        Seconds: today.getSeconds(),
+        Minutes: today.getMinutes(),
+        Hours: today.getHours()
     }
     let sessionStorageID = "startDateTime_" + this.selectedOffice;
     window.sessionStorage.setItem(sessionStorageID, JSON.stringify(date));
+    }
   }
 
   startTimerInterval(){
@@ -1051,24 +1290,117 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   stopTrackingTimer(){
-    clearInterval(this.trackingTimerInterval);
-    document.getElementById('timerSecond').innerText = "00";
-    document.getElementById('timerMinute').innerText = "00";
-    document.getElementById('timerHour').innerText = "00";
+    if(this.trackerStarted){
+      if(this.timeTrackerDescription != ""){
+        this.warningCount = 0;
+        this.closeAlert();
+        clearInterval(this.trackingTimerInterval);
+        this.trackerStarted = false;
+        document.getElementById('timerSecond').innerText = "00";
+        document.getElementById('timerMinute').innerText = "00";
+        document.getElementById('timerHour').innerText = "00";
 
-    let sessionStorageID = "startDateTime_" + this.selectedOffice;
-    let storedStartDate = JSON.parse(window.sessionStorage.getItem(sessionStorageID));
-    let startDate = new Date(
-      storedStartDate.Year, 
-      storedStartDate.Month, 
-      storedStartDate.Day, 
-      storedStartDate.Hours, 
-      storedStartDate.Minutes, 
-      storedStartDate.Seconds, 
-      storedStartDate.MilliSeconds
-    );
-    window.sessionStorage.removeItem(sessionStorageID)
-    let endDate = new Date();
+        let sessionStorageID = "startDateTime_" + this.selectedOffice;
+        let storedStartDate = JSON.parse(window.sessionStorage.getItem(sessionStorageID));
+        let startDate = new Date(
+          storedStartDate.Year, 
+          storedStartDate.Month, 
+          storedStartDate.Day, 
+          storedStartDate.Hours, 
+          storedStartDate.Minutes, 
+          storedStartDate.Seconds, 
+          storedStartDate.MilliSeconds
+        );
+        window.sessionStorage.removeItem(sessionStorageID)
+        let endDate = new Date();
+        
+        let jwt = sessionStorage.getItem('jwt');
+        this.timeTrackingService.registerNewTimeTrackingInstance(
+          jwt,
+          this.selectedOfficeID,
+          this.timeTrackerDescription,
+          this.selectedProjectID,
+          this.selectedTagID,
+          startDate.getTime() + "",
+          endDate.getTime() + ""
+        ).subscribe((response) => {
+          console.log(response)
+          this.timeTrackerDescription = "";
+          this.removeSelectedProject();
+          this.removeSelectedTag();
+          this.getUserTrackingInstances();
+        }, 
+        (error) => {
+          console.log(error)
+          this.timeTrackerDescription = "";
+          this.removeSelectedProject();
+          this.removeSelectedTag();
+        })
+      }
+      else if(this.warningCount == 1){
+        this.warningCount = 0;
+        this.closeAlert();
+
+        clearInterval(this.trackingTimerInterval);
+        this.trackerStarted = false;
+        document.getElementById('timerSecond').innerText = "00";
+        document.getElementById('timerMinute').innerText = "00";
+        document.getElementById('timerHour').innerText = "00";
+
+        let sessionStorageID = "startDateTime_" + this.selectedOffice;
+        let storedStartDate = JSON.parse(window.sessionStorage.getItem(sessionStorageID));
+        let startDate = new Date(
+          storedStartDate.Year, 
+          storedStartDate.Month, 
+          storedStartDate.Day, 
+          storedStartDate.Hours, 
+          storedStartDate.Minutes, 
+          storedStartDate.Seconds, 
+          storedStartDate.MilliSeconds
+        );
+        window.sessionStorage.removeItem(sessionStorageID)
+        let endDate = new Date();
+
+        let autoGeneratedDescription = 
+          this.userUsername + " - " + 
+          startDate.getFullYear() + ":" + 
+          startDate.getMonth() + ":" + 
+          startDate.getDate() + "-" + 
+          startDate.getHours() + ":" + 
+          startDate.getMinutes() + ":" + 
+          startDate.getSeconds();
+        
+        let jwt = sessionStorage.getItem('jwt');
+        this.timeTrackingService.registerNewTimeTrackingInstance(
+          jwt,
+          this.selectedOfficeID,
+          autoGeneratedDescription,
+          this.selectedProjectID,
+          this.selectedTagID,
+          startDate.getTime() + "",
+          endDate.getTime() + ""
+        ).subscribe((response) => {
+          console.log(response)
+          this.timeTrackerDescription = "";
+          this.removeSelectedProject();
+          this.removeSelectedTag();
+          this.getUserTrackingInstances();
+        }, 
+        (error) => {
+          console.log(error)
+          this.timeTrackerDescription = "";
+          this.removeSelectedProject();
+          this.removeSelectedTag();
+        })
+      }
+      else{
+        this.closeAlert();
+        this.warningCount++;
+        this.showPrimaryGlobalAlert = true;
+        this.globalAlertType = "Error - ";
+        this.globalAlertMsg = "Please add a description before ending the time tracking instance.";
+      }
+    }
   }
 
   setTimeTrackerProject(projectID: number, project: string){
@@ -1077,9 +1409,105 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     this.selectedProject = project;
   }
 
+  removeSelectedProject(){
+    this.timeTrackerProjectSelected = false;
+    this.selectedProjectID = null;
+    this.selectedProject = "";
+  }
+
   setTimeTrackerTag(tagID: number, tag: string){
     this.timeTrackerTagSelected = true;
-    
+    this.selectedTagID = tagID;
+    this.selectedTag = tag;
+  }
+
+  removeSelectedTag(){
+    this.timeTrackerTagSelected = false;
+    this.selectedTagID = null;
+    this.selectedTag = "";
+  }
+
+  addNewProject(){
+    let jwt = sessionStorage.getItem('jwt');
+    this.timeTrackingService.registerNewTimeTrackingProject(jwt, this.selectedOfficeID, this.newProjectName).subscribe((response) => {
+      this.newProjectName = "";
+      let newProject: TimeTrackingProject = {
+        id: response.Project.id,
+        officeID: response.Project.officeID,
+        project: response.Project.project
+      };
+      let tempArray: TimeTrackingProject[] = [];
+      tempArray.push(newProject);
+      this.timeTrackingProjects.forEach((project) => {
+        let tempProject: TimeTrackingProject = {
+          id: project.id,
+          officeID: project.officeID,
+          project: project.project
+        };
+        tempArray.push(tempProject);
+      })
+      this.timeTrackingProjects = tempArray;
+    },
+    (error) => {
+      console.log(error)
+      this.newProjectName = "";
+      this.closeAlert();
+      this.showPrimaryGlobalAlert = true;
+      this.globalAlertType = "Error - ";
+      this.globalAlertMsg = error.error.message;
+    })
+  }
+
+  deleteProject(id: number){
+    let jwt = sessionStorage.getItem('jwt');
+    this.timeTrackingService.removeTimeTrackingProjectByID(jwt, id).subscribe((response) => {
+      let tempArray: TimeTrackingProject[] = [];
+      this.timeTrackingProjects.forEach((project) => {
+        if(project.id != id){
+          let tempProject: TimeTrackingProject = {
+            id: project.id,
+            officeID: project.officeID,
+            project: project.project
+          };
+          tempArray.push(tempProject);
+        }
+      })
+      this.timeTrackingProjects = tempArray;
+    },
+    (error) => {
+      console.log(error)
+    })
+  }
+
+  addNewTag(){
+    let jwt = sessionStorage.getItem('jwt');
+    this.timeTrackingService.registerNewTimeTrackingTag(jwt, this.selectedOfficeID, this.newTagName).subscribe((response) => {
+      this.newTagName = "";
+      let newTag: TimeTrackingTag = {
+        id: response.Tag.id,
+        officeID: response.Tag.officeID,
+        tag: response.Tag.tag
+      };
+      let tempArray: TimeTrackingTag[] = [];
+      tempArray.push(newTag);
+      this.timeTrackingTags.forEach((tag) => {
+        let tempTag: TimeTrackingTag = {
+          id: tag.id,
+          officeID: tag.officeID,
+          tag: tag.tag
+        };
+        tempArray.push(tempTag);
+      })
+      this.timeTrackingTags = tempArray;
+    },
+    (error) => {
+      console.log(error)
+      this.newTagName = "";
+      this.closeAlert();
+      this.showPrimaryGlobalAlert = true;
+      this.globalAlertType = "Error - ";
+      this.globalAlertMsg = error.error.message;
+    })
   }
 
   showSendInviteModal(): void{
@@ -1095,12 +1523,14 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   hideDisplayFormModal(): void{
     this.showInviteModal = false;
     this.showAddRoomModal = false;
+    this.showVRCodeModal = false;
     this.displayFormModal = false;
     this.formModalAlertMsg = '';
     this.sendFormModalAlert = false;
     this.newRoomName = '';
     this.sendInviteToName = '';
     this.sendInviteToEmail = '';
+    this.VR_RoomCode = '';
   }
 
   sendOfficeInvite(): void{
@@ -1146,5 +1576,86 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy() {
     var body = document.getElementsByTagName("body")[0];
     body.classList.remove("user-page");
+
+    if(this.trackerStarted){
+      this.warningCount = 0;
+      this.closeAlert();
+
+      clearInterval(this.trackingTimerInterval);
+      this.trackerStarted = false;
+      document.getElementById('timerSecond').innerText = "00";
+      document.getElementById('timerMinute').innerText = "00";
+      document.getElementById('timerHour').innerText = "00";
+
+      let sessionStorageID = "startDateTime_" + this.selectedOffice;
+      let storedStartDate = JSON.parse(window.sessionStorage.getItem(sessionStorageID));
+      let startDate = new Date(
+        storedStartDate.Year, 
+        storedStartDate.Month, 
+        storedStartDate.Day, 
+        storedStartDate.Hours, 
+        storedStartDate.Minutes, 
+        storedStartDate.Seconds, 
+        storedStartDate.MilliSeconds
+      );
+      window.sessionStorage.removeItem(sessionStorageID)
+      let endDate = new Date();
+
+      if(this.timeTrackerDescription == ""){
+        let autoGeneratedDescription = 
+          this.userUsername + " - " + 
+          startDate.getFullYear() + ":" + 
+          startDate.getMonth() + ":" + 
+          startDate.getDate() + "-" + 
+          startDate.getHours() + ":" + 
+          startDate.getMinutes() + ":" + 
+          startDate.getSeconds();
+      
+        let jwt = sessionStorage.getItem('jwt');
+        this.timeTrackingService.registerNewTimeTrackingInstance(
+          jwt,
+          this.selectedOfficeID,
+          autoGeneratedDescription,
+          this.selectedProjectID,
+          this.selectedTagID,
+          startDate.getTime() + "",
+          endDate.getTime() + ""
+        ).subscribe((response) => {
+          console.log(response)
+          this.timeTrackerDescription = "";
+          this.removeSelectedProject();
+          this.removeSelectedTag();
+        }, 
+        (error) => {
+          console.log(error)
+          this.timeTrackerDescription = "";
+          this.removeSelectedProject();
+          this.removeSelectedTag();
+        })
+      }
+      else{
+        let jwt = sessionStorage.getItem('jwt');
+        this.timeTrackingService.registerNewTimeTrackingInstance(
+          jwt,
+          this.selectedOfficeID,
+          this.timeTrackerDescription,
+          this.selectedProjectID,
+          this.selectedTagID,
+          startDate.getTime() + "",
+          endDate.getTime() + ""
+        ).subscribe((response) => {
+          console.log(response)
+          this.timeTrackerDescription = "";
+          this.removeSelectedProject();
+          this.removeSelectedTag();
+        }, 
+        (error) => {
+          console.log(error)
+          this.timeTrackerDescription = "";
+          this.removeSelectedProject();
+          this.removeSelectedTag();
+        })
+      }
+    }
   }
 }

@@ -25,8 +25,8 @@ export class TimeTrackerUser{
     tagID: number;
 
     @Column()
-    startTime: Date;
+    startTime: string;
 
     @Column()
-    endTime: Date;
+    endTime: string;
 }

@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { TimeTrackerTagService } from './time-tracker-tag.service';
 
-@Controller('api/time-tracker/project')
+@Controller('api/time-tracker/tag')
 export class TimeTrackerTagController {
     constructor(private readonly timeTrackerTagService: TimeTrackerTagService){}
 
