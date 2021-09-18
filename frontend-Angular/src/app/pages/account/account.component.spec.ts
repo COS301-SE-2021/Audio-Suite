@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ModalModule } from "ngx-bootstrap/modal";
+import { Observable, of } from 'rxjs';
 
 import { AccountComponent } from './account.component';
 
@@ -8,7 +10,8 @@ xdescribe('AccountComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AccountComponent ]
+      declarations: [ AccountComponent ],
+      imports: [ModalModule.forRoot()]
     })
     .compileComponents();
   });

@@ -1,0 +1,103 @@
+.container{
+    text-align: center;
+    margin: auto;
+	position: relative;
+	-ms-overflow-style: none;
+    scrollbar-width: none;
+    overflow: hidden; 
+}
+
+.container::-webkit-scrollbar {
+    display: none;
+}
+
+#header {
+    display: flex;
+    justify-content: center;
+    position: relative;
+	padding-top:22px;
+}
+
+.row{
+	position: relative;
+	margin-right: 0;
+	margin-left: 0;
+}
+
+#back-button{
+	position: absolute;
+    left: 5px;
+    top: 5px;
+    width: 65px;
+    height: 41px;
+	text-align: center;
+	padding-right: 75px;
+	margin-top: 22px;
+}
+
+#header-text {
+    text-align: center;
+    font-size: 45px;
+}
+
+.new-sections{
+	width: 600px;
+	height: 225px;
+    padding: 12px 0 12px 0;
+	margin:0 auto;
+	position: relative;
+	color: #FFF;
+	background-clip: padding-box;
+	border: 1px solid #cad1d7;
+	border-radius: 1em;
+	overflow: none;
+}
+
+.form-group{
+	padding: 0 10px 0 10px;
+}
+
+.section-header, .section-header-delete, .subheading, .edit-input, #current-username{
+    text-align: center;
+}
+
+.section-header-delete{
+	color: #e14eca;
+}
+
+.edit-input, .section-button{
+    display: block;
+    margin: 0 auto;
+}
+
+.edit-input{
+	width: 300px;
+	padding: 10px;
+	color: white;
+	outline: 0;
+	background: #fff;
+	background-color: rgba(23, 25, 65, 0.9);
+	border:none;
+	box-shadow:none;
+	transition: border-bottom 0.3s;
+}
+.edit-input:focus{
+	border-bottom:1px solid violet ;
+}
+
+.section-button {
+	width: 50%;
+	display: block;
+	text-decoration: none;
+	margin-top: 10px;
+	background-color: rgba(58, 63, 156, 0.1);
+	border: 2px solid rgba(23, 25, 65, 0.9);
+	border-radius: 1em;
+	color: #e14eca;
+	outline: none;
+	transition: border-color 0.3s;
+}
+
+.section-button:hover{
+	border-color: #e14eca;
+}
