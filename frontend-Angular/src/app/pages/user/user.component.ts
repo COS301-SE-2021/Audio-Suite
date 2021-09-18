@@ -14,6 +14,7 @@ import { KanbanService } from 'src/app/services/kanban.service';
 import { TimeTrackingService } from 'src/app/services/time-tracking.service';
 import * as $ from "jquery";
 import 'round-slider';
+import { environment } from 'src/environments/environment';
 
 interface Office{
   id: string,
@@ -82,7 +83,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
   //Agora Audio Variables
   agoraConfig: AgoraConfig = {
-    AppID: '023766436b244044ab85f65470dcbae2',
+    AppID: environment.agoraAppId,
   };
   agoraService:AngularAgoraRtcService = new AngularAgoraRtcService(this.agoraConfig);
   audioComponent: AudioComponent;

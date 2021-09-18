@@ -29,9 +29,10 @@ import { UserComponent } from './user/user.component';
 import { ListComponent } from './list/list.component';
 import { CardComponent } from './card/card.component';
 import { AudioComponent } from "../audio/audio.component";
+import { environment } from "src/environments/environment";
 
 const agoraConfig: AgoraConfig = {
-  AppID: '023766436b244044ab85f65470dcbae2',
+  AppID: environment.agoraAppId,
 };
 //023766436b244044ab85f65470dcbae2
 //7afb53157f754f6f8023f31fb343404a
