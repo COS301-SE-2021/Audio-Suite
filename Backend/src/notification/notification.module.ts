@@ -8,14 +8,22 @@ import { UserService } from '../user/user.service';
 import { Notifications } from './notification.entity';
 import { MailModule } from '../mail/mail.module';
 import { MailService } from '../mail/mail.service';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Notifications]),
     TypeOrmModule.forFeature([User]),
-    JwtModule.register({
-      secret: 'secret', // TODO change to env var
-      signOptions: {expiresIn: '1d'}
+    JwtModule.registerAsync({
+      useFactory: (config: ConfigService) => {
+        return {
+          secret: config.get<string>('JWT_SECRET_KEY'),
+          signOptions: {
+            expiresIn: config.get<string | number>('JWT_EXPIRATION_TIME'),
+          },
+        };
+      },
+      inject: [ConfigService],
     }),
     MailModule
   ],

@@ -89,13 +89,53 @@ export class UserService {
         }
     }
 
-    async updateUsername(id: string, newUsername: string): Promise<any>{
+    async updateUsername(jwt: string, id: string, newUsername: string): Promise<any>{
         try{
             const user = await this.usersRepository.findOne({id: Number(id)});
             user.userName = newUsername;
             await this.usersRepository.save(user);
             const {password, ...result} = user;
             return result;
+        }catch(err){
+            throw new NotFoundException('User Not Found.');
+        }
+    }
+
+    async updateEmail(jwt: string, id: string, newEmail: string): Promise<any>{
+        try{
+            const user = await this.usersRepository.findOne({id: Number(id)});
+            user.email = newEmail;
+            await this.usersRepository.save(user);
+            const {password, ...result} = user;
+            return result;
+        }catch(err){
+            throw new NotFoundException('User Not Found.');
+        }
+    }
+
+    async updatePassword(jwt: string, id: string, newPassword: string): Promise<any>{
+        try{
+            const user = await this.usersRepository.findOne({id: Number(id)});
+            const saltOrRounds = 10;
+            const hashed_password = await bcrypt.hash(newPassword, saltOrRounds);
+            newPassword = hashed_password;
+            user.password = newPassword;
+            await this.usersRepository.save(user);
+            const {password, ...result} = user;
+            return result;
+        }catch(err){
+            throw new NotFoundException('User Not Found.');
+        }
+    }
+
+    async deleteUser(jwt: string, id: string): Promise<any>{
+        try{
+            const user = await this.usersRepository.findOne({id: Number(id)});
+            await this.usersRepository.delete(user);
+            return {
+                response: 'Success',
+                jwt: jwt
+            };
         }catch(err){
             throw new NotFoundException('User Not Found.');
         }

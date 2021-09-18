@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs'
+import { environment } from 'src/environments/environment';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -13,7 +14,7 @@ const httpOptions = {
 })
 export class UserService {
 
-  baseUrl = 'http://localhost:3001'
+  baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
@@ -60,15 +61,57 @@ export class UserService {
   }
 
   updateUsername(
+    jwt: string,
     id: string,
     newUsername: string
   ): Observable<any>{
     const body = {
+      jwt: jwt,
       id: id,
       newUsername: newUsername
     }
     var updateUsernameURL = this.baseUrl + '/api/user/updateUsername'
     return this.http.post<any>(updateUsernameURL, body, httpOptions);
+  }
+
+  updateEmail(
+    jwt: string,
+    id: string,
+    newEmail: string
+  ): Observable<any>{
+    const body = {
+      jwt: jwt,
+      id: id,
+      newEmail: newEmail
+    }
+    var updateEmailURL = this.baseUrl + '/api/user/updateEmail'
+    return this.http.post<any>(updateEmailURL, body, httpOptions);
+  }
+
+  updatePassword(
+    jwt: string,
+    id: string,
+    newPassword: string
+  ): Observable<any>{
+    const body = {
+      jwt: jwt,
+      id: id,
+      newPassword: newPassword
+    }
+    var updatePasswordURL = this.baseUrl + '/api/user/updatePassword'
+    return this.http.post<any>(updatePasswordURL, body, httpOptions);
+  }
+
+  deleteUser(
+    jwt: string,
+    id: string
+  ): Observable<any>{
+    const body = {
+      jwt: jwt,
+      id: id
+    }
+    var deleteUserURL = this.baseUrl + '/api/user/deleteUser'
+    return this.http.post<any>(deleteUserURL, body, httpOptions);
   }
 
   getUserDetails(

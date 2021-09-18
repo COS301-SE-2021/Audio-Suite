@@ -158,7 +158,8 @@ describe('OfficeRoomService', () => {
         Room: {
           id: 1, 
           officeID: 1, 
-          roomName: "Test_Room", 
+          roomName: "Test_Room",
+          roomType: "Normal",
           xCoordinate: 0, 
           yCoordinate: 0, 
           w: 2, 
@@ -169,11 +170,12 @@ describe('OfficeRoomService', () => {
       const jwt = 'gsahjgkhsdaklfhalskfklas.ghaslkghslslghsal.gfhaslkg/agfhilashglkas';
       const officeID = 1;
       const roomName = "Test_Room";
+      const roomType = "Normal";
       const xCoordinate = 0;
       const yCoordinate = 0;
       const w = 2;
       const h = 2;
-      officeRoomService.registerRoom(jwt, officeID, roomName, xCoordinate, yCoordinate, w, h).subscribe((response) => {
+      officeRoomService.registerRoom(jwt, officeID, roomName, roomType, xCoordinate, yCoordinate, w, h).subscribe((response) => {
         expect(expectedResponse).toBe(response, "should compare expected response to actual response");
       }, 
       (error) => {
@@ -195,6 +197,7 @@ describe('OfficeRoomService', () => {
           id: 1, 
           officeID: 1, 
           roomName: "Test_Room", 
+          roomType: "Normal",
           xCoordinate: 0, 
           yCoordinate: 0, 
           w: 3, 
@@ -205,11 +208,12 @@ describe('OfficeRoomService', () => {
       const jwt = 'gsahjgkhsdaklfhalskfklas.ghaslkghslslghsal.gfhaslkg/agfhilashglkas';
       const officeID = 1;
       const roomName = "Test_Room";
+      const roomType = "Normal";
       const xCoordinate = 0;
       const yCoordinate = 0;
       const w = 3;
       const h = 2;
-      officeRoomService.updateRoom(jwt, officeID, roomName, xCoordinate, yCoordinate, w, h).subscribe((response) => {
+      officeRoomService.updateRoom(jwt, officeID, roomName, roomType, xCoordinate, yCoordinate, w, h).subscribe((response) => {
         expect(expectedResponse).toBe(response, "should compare expected response to actual response");
       }, 
       (error) => {

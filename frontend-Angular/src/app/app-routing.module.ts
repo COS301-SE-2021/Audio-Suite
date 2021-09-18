@@ -16,12 +16,11 @@ import { AccountComponent } from "./pages/account/account.component";
 import { ListComponent } from "./pages/list/list.component";
 
 const routes: Routes = [
-  { path: "", redirectTo: "login", pathMatch: "full" },
+  { path: "", redirectTo: "home", pathMatch: "full" },
   { path: "home", component: IndexComponent },
   { path: "login", component: LoginComponent},
   { path: "register", component: RegisterComponent },
   { path: "user", component: UserComponent },
-  // { path: "kanban", component: ListComponent },
   { path: "account", component: AccountComponent },
   { path: "profile", component: ProfilepageComponent },
   { path: "registerExample", component: RegisterpageComponent },

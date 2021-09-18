@@ -39,7 +39,11 @@
 }
 
 .card-title {
+  padding-top: 5%;
+  padding-bottom: 5%;
   margin-bottom: $card-spacer-y;
+  background-color: #DA4FD2;
+  border-radius: 20px;
 }
 
 .card-subtitle {

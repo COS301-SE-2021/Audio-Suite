@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Message } from 'src/message/message.entity';
@@ -17,9 +18,16 @@ import { ServerSocketGateway } from './server-socket.gateway';
         TypeOrmModule.forFeature([Room]),
         TypeOrmModule.forFeature([RoomUsers]),
         TypeOrmModule.forFeature([User]),
-        JwtModule.register({
-            secret: 'secret', // TODO change to env var
-            signOptions: {expiresIn: '1d'}
+        JwtModule.registerAsync({
+            useFactory: (config: ConfigService) => {
+              return {
+                secret: config.get<string>('JWT_SECRET_KEY'),
+                signOptions: {
+                  expiresIn: config.get<string | number>('JWT_EXPIRATION_TIME'),
+                },
+              };
+            },
+            inject: [ConfigService],
           })
     ],
     controllers: [],

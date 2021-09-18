@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs'
+import { environment } from 'src/environments/environment';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -13,7 +14,8 @@ const httpOptions = {
 })
 export class OfficeRoomService {
 
-  baseUrl = 'http://localhost:3001'
+  baseUrl = environment.apiUrl;
+  tokenUrl = environment.tokenUrl;
 
   constructor(private http: HttpClient) { }
 
@@ -78,6 +80,7 @@ export class OfficeRoomService {
     jwt: string,
     officeID: number,
     roomName: string,
+    roomType: string,
     xCoordinate: number,
     yCoordinate: number,
     width: number, 
@@ -87,6 +90,7 @@ export class OfficeRoomService {
       jwt: jwt,
       officeID: officeID,
       roomName: roomName,
+      roomType: roomType,
       xCoordinate: xCoordinate,
       yCoordinate: yCoordinate,
       width: width,
@@ -109,6 +113,7 @@ export class OfficeRoomService {
     jwt: string,
     officeID: number,
     roomName: string,
+    roomType: string,
     xCoordinate: number,
     yCoordinate: number,
     width: number, 
@@ -118,6 +123,7 @@ export class OfficeRoomService {
       jwt: jwt,
       officeID: officeID,
       roomName: roomName,
+      roomType: roomType,
       xCoordinate: xCoordinate,
       yCoordinate: yCoordinate,
       width: width,
@@ -152,4 +158,27 @@ export class OfficeRoomService {
       var userRoom = this.baseUrl + '/api/room/findUser';
       return this.http.post<any>(userRoom, body, httpOptions);
   }
+
+  getRoomUsersByOfficeID(
+    jwt: string, 
+    officeID: number
+    ): Observable<any>{
+      const body = {
+        jwt: jwt,
+        officeID: officeID
+      }
+      var getRoomUsersByOfficeID_URL = this.baseUrl + '/api/room/getRoomUsers';
+      return this.http.post<any>(getRoomUsersByOfficeID_URL, body, httpOptions);
+  }
+
+  fetchToken( uid: number, channelName: string, role: number): Observable<any>{
+      const body = {
+        uid: uid,
+        channelName: channelName,
+        role: role
+      }
+      var fetchTokenURL = this.tokenUrl;
+      return this.http.post<any>(fetchTokenURL, body, httpOptions);
+  }
+
 }
