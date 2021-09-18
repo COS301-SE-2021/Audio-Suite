@@ -128,6 +128,8 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   displayFormModal: boolean = false;
   showInviteModal: boolean = false;
   showAddRoomModal: boolean = false;
+  showVRCodeModal: boolean = false;
+  VR_RoomCode: string = '';
   focus6: boolean = false;
   focus7: boolean = false;
   sendNewOfficeAlert: boolean = false;
@@ -450,26 +452,6 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       document.getElementById('Content').style.width = "100%";
       document.getElementById('TextChannelContent').style.width = "100%";
     }
-
-    // const component = this;
-
-    // $("#slider").roundSlider({
-    //   sliderType: "min-range",
-    //   radius: 130,
-    //   showTooltip: false,
-    //   width: 25,
-    //   //value: 100,
-    //   handleSize: 0,
-    //   handleShape: "square",
-    //   circleShape: "full",
-    //   value: 100,
-    //   startAngle: 90,
-    //       valueChange: function (e) {
-    //       var color = e.isInvertedRange ? "#FF5722" : "#8BC34A";
-    //       $("#slider").roundSlider({ "rangeColor": color, "tooltipColor": color });
-    //       component.audioComponent.setUserOrientation(e.value);
-    //     }
-    // });
   }
 
   getUserOfficeList(): void{
@@ -808,7 +790,12 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
   selectRoom(id: string, roomType: string, leaveRoom: boolean): void{
     // console.log("Room Type: " + roomType)
-    if(leaveRoom){
+    if(roomType == "VR"){
+      this.VR_RoomCode = this.selectedOffice + "_" + id;
+      this.showVRCodeModal = true;
+      this.displayFormModal = true;
+    }
+    else if(leaveRoom){
       var jwt = sessionStorage.getItem('jwt');
       this.textChannelsService.leaveRoom(jwt, this.selectedOfficeID, this.selectedOffice, id);
       this.roomSelected = false;
@@ -1531,12 +1518,14 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   hideDisplayFormModal(): void{
     this.showInviteModal = false;
     this.showAddRoomModal = false;
+    this.showVRCodeModal = false;
     this.displayFormModal = false;
     this.formModalAlertMsg = '';
     this.sendFormModalAlert = false;
     this.newRoomName = '';
     this.sendInviteToName = '';
     this.sendInviteToEmail = '';
+    this.VR_RoomCode = '';
   }
 
   sendOfficeInvite(): void{

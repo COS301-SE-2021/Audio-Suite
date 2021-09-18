@@ -858,113 +858,138 @@
         </div>
         </div>
         <div class="modal-body">
-        <form role="form" *ngIf="showInviteModal">
-            <div *ngIf="sendFormModalAlert">
-                <alert class="alert-with-icon" [type]="'primary alert-with-icon'">
-                    <span class=" tim-icons icon-trophy" data-notify="icon">
-                    </span>
-                    <span>
-                        {{ formModalAlertMsg }}
-                    </span>
-                </alert>
-                </div>
-            <div class="form-group mb-3">
-                <div class="input-group input-group-alternative" [ngClass]="{'input-group-focus':focus6===true}">
-                    <div class="input-group-prepend">
-                    <span class="input-group-text">
-                        <i class="tim-icons icon-email-85"> </i>
-                    </span>
+            <form role="form" *ngIf="showVRCodeModal">
+                <div *ngIf="sendFormModalAlert">
+                    <alert class="alert-with-icon" [type]="'primary alert-with-icon'">
+                        <span class=" tim-icons icon-trophy" data-notify="icon">
+                        </span>
+                        <span>
+                            {{ formModalAlertMsg }}
+                        </span>
+                    </alert>
                     </div>
-                    <input
-                        class="form-control"
-                        placeholder="Name"
-                        name="sendInviteToName"
-                        [(ngModel)]="sendInviteToName"
-                        type="text"
-                        (focus)="focus6=true" 
-                        (blur)="focus6=false"
-                    />
+                <div class="form-group mb-3">
+                    <h4>
+                        Your VR room code is: <b>{{ VR_RoomCode }}</b>
+                    </h4>
                 </div>
-            </div>
-            <div class="form-group mb-3">
-                <div class="input-group input-group-alternative" [ngClass]="{'input-group-focus':focus7===true}">
-                    <div class="input-group-prepend">
-                    <span class="input-group-text">
-                        <i class="tim-icons icon-email-85"> </i>
-                    </span>
+                <div class="text-center">
+                    <button 
+                        class="btn btn-success my-4" 
+                        type="button"
+                        (click)="hideDisplayFormModal()"
+                    >
+                        Close
+                    </button>
+                </div>
+            </form>
+            <form role="form" *ngIf="showInviteModal">
+                <div *ngIf="sendFormModalAlert">
+                    <alert class="alert-with-icon" [type]="'primary alert-with-icon'">
+                        <span class=" tim-icons icon-trophy" data-notify="icon">
+                        </span>
+                        <span>
+                            {{ formModalAlertMsg }}
+                        </span>
+                    </alert>
                     </div>
-                    <input
-                        class="form-control"
-                        placeholder="Email"
-                        name="sendInviteToEmail"
-                        [(ngModel)]="sendInviteToEmail"
-                        type="email"
-                        (focus)="focus7=true" 
-                        (blur)="focus7=false"
-                    />
-                </div>
-            </div>
-            <div class="text-center">
-                <button 
-                    class="btn btn-success my-4" 
-                    type="button"
-                    (click)="sendOfficeInvite()"
-                >
-                    Submit
-                </button>
-            </div>
-        </form>
-        <form role="form" *ngIf="showAddRoomModal">
-            <div *ngIf="sendFormModalAlert">
-                <alert class="alert-with-icon" [type]="'primary alert-with-icon'">
-                    <span class=" tim-icons icon-trophy" data-notify="icon">
-                    </span>
-                    <span>
-                        {{ formModalAlertMsg }}
-                    </span>
-                </alert>
-                </div>
-            <div class="form-group mb-3">
-                <div class="input-group input-group-alternative" [ngClass]="{'input-group-focus':focus6===true}">
-                    <div class="input-group-prepend">
-                    <span class="input-group-text">
-                        <i class="tim-icons icon-email-85"> </i>
-                    </span>
+                <div class="form-group mb-3">
+                    <div class="input-group input-group-alternative" [ngClass]="{'input-group-focus':focus6===true}">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="tim-icons icon-email-85"> </i>
+                        </span>
+                        </div>
+                        <input
+                            class="form-control"
+                            placeholder="Name"
+                            name="sendInviteToName"
+                            [(ngModel)]="sendInviteToName"
+                            type="text"
+                            (focus)="focus6=true" 
+                            (blur)="focus6=false"
+                        />
                     </div>
-                    <input
-                        class="form-control"
-                        placeholder="Room Name"
-                        name="newRoomName"
-                        [(ngModel)]="newRoomName"
-                        type="text"
-                        (focus)="focus6=true" 
-                        (blur)="focus6=false"
-                    />
                 </div>
-            </div>
-            <div class="form-group mb-3">
-                <label for="roomTypeDropdown">Room Type</label>
-                <select 
-                    class="form-control"   
-                    id="roomTypeDropdown"
-                    name="newRoomType"
-                    [(ngModel)]="newRoomType"
-                >
-                  <option value="Normal" selected>Normal</option>
-                  <option value="Private">Private</option>
-                  <option value="VR">VR</option>
-                </select>
-              </div>
-            <div class="text-center">
-                <button 
-                    class="btn btn-success my-4" 
-                    type="button"
-                    (click)="addRoom()"
-                >
-                    Add Room
-                </button>
-            </div>
-        </form>
+                <div class="form-group mb-3">
+                    <div class="input-group input-group-alternative" [ngClass]="{'input-group-focus':focus7===true}">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="tim-icons icon-email-85"> </i>
+                        </span>
+                        </div>
+                        <input
+                            class="form-control"
+                            placeholder="Email"
+                            name="sendInviteToEmail"
+                            [(ngModel)]="sendInviteToEmail"
+                            type="email"
+                            (focus)="focus7=true" 
+                            (blur)="focus7=false"
+                        />
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button 
+                        class="btn btn-success my-4" 
+                        type="button"
+                        (click)="sendOfficeInvite()"
+                    >
+                        Submit
+                    </button>
+                </div>
+            </form>
+            <form role="form" *ngIf="showAddRoomModal">
+                <div *ngIf="sendFormModalAlert">
+                    <alert class="alert-with-icon" [type]="'primary alert-with-icon'">
+                        <span class=" tim-icons icon-trophy" data-notify="icon">
+                        </span>
+                        <span>
+                            {{ formModalAlertMsg }}
+                        </span>
+                    </alert>
+                    </div>
+                <div class="form-group mb-3">
+                    <div class="input-group input-group-alternative" [ngClass]="{'input-group-focus':focus6===true}">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="tim-icons icon-email-85"> </i>
+                        </span>
+                        </div>
+                        <input
+                            class="form-control"
+                            placeholder="Room Name"
+                            name="newRoomName"
+                            [(ngModel)]="newRoomName"
+                            type="text"
+                            (focus)="focus6=true" 
+                            (blur)="focus6=false"
+                        />
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="roomTypeDropdown">Room Type</label>
+                    <select 
+                        class="form-control"   
+                        id="roomTypeDropdown"
+                        name="newRoomType"
+                        [(ngModel)]="newRoomType"
+                    >
+                    <option value="Normal" selected>Normal</option>
+                    <option value="Private">Private</option>
+                    <option value="VR">VR</option>
+                    </select>
+                </div>
+                <div class="text-center">
+                    <button 
+                        class="btn btn-success my-4" 
+                        type="button"
+                        (click)="addRoom()"
+                    >
+                        Add Room
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
     </div>
