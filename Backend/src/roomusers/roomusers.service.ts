@@ -40,6 +40,10 @@ export class RoomUsersService {
         }
     }
 
+    async getRoomUserByRoomID(roomID: number): Promise<any>{
+        return await this.roomUsersRepository.find({roomID});
+    }
+
     async removeUserFromAllRooms(userID: number): Promise<any>{
         try{
             const removedRoomUsers = await this.roomUsersRepository.delete({userID});

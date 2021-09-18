@@ -20,13 +20,14 @@ export class RoomController {
         @Body('jwt') jwt: string,
         @Body('officeID') officeID: number,
         @Body('roomName') roomName: string, 
+        @Body('roomType') roomType: string,
         @Body('xCoordinate') xCoordinate: number,
         @Body('yCoordinate') yCoordinate: number,
         @Body('width') width: number,
         @Body('height') height: number,
     )
     {
-        return await this.roomService.registerRoom(jwt, officeID, roomName, xCoordinate, yCoordinate, width, height);
+        return await this.roomService.registerRoom(jwt, officeID, roomName, roomType, xCoordinate, yCoordinate, width, height);
     }
 
     @Post('room/updateDetails')
@@ -34,13 +35,14 @@ export class RoomController {
         @Body('jwt') jwt: string,
         @Body('officeID') officeID: number,
         @Body('roomName') roomName: string, 
+        @Body('roomType') roomType: string,
         @Body('xCoordinate') xCoordinate: number,
         @Body('yCoordinate') yCoordinate: number,
         @Body('width') width: number,
         @Body('height') height: number,
     )
     {
-        return await this.roomService.updateRoomDetails(jwt, officeID, roomName, xCoordinate, yCoordinate, width, height);
+        return await this.roomService.updateRoomDetails(jwt, officeID, roomName, roomType, xCoordinate, yCoordinate, width, height);
     }
 
     @Post('room/delete')
@@ -83,5 +85,15 @@ export class RoomController {
     )
     {
         return await this.roomService.findWhatRoomAUserIsIn(jwt, userID);
+    }
+
+    //Returns all the room users for a given office
+    @Post('room/getRoomUsers')
+    async getRoomUsersByOfficeID(
+        @Body('jwt') jwt: string,
+        @Body('officeID') officeID: number,
+    )
+    {
+        return await this.roomService.getRoomUsersByOfficeID(jwt, officeID);
     }
 }

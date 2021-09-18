@@ -1,0 +1,15 @@
+{
+  "name": "audio_suite_desktop",
+  "version": "1.0.0",
+  "description": "The desktop application for the audio suite website.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "AudioSuiteDevs",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^14.0.0"
+  }
+}

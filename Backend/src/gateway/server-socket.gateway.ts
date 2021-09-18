@@ -37,7 +37,7 @@ export class ServerSocketGateway implements OnGatewayInit, OnGatewayDisconnect{
       var tmpOffice = this.clientList[index].office;
       await this.roomService.removeUserFromAllRooms(this.clientList[index].jwt);
       this.clientList.splice(index, 1);
-      this.wss.to(tmpOffice).emit('updateRoomAttendance');
+      this.wss.to(tmpOffice).emit('updateRoomAttendance', "Update Room User List");
       this.logger.log('Clean up before disconnecting')
     }
     this.logger.log('Client: ' + client.id + ' disconnected');
@@ -73,7 +73,7 @@ export class ServerSocketGateway implements OnGatewayInit, OnGatewayDisconnect{
       this.clientList.push(newClient);
       
       await this.roomService.addUserToRoomUsersFromRoomName(data.jwt, data.officeID, data.channel);
-      this.wss.to(data.office).emit('updateRoomAttendance');
+      this.wss.to(data.office).emit('updateRoomAttendance', "Update Room User List");
     }
   }
 
@@ -91,7 +91,7 @@ export class ServerSocketGateway implements OnGatewayInit, OnGatewayDisconnect{
     }
 
     await this.roomService.removeUserFromRoomUsersFromRoomName(data.jwt, data.officeID, data.channel);
-    this.wss.to(data.office).emit('updateRoomAttendance');
+    this.wss.to(data.office).emit('updateRoomAttendance', "Update Room User List");
   }
 
   //--------------------------------------------------------------------------------------------------------------------

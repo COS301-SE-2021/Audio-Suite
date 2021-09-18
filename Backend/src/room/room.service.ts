@@ -4,6 +4,7 @@ import { RoomUsersService } from '../roomusers/roomusers.service';
 import { UserService } from '../user/user.service';
 import { Repository } from 'typeorm';
 import { Room } from './room.entity';
+import { RoomUsers } from 'src/roomusers/roomusers.entity';
 
 @Injectable()
 export class RoomService {
@@ -36,7 +37,7 @@ export class RoomService {
         }
     }
 
-    async registerRoomAuth(officeID: number, roomName: string, xCoordinate: number, yCoordinate: number, width: number, height: number): Promise<any> {
+    async registerRoomAuth(officeID: number, roomName: string, roomType: string, xCoordinate: number, yCoordinate: number, width: number, height: number): Promise<any> {
         try{
             const roomExists = await this.roomRepository.find({officeID, roomName});
             if(roomExists.length > 0){
@@ -48,7 +49,7 @@ export class RoomService {
         }
         
         try{
-            const room = await this.roomRepository.create({officeID, roomName, xCoordinate, yCoordinate, width, height});
+            const room = await this.roomRepository.create({officeID, roomName, roomType, xCoordinate, yCoordinate, width, height});
             const savedRoom = await this.roomRepository.save(room);
             return {
                 Response: "Success",
@@ -60,7 +61,7 @@ export class RoomService {
         }
     }
 
-    async registerRoom(jwt: string, officeID: number, roomName: string, xCoordinate: number, yCoordinate: number, width: number, height: number): Promise<any> {
+    async registerRoom(jwt: string, officeID: number, roomName: string, roomType: string, xCoordinate: number, yCoordinate: number, width: number, height: number): Promise<any> {
         try{
             const user = await this.userService.validateUser(jwt);
             if(user == null){
@@ -82,7 +83,7 @@ export class RoomService {
         }
 
         try{
-            const room = await this.roomRepository.create({officeID, roomName, xCoordinate, yCoordinate, width, height});
+            const room = await this.roomRepository.create({officeID, roomName, roomType, xCoordinate, yCoordinate, width, height});
             const savedRoom = await this.roomRepository.save(room);
             return {
                 Response: "Success",
@@ -94,7 +95,7 @@ export class RoomService {
         }
     }
 
-    async updateRoomDetails(jwt: string, officeID: number, roomName: string, xCoordinate: number, yCoordinate: number, width: number, height: number): Promise<any> {
+    async updateRoomDetails(jwt: string, officeID: number, roomName: string, roomType: string, xCoordinate: number, yCoordinate: number, width: number, height: number): Promise<any> {
         try{
             const user = await this.userService.validateUser(jwt);
             if(user == null){
@@ -108,7 +109,7 @@ export class RoomService {
         try{
             const oldRoom = await this.roomRepository.findOne({officeID, roomName});
             var id = oldRoom.id;
-            const newRoom = await this.roomRepository.create({id, officeID, roomName, xCoordinate, yCoordinate, width, height});
+            const newRoom = await this.roomRepository.create({id, officeID, roomName, roomType, xCoordinate, yCoordinate, width, height});
             const savedRoom = await this.roomRepository.save(newRoom);
             this.logger.log("Updating Room with ID: " + id);
             return {
@@ -295,6 +296,44 @@ export class RoomService {
         }
         catch(err){
             throw new BadRequestException("Could not remove records with the given user ID.")
+        }
+    }
+
+    async getRoomUsersByOfficeID(jwt: string, officeID: number): Promise<any>{
+        //verify the user
+        try{
+            const user = await this.userService.validateUser(jwt);
+        }
+        catch(err){
+            throw new UnauthorizedException();
+        }
+
+        interface RoomUserList{
+            Room: string,
+            RoomUsers: RoomUsers []
+        }
+
+        let roomUserList: RoomUserList[] = [];
+        try{
+            const rooms: Room [] = await this.roomRepository.find({officeID: officeID});
+            for(var i = 0; i < rooms.length; i++){
+                let newRoomUserItem: RoomUserList = {
+                    Room: rooms[i].roomName,
+                    RoomUsers: await this.roomUserService.getRoomUserByRoomID(rooms[i].id)
+                }
+
+                roomUserList.push(newRoomUserItem);
+
+                if(i == rooms.length-1){
+                    return {
+                        Response: "Success",
+                        RoomUserList: roomUserList
+                    }
+                }
+            }
+        }
+        catch(err){
+            throw new BadRequestException("Could not find records with the given office ID.")
         }
     }
 }

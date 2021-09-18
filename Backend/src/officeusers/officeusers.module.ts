@@ -7,6 +7,7 @@ import { User } from "../user/user.entity";
 import { UserService } from "../user/user.service";
 import { OfficeUsers } from "./officeusers.entity";
 import { OfficeusersService } from "./officeusers.service";
+import { ConfigService } from "@nestjs/config";
 
 
 
@@ -14,9 +15,16 @@ import { OfficeusersService } from "./officeusers.service";
   imports: [TypeOrmModule.forFeature([OfficeUsers]),
   TypeOrmModule.forFeature([Office]),
   TypeOrmModule.forFeature([User]),
-  JwtModule.register({
-    secret: 'secret', // TODO change to env var
-    signOptions: {expiresIn: '1d'}
+  JwtModule.registerAsync({
+    useFactory: (config: ConfigService) => {
+      return {
+        secret: config.get<string>('JWT_SECRET_KEY'),
+        signOptions: {
+          expiresIn: config.get<string | number>('JWT_EXPIRATION_TIME'),
+        },
+      };
+    },
+    inject: [ConfigService],
   })
 ],
   providers: [OfficeUsers, OfficeusersService, UserService]

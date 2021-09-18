@@ -1,3 +1,4 @@
+<body>
 <nav
   class="navbar navbar-expand-lg fixed-top navbar-transparent"
   color-on-scroll="100"
@@ -10,9 +11,10 @@
         placement="bottom"
         [routerLink]="['/home']"
         target="_blank"
-        tooltip="Designed and Coded by Creative Tim"
+        tooltip="Audio Suite by Project Pegasus"
+        id="audio-suite-nav-title"
       >
-        <span> BLK• </span> Design System Angular
+        <span>Audio</span> Suite
       </a>
       <button
         aria-controls="navigation-index"
@@ -55,7 +57,7 @@
         <li class="nav-item p-0">
           <a
             class="nav-link"
-            href="https://twitter.com/CreativeTim"
+            href="#"
             placement="bottom"
             target="_blank"
             tooltip="Follow us on Twitter"
@@ -67,7 +69,7 @@
         <li class="nav-item p-0">
           <a
             class="nav-link"
-            href="https://www.facebook.com/CreativeTim"
+            href="#"
             placement="bottom"
             target="_blank"
             tooltip="Like us on Facebook"
@@ -79,7 +81,7 @@
         <li class="nav-item p-0">
           <a
             class="nav-link"
-            href="https://www.instagram.com/CreativeTimOfficial"
+            href="#"
             placement="bottom"
             target="_blank"
             tooltip="Follow us on Instagram"
@@ -88,38 +90,18 @@
             <p class="d-lg-none d-xl-none">Instagram</p>
           </a>
         </li>
-        <li class="dropdown nav-item" dropdown>
+        <li class="nav-item">
           <a
-            class="dropdown-toggle nav-link dropdown-toggle"
-            data-toggle="dropdown"
-            dropdownToggle
-            href="javascript:void(0)"
+            class="nav-link"
+            [routerLink]="['/login']"
           >
-            <i class="fa fa-cogs d-lg-none d-xl-none"> </i> Getting started
+            Login
           </a>
-          <div class="dropdown-menu dropdown-with-icons" *dropdownMenu>
-            <a
-              class="dropdown-item"
-              href="https://demos.creative-tim.com/blk-design-system-angular/#/documentation/overview"
-            >
-              <i class="tim-icons icon-paper"> </i> Documentation
-            </a>
-            <a class="dropdown-item" [routerLink]="['/register']">
-              <i class="tim-icons icon-bullet-list-67"> </i> Register Page
-            </a>
-            <a class="dropdown-item" [routerLink]="['/landing']">
-              <i class="tim-icons icon-image-02"> </i> Landing Page
-            </a>
-            <a class="dropdown-item" [routerLink]="['/profile']">
-              <i class="tim-icons icon-single-02"> </i> Profile Page
-            </a>
-          </div>
         </li>
         <li class="nav-item">
           <a
             class="nav-link btn btn-default d-none d-lg-block"
-            href="javascript:void(0)"
-            (click)="scrollToDownload(target)"
+            href="#download-section1"
           >
             <i class="tim-icons icon-cloud-download-93"> </i> Download
           </a>
@@ -139,7 +121,7 @@
     <div class="squares square7"></div>
     <div class="container">
       <div class="content-center brand">
-        <h1 class="h1-seo">BLK•</h1>
+        <h1 class="h1-seo">Audio Suite</h1>
         <h3>
           A beautiful Design System for Bootstrap 4 and Angular. It's Free and
           Open Source.
@@ -147,7 +129,7 @@
       </div>
     </div>
   </div>
-  <div class="main">
+  <!-- <div class="main">
     <div class="section section-basic" id="basic-elements">
       <img class="path" src="assets/img/path1.png" />
 
@@ -1905,7 +1887,646 @@
         </div>
       </div>
     </div>
+  </div> -->
+
+
+  <section id="office-features" class="section section-lg section-safe">
+    <img  id="office-features-img" src="assets/img/path5.png" class="path">
+    <div class="container">
+      <div class="row row-grid justify-content-between">
+          <div id="office-features-blocks" class="col-md-6">
+            <div class="px-md-5">
+              <hr class="line-success">
+              <h1 class="profile-title text-left">Office Spaces</h1>
+              <p class="profile-description"> The design of our office space comes with four built-in pages to enhance your online office experience. After creating an account, you'll be able to create an office or even join an office that you have been invited to. The features that you will have access to within the office include: </p>
+              <!-- <ul class="list-unstyled mt-5">
+                <li class="py-2">
+                  <div class="d-flex align-items-center">
+                    <div class="icon icon-success mb-2">
+                      <i class="tim-icons icon-vector"></i>
+                    </div>
+                    <div class="ml-3">
+                      <h6>Spatial Audio Office Floorplan</h6>
+                    </div>
+                  </div>
+                </li>
+                <li class="py-2">
+                  <div class="d-flex align-items-center">
+                    <div class="icon icon-success mb-2">
+                      <i class="tim-icons icon-tap-02"></i>
+                    </div><div class="ml-3">
+                      <h6>Office Chatroom</h6>
+                    </div>
+                  </div>
+                </li>
+                <li class="py-2">
+                  <div class="d-flex align-items-center">
+                    <div class="icon icon-success mb-2">
+                      <i class="tim-icons icon-single-02"></i>
+                    </div>
+                    <div class="ml-3">
+                      <h6>Kanban Boards</h6>
+                    </div>
+                  </div>
+                </li>
+                <li class="py-2">
+                  <div class="d-flex align-items-center">
+                    <div class="icon icon-success mb-2">
+                      <i class="tim-icons icon-single-02"></i>
+                    </div>
+                    <div class="ml-3">
+                      <h6>Timesheet</h6>
+                    </div>
+                  </div>
+                </li>
+              </ul> -->
+            </div>
+          </div>
+          <div class="col-md-5">
+            <img src="assets/img/chester-wade.jpg" class="img-fluid floating">
+            <div class="card card-stats bg-danger">
+              <div class="card-body">
+                <div class="justify-content-center">
+                  <div class="numbers">
+                    <p class="card-title">100%</p>
+                    <p class="card-category text-white">Safe</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card card-stats bg-info">
+              <div class="card-body">
+                <div class="justify-content-center">
+                  <div class="numbers">
+                    <p class="card-title">573 K</p>
+                    <p class="card-category text-white">Satisfied customers</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+              <div class="card card-stats bg-default">
+                <div class="card-body">
+                  <div class="justify-content-center">
+                    <div class="numbers">
+                      <p class="card-title">10 425</p>
+                      <p class="card-category text-white">Business</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-lg">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-12">
+          <div class="row row-grid justify-content-center">
+            <div class="col-lg-3">
+              <div class="info">
+                <div class="icon icon-primary">
+                  <i class="tim-icons icon-money-coins"></i>
+                </div>
+                <h4 class="info-title">Office Chatroom</h4>
+                <hr class="line-primary">
+                <p> Whether it be scheduling the next meeting or sending links and information to your peers, we know how important it is to have an easy access platform to comunicate with your fellow office members. The Chatroom is exactly that! A messaging service that connects you to the Office, allowing you to message whenever you need to. </p>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <div class="info">
+                <div class="icon icon-warning">
+                  <i class="tim-icons icon-chart-pie-36"></i>
+                </div>
+                <h4 class="info-title">Kanban Boards</h4>
+                <hr class="line-warning">
+                <p> Need help organizing and setting up a guideline for a project or even for office outcomes? We've got just the feature. Our Kanban Boards offer office users an office-wide simplistic interface to organize and manage workload and workflow of projects by means of a board with three seperate lists. </p>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <div class="info">
+                <div class="icon icon-success">
+                  <i class="tim-icons icon-single-02"></i>
+                </div>
+                <h4 class="info-title">Timesheet</h4>
+                <hr class="line-success">
+                <p> It can be very tiresome having to manually fill in your hours during or after work, which is why we have integrated a Timesheet into the office. The Timesheet allows you to fill in what you worked, when you worked on it! All of this accessible through our easy-to-follow interface. </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- <section id="office-features" class="section section-lg section-safe">
+    <div class="container">
+      <div class="row row-grid justify-content-between">
+          <div id="office-features-blocks" class="col-md-6">
+            <div class="px-md-5">
+              <hr class="line-success">
+              <h3>Office Space</h3>
+              <p> The design of our office space comes with four built-in pages to enhance your online office experience. After creating an account, you'll be able to create an office or even join an office that you have been invited to. The features that you will have access to within the office include: </p>
+              <ul class="list-unstyled mt-5">
+                <li class="py-2">
+                  <div class="d-flex align-items-center">
+                    <div class="icon icon-success mb-2">
+                      <i class="tim-icons icon-vector"></i>
+                    </div>
+                    <div class="ml-3">
+                      <h6>Spatial Audio Office Floorplan</h6>
+                    </div>
+                  </div>
+                </li>
+                <li class="py-2">
+                  <div class="d-flex align-items-center">
+                    <div class="icon icon-success mb-2">
+                      <i class="tim-icons icon-tap-02"></i>
+                    </div><div class="ml-3">
+                      <h6>Office Chatroom</h6>
+                    </div>
+                  </div>
+                </li>
+                <li class="py-2">
+                  <div class="d-flex align-items-center">
+                    <div class="icon icon-success mb-2">
+                      <i class="tim-icons icon-single-02"></i>
+                    </div>
+                    <div class="ml-3">
+                      <h6>Kanban Boards</h6>
+                    </div>
+                  </div>
+                </li>
+                <li class="py-2">
+                  <div class="d-flex align-items-center">
+                    <div class="icon icon-success mb-2">
+                      <i class="tim-icons icon-single-02"></i>
+                    </div>
+                    <div class="ml-3">
+                      <h6>Timesheet</h6>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="row justify-content-between align-items-center">
+              <carousel ng-reflect-show-indicators="true">
+                <div tabindex="0" class="carousel slide">
+                  <ol class="carousel-indicators">
+                    <li class=""></li>
+                    <li class="active"></li>
+                    <li class=""></li>
+                  </ol>
+                  <div class="carousel-inner" ng-reflect-ng-style="[object Object]" style="display: block;">
+                    <slide _nghost-nrw-c91="" aria-hidden="true" class="item carousel-item" style="width: 100%; order: 0;">
+                      <div _ngcontent-nrw-c91="" class="item">
+                        <img alt="First slide" src="assets/img/VRfrom_whiteboard.PNG" class="d-block">
+                        <div class="carousel-caption d-none d-md-block">
+                          <h5>Office from Whiteboard</h5>
+                        </div>
+                      </div>
+                    </slide>
+                    <slide _nghost-nrw-c91="" aria-hidden="false" class="item carousel-item active" style="width: 100%; order: 0;">
+                      <div _ngcontent-nrw-c91="" class="item active">
+                        <img alt="Second slide" src="assets/img/VRroom.PNG" class="d-block">
+                        <div class="carousel-caption d-none d-md-block">
+                          <h5>Office from Entrance</h5>
+                        </div>
+                      </div>
+                    </slide>
+                    <slide _nghost-nrw-c91="" aria-hidden="true" class="item carousel-item" style="width: 100%; order: 0;">
+                      <div _ngcontent-nrw-c91="" class="item">
+                        <img alt="Third slide" src="assets/img/VRback.PNG" class="d-block">
+                        <div class="carousel-caption d-none d-md-block">
+                          <h5>Office View</h5>
+                        </div>
+                      </div>
+                    </slide>
+                  </div>
+                  <a tabindex="0" role="button" class="left carousel-control carousel-control-prev">
+                    <span aria-hidden="true" class="icon-prev carousel-control-prev-icon"></span>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                  <a tabindex="0" role="button" class="right carousel-control carousel-control-next">
+                    <span aria-hidden="true" class="icon-next carousel-control-next-icon"></span>
+                    <span class="sr-only">Next</span>
+                  </a>
+                </div>
+              </carousel>
+            </div>
+          </div>
+      </div>
+    </div>
+  </section> -->
+
+
+
+
+
+  <div class="section">
+    <div class="container">
+      <div class="row justify-content-between">
+        <div class="col-md-6">
+          <div class="row justify-content-between align-items-center">
+            <carousel ng-reflect-show-indicators="true">
+              <div tabindex="0" class="carousel slide">
+                <ol class="carousel-indicators">
+                  <li class=""></li>
+                  <li class="active"></li>
+                  <li class=""></li>
+                </ol>
+                <div class="carousel-inner" ng-reflect-ng-style="[object Object]" style="display: block;">
+                  <slide _nghost-nrw-c91="" aria-hidden="true" class="item carousel-item" style="width: 100%; order: 0;">
+                    <div _ngcontent-nrw-c91="" class="item">
+                      <img alt="First slide" src="assets/img/VRfrom_whiteboard.PNG" class="d-block">
+                      <div class="carousel-caption d-none d-md-block">
+                        <h5>Office from Whiteboard</h5>
+                      </div>
+                    </div>
+                  </slide>
+                  <slide _nghost-nrw-c91="" aria-hidden="false" class="item carousel-item active" style="width: 100%; order: 0;">
+                    <div _ngcontent-nrw-c91="" class="item active">
+                      <img alt="Second slide" src="assets/img/VRroom.PNG" class="d-block">
+                      <div class="carousel-caption d-none d-md-block">
+                        <h5>Office from Entrance</h5>
+                      </div>
+                    </div>
+                  </slide>
+                  <slide _nghost-nrw-c91="" aria-hidden="true" class="item carousel-item" style="width: 100%; order: 0;">
+                    <div _ngcontent-nrw-c91="" class="item">
+                      <img alt="Third slide" src="assets/img/VRback.PNG" class="d-block">
+                      <div class="carousel-caption d-none d-md-block">
+                        <h5>Office View</h5>
+                      </div>
+                    </div>
+                  </slide>
+                </div>
+                <a tabindex="0" role="button" class="left carousel-control carousel-control-prev">
+                  <span aria-hidden="true" class="icon-prev carousel-control-prev-icon"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a tabindex="0" role="button" class="right carousel-control carousel-control-next">
+                  <span aria-hidden="true" class="icon-next carousel-control-next-icon"></span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </div>
+            </carousel>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <hr class="line-success">
+          <h1 class="profile-title text-left">Virtual Reality</h1>
+          <!-- <h5 class="text-on-back">02</h5> -->
+          <p class="profile-description text-left"> The aim of the Virtual Reality offices is to provide a true 3D virtual environment where users can have "face-to-face" meetings and discussions. Each Virtual Reality office in the floor plan represents a unique office in the Virtual Reality space, each of which has full voice communication and an interactive whiteboard to enhance discussions. </p>
+        </div>
+      </div>
+    </div>
   </div>
+
+
+
+
+  <!-- <section id="office-features" class="section section-lg section-safe">
+    <img src="assets/img/path5.png" class="path">
+    <div class="container">
+      <div class="row row-grid justify-content-between">
+        <div class="col-md-5">
+          <img src="assets/img/VRfrom_whiteboard.PNG" class="img-fluid floating">
+          <div class="card card-stats bg-danger">
+            <div class="card-body">
+              <div class="justify-content-center">
+                <div class="numbers">
+                  <p class="card-title">100%</p>
+                  <p class="card-category text-white">Safe</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card card-stats bg-info">
+            <div class="card-body">
+              <div class="justify-content-center">
+                <div class="numbers">
+                  <p class="card-title">573 K</p>
+                  <p class="card-category text-white">Satisfied customers</p>
+                </div>
+              </div>
+            </div>
+          </div>
+            <div class="card card-stats bg-default">
+              <div class="card-body">
+                <div class="justify-content-center">
+                  <div class="numbers">
+                    <p class="card-title">10 425</p>
+                    <p class="card-category text-white">Business</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+          <div class="col-md-6">
+            <div class="px-md-5">
+              <hr class="line-success">
+              <h3>Virtual Reality</h3>
+              <p> The aim of the Virtual Reality offices is to provide a true 3D virtual environment where users can have "face-to-face" meetings and discussions. Each Virtual Reality office in the floor plan represents a unique office in the Virtual Reality space, each of which has full voice communication and an interactive whiteboard to enhance discussions. </p>
+              <ul class="list-unstyled mt-5">
+                <li class="py-2">
+                  <div class="d-flex align-items-center">
+                    <div class="icon icon-success mb-2">
+                      <i class="tim-icons icon-vector"></i>
+                    </div>
+                    <div class="ml-3">
+                      <h6>Spatial Audio Office Floorplan</h6>
+                    </div>
+                  </div>
+                </li>
+                <li class="py-2">
+                  <div class="d-flex align-items-center">
+                    <div class="icon icon-success mb-2">
+                      <i class="tim-icons icon-tap-02"></i>
+                    </div><div class="ml-3">
+                      <h6>Office Chatroom</h6>
+                    </div>
+                  </div>
+                </li>
+                <li class="py-2">
+                  <div class="d-flex align-items-center">
+                    <div class="icon icon-success mb-2">
+                      <i class="tim-icons icon-single-02"></i>
+                    </div>
+                    <div class="ml-3">
+                      <h6>Kanban Boards</h6>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+      </div>
+    </div>
+  </section> -->
+
+  <section id="video-section" class="section">
+    <img src="assets/img/path4.png" class="path">
+    <div class="container">
+      <div class="row row-grid justify-content-between">
+        <div class="col-md-5">
+          <div class="pl-md-5">
+            <h1>Video HERE: </h1>
+            <p> I should be capable of drawing a single stroke at the present moment; and yet I feel that I never was a greater artist than now. </p>
+            <br>
+            <p> When, while the lovely valley teems with vapour around me, and the meridian sun strikes the upper surface of the impenetrable foliage of my trees, and but a few stray. </p>
+            <br>
+            <a href="javascript:void(0)" class="font-weight-bold text-info mt-5"> Show all <i class="tim-icons icon-minimal-right text-info"></i></a>
+          </div>
+        </div>
+        <div class="col-md-6 mt-lg-6">
+          <div class="row">
+            <div class="col-lg-6 col-sm-12 px-2 py-2">
+              <div class="card card-stats">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-5 col-md-4">
+                      <div class="icon-big text-center icon-warning">
+                        <i class="tim-icons icon-trophy text-warning"></i>
+                      </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                      <div class="numbers">
+                        <p class="card-title">3,237</p>
+                        <p></p>
+                        <p class="card-category">Awards</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-sm-12 px-2 py-2">
+              <div class="card card-stats upper bg-default">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-5 col-md-4">
+                      <div class="icon-big text-center icon-warning">
+                        <i class="tim-icons icon-coins text-white"></i>
+                      </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                      <div class="numbers">
+                        <p class="card-title">3,653</p
+                          ><p></p>
+                          <p class="card-category">Commits</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6 col-sm-12 px-2 py-2">
+                <div class="card card-stats">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-5 col-md-4">
+                        <div class="icon-big text-center icon-warning">
+                          <i class="tim-icons icon-gift-2 text-info"></i>
+                        </div>
+                      </div>
+                      <div class="col-7 col-md-8">
+                        <div class="numbers">
+                          <p class="card-title">593</p>
+                          <p></p>
+                          <p class="card-category">Presents</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 col-sm-12 px-2 py-2">
+                <div class="card card-stats">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-5 col-md-4">
+                        <div class="icon-big text-center icon-warning">
+                          <i class="tim-icons icon-credit-card text-success"></i>
+                        </div>
+                      </div>
+                      <div class="col-7 col-md-8">
+                        <div class="numbers">
+                          <p class="card-title">10,783</p>
+                          <p></p>
+                          <p class="card-category">Forks</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+  <!-- <section id="download-section1" class="section section-lg section-coins"> -->
+    <img src="assets/img/path3.png" class="path">
+    <div id="download-section1" class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <hr class="line-info">
+          <h1><span class="text-info"> Desktop Application </span> </h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card card-coin card-plain">
+            <div class="card-header">
+              <img src="assets/img/windows-icon.png" class="img-center img-fluid">
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12 text-center">
+                  <h4 class="text-uppercase">Windows</h4><span></span>
+                  <hr class="line-primary">
+                </div>
+              </div>
+              <div class="row">
+                <ul class="list-group">
+                  <li class="list-group-item">Download the latest version of Audio Suite on Windows now.</li>
+                  <!-- <li class="list-group-item">100 emails</li>
+                  <li class="list-group-item">24/7 Support</li> -->
+                </ul>
+              </div>
+            </div>
+            <div class="card-footer text-center">
+              <button class="btn btn-primary btn-simple">Start Download</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card card-coin card-plain">
+            <div class="card-header">
+              <img src="assets/img/linux-icon.png" class="img-center img-fluid"></div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12 text-center">
+                    <h4 class="text-uppercase">Linux</h4><span></span>
+                    <hr class="line-success">
+                  </div>
+                </div>
+                <div class="row">
+                  <ul class="list-group">
+                    <li class="list-group-item">Download the latest version of Audio Suite on Linux now.</li>
+                    <!-- <li class="list-group-item">1000 emails</li>
+                    <li class="list-group-item">24/7 Support</li> -->
+                  </ul>
+                </div>
+              </div>
+              <div class="card-footer text-center">
+                <button class="btn btn-success btn-simple">Start Download</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card card-coin card-plain">
+              <div class="card-header">
+                <img src="assets/img/mac-icon.png" class="img-center img-fluid">
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12 text-center">
+                    <h4 class="text-uppercase">MAC</h4><span></span>
+                    <hr class="line-info">
+                  </div>
+                </div>
+                <div class="row">
+                  <ul class="list-group">
+                    <li class="list-group-item">Download the latest version of Audio Suite on MAC now.</li>
+                    <!-- <li class="list-group-item">10K emails</li>
+                    <li class="list-group-item">24/7 Support</li> -->
+                  </ul>
+                </div>
+              </div>
+              <div class="card-footer text-center">
+                <button class="btn btn-info btn-simple">Start Download</button>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  <!-- </section> -->
+
+
+  <!-- <section class="section section-lg section-coins"> -->
+    <img src="assets/img/path3.png" class="path">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <hr class="line-info">
+          <h1><span class="text-info"> Virtual Reality </span></h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card card-coin card-plain">
+            <div class="card-header">
+              <img src="assets/img/vr2-icon.png" class="img-center img-fluid">
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12 text-center">
+                  <h4 class="text-uppercase">Headset Executable</h4><span>Turn your virtual office into a reality!</span>
+                  <hr class="line-primary">
+                </div>
+              </div>
+              <div class="row">
+                <ul class="list-group">
+                  <li class="list-group-item">Download the VR Executable to experience <b>ALL</b> Audio-Suite features through Virtual Reality.</li>
+                  <!-- <li class="list-group-item">100 emails</li>
+                  <li class="list-group-item">24/7 Support</li> -->
+                </ul>
+              </div>
+            </div>
+            <div class="card-footer text-center">
+              <button class="btn btn-primary btn-simple">Start Download</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card card-coin card-plain">
+            <div class="card-header">
+              <img src="assets/img/desktop-icon.png" class="img-center img-fluid"></div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12 text-center">
+                    <h4 class="text-uppercase">Desktop Executable</h4><span> No headset? No problem!</span>
+                    <hr class="line-success">
+                  </div>
+                </div>
+                <div class="row">
+                  <ul class="list-group">
+                    <li class="list-group-item">The Desktop Executable allows you to enjoy the VR experience through your screen, headset free.</li>
+                    <!-- <li class="list-group-item">1000 emails</li>
+                    <li class="list-group-item">24/7 Support</li> -->
+                  </ul>
+                </div>
+              </div>
+              <div class="card-footer text-center">
+                <button class="btn btn-success btn-simple">Start Download</button>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  <!-- </section> -->
+
+
   <footer class="footer">
     <div class="container">
       <div class="row">
@@ -1980,3 +2601,4 @@
     </div>
   </footer>
 </div>
+</body>

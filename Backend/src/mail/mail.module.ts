@@ -3,30 +3,34 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { join } from 'path';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    MailerModule.forRoot({
-      // transport: 'smtps://user@example.com:topsecret@smtp.example.com',
-      // or
-      transport: {
-        host: 'smtp.office365.com',
-        secure: false,
-        auth: {
-          user: 'projectpegasusdevs@outlook.com',
-          pass: 'PrOjEcTpEgAsUs',
+    ConfigModule,
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        transport: {
+          host: configService.get('EMAIL_HOST'),
+          secure: false,
+          auth: {
+            user: configService.get('EMAIL_ADDRESS'),
+            pass: configService.get('EMAIL_PASSWORD'),
+          },
         },
-      },
-      defaults: {
-        from: '"Project Pegasus" <projectpegasusdevs@outlook.com>',
-      },
-      template: {
-        dir: join(__dirname, 'templates'),
-        adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
-        options: {
-          strict: true,
+        defaults: {
+          from: configService.get('EMAIL_FROM'),
         },
-      },
+        template: {
+          dir: join(__dirname, 'templates'),
+          adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
+          options: {
+            strict: true,
+          },
+        },
+      }),
+      inject: [ConfigService],
     }),
   ],
   providers: [MailService],

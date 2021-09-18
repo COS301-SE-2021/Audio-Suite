@@ -11,17 +11,55 @@ import { ListSchema } from '../listschema';
 import { AudioComponent } from 'src/app/audio/audio.component';
 import { AngularAgoraRtcService, Stream, AgoraConfig } from 'angular-agora-rtc';
 import { KanbanService } from 'src/app/services/kanban.service';
+import { TimeTrackingService } from 'src/app/services/time-tracking.service';
 
 interface Office{
   id: string,
   name: string,
-  invite: string
+  invite: string,
+  role: string
+}
+
+interface FloorPlan{
+  RoomID: number,
+  RoomType: string,
+  RoomLayout: KtdGridLayoutItem
+}
+
+interface RoomUsersList{
+  Room: string,
+  IconID: string,
+  UserListID: string,
+  RoomUsers: string[]
 }
 
 interface textMessage{
   sender: string,
   room: string,
   message: string
+}
+
+interface TimeTrackingUserInstance{
+  id: number,
+  userID: number,
+  officeID: number, 
+  description: string,
+  projectID: number,
+  tagID: number,
+  startTime: Date,
+  endTime: Date
+}
+
+interface TimeTrackingProject{
+  id: number,
+  officeID: number,
+  project: string
+}
+
+interface TimeTrackingTag{
+  id: number,
+  officeID: number,
+  tag: string
 }
 
 @Component({
@@ -32,44 +70,56 @@ interface textMessage{
 
 export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  //#region Variables
   parentMessage = "message from parent"
 
-  @ViewChild('scrollframe', {static: false}) scrollFrame: ElementRef;
-  @ViewChildren('messageitem') itemElements: QueryList<any>;
-  @ViewChild('scrollRoomframe', {static: false}) scrollRoomFrame: ElementRef;
-  @ViewChildren('messageRoomitem') itemRoomElements: QueryList<any>;
-  @ViewChild(KtdGridComponent, { static: true }) grid: KtdGridComponent;
-  scrollContainer: any;
-  scrollRoomContainer: any;
-
+  //Agora Audio Variables
   agoraConfig: AgoraConfig = {
     AppID: '023766436b244044ab85f65470dcbae2',
   };
-  
   agoraService:AngularAgoraRtcService = new AngularAgoraRtcService(this.agoraConfig);
   audioComponent: AudioComponent;
   
+  //Sidebar Varibales
   sidebarOpened: boolean = true;
   showOfficeList: boolean = true;
   showQuickSettingsList: boolean = true;
   showOfficeSettingsList: boolean = true;
+
+  //Current Office Variables
   officeSelected: boolean = false;
-  roomSelected: boolean = false;
-  sendNewOfficeAlert: boolean = false;
-  sendJoinOfficeAlert: boolean = false;
-  sendFormModalAlert: boolean = false;
   officeListLoaded: boolean = false;
+  selectedOffice: string = '';
+  selectedOfficeID: number = null;
+  selectedOfficeInvite: string = '';
+  selectedOfficeRole: string = '';
+  officeList: Office[] = [];
+
+  //Current Room Variables
+  roomSelected: boolean = false;
+  selectedRoom: string = '';
+  selectedRoomID: string = '';
+
+  //Current User Details
+  userID: string = '';
+  userFirstName: string = '';
+  userLastName: string = '';
+  userUsername: string = '';
+  userEmail: string = '';
+
+  //Modal Variables
+  sendInviteToEmail: string = '';
+  sendInviteToName: string = '';
+  newRoomName: string = '';
+  newRoomType: string = '';
   displayFormModal: boolean = false;
   showInviteModal: boolean = false;
   showAddRoomModal: boolean = false;
   focus6: boolean = false;
   focus7: boolean = false;
-
-  selectedOffice: string = '';
-  selectedOfficeID: number = null;
-  selectedOfficeInvite: string = '';
-  selectedRoom: string = '';
-  selectedRoomID: string = '';
+  sendNewOfficeAlert: boolean = false;
+  sendJoinOfficeAlert: boolean = false;
+  sendFormModalAlert: boolean = false;
   newOfficeName: string = '';
   joinOfficeCode: string = '';
   newMessageInput: string = '';
@@ -77,28 +127,44 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   joinOfficeAlertMsg: string = '';
   formModalAlertMsg: string = '';
 
-  userID: string = '';
-  userFirstName: string = '';
-  userLastName: string = '';
-  userUsername: string = '';
-  userEmail: string = '';
+  //Time Tracker Variables
+  showTimeTrackerTab: string = 'dashboard';
+  displayBigScreenTracker: boolean = true;
+  timeTrackerDescription: string = '';
+  timeTrackerProjectSelected: boolean = false;
+  selectedProject: string = '';
+  selectedProjectID: number;
+  timeTrackerTagSelected: boolean = false;
+  selectedTag: string = '';
+  selectedTagID: number;
+  trackingTimerInterval: any = null;
+  timeTrackingUserInstances: TimeTrackingUserInstance[] = [];
+  timeTrackingProjects: TimeTrackingProject[] = [];
+  timeTrackingTags: TimeTrackingTag[] = [];
 
-  sendInviteToEmail: string = '';
-  sendInviteToName: string = '';
-  newRoomName: string = '';
-
-  officeList: Office[] = [];
-
+  //Text Channel Variables
   officeTextChannelMessages: textMessage[] = [];
   roomTextChannelMessages: textMessage[] = [];
+    //Text Channel auto scrolling Variables
+    @ViewChild('scrollframe', {static: false}) scrollFrame: ElementRef;
+    @ViewChildren('messageitem') itemElements: QueryList<any>;
+    @ViewChild('scrollRoomframe', {static: false}) scrollRoomFrame: ElementRef;
+    @ViewChildren('messageRoomitem') itemRoomElements: QueryList<any>;
+    @ViewChild(KtdGridComponent, { static: true }) grid: KtdGridComponent;
+    scrollContainer: any;
+    scrollRoomContainer: any;
 
+  //Kanban Variables
   cardStore: CardStore;
   lists: ListSchema[];
 
+  //FloorPlan Variables
   cols = 12;
   rowHeight = 50;
   compactType: 'vertical' | 'horizontal' | null = null;
+  floorPlan: FloorPlan[] = [];
   layout: KtdGridLayout = [];
+  roomUsersList: RoomUsersList[] = [];
   transitions: { name: string; value: string }[] = [
     {
       name: 'ease',
@@ -130,7 +196,6 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     { name: 'transform-only', value: 'transform 500ms ease' }
   ];
   currentTransition: string = this.transitions[0].value;
-
   dragStartThreshold = 0;
   inFloorPlanEditorMode = false;
   disableDrag = true;
@@ -142,12 +207,14 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   isDragging = false;
   isResizing = false;
   resizeSubscription: Subscription;
+  //#endregion
 
   constructor(
     private textChannelsService: TextChannelsService,
     private officeRoomService: OfficeRoomService,
     private userService: UserService,
     private kanbanService: KanbanService,
+    private timeTrackingService: TimeTrackingService,
     private router: Router) { }
 
   setListData(): void {
@@ -263,12 +330,29 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
+    var jwt = sessionStorage.getItem('jwt');
+    this.userService.getUserDetails(jwt).subscribe((response) => {
+      this.userID = response.id;
+      this.userFirstName = response.firstName;
+      this.userLastName = response.lastName;
+      this.userUsername = response.userName;
+      this.userEmail = response.email;
+
+      this.audioComponent = new AudioComponent( this.agoraService, this.officeRoomService );
+
+      this.getUserOfficeList();
+    },
+    (error) => {
+      console.log(error);
+      this.router.navigate(['login']);
+    })
+
     var body = document.getElementsByTagName("body")[0];
     body.classList.add("user-page");
-    this.audioComponent = new AudioComponent( this.agoraService, this.officeRoomService );
+    // this.audioComponent = new AudioComponent( this.agoraService, this.officeRoomService );
 
-    this.getUserDetails();
-    this.getUserOfficeList();
+    // this.getUserDetails();
+    // this.getUserOfficeList();
 
     this.textChannelsService.listen("joinedRoomText").subscribe(data => {
       console.log("Joined room: ", data);
@@ -304,21 +388,50 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.receivedMessage(data);
     }) 
 
-    this.resizeSubscription = merge(
-      fromEvent(window, 'resize'),
-      fromEvent(window, 'orientationchange')
-    )
-      .pipe(
-        debounceTime(50),
-        filter(() => this.autoResize)
-      )
-      .subscribe(() => {
-        this.grid.resize();
-      });
+    this.textChannelsService.listen("updateRoomAttendance").subscribe(data => {
+      let jwt = window.sessionStorage.getItem('jwt');
+      this.getRoomUsersByOfficeID(jwt, this.selectedOfficeID);
+    })
 
+    window.addEventListener("resize", () => {
+      if(window.innerWidth < 800){
+        document.getElementById('Sidebar').style.display = "none";
+        document.getElementById('Content').style.marginLeft = "0%"
+        document.getElementById('Content').style.width = "100%";
+        document.getElementById('TextChannelContent').style.width = "100%";
+      }
+      else if(window.innerWidth < 1200){
+        document.getElementById('Sidebar').style.display = "none";
+        document.getElementById('Content').style.marginLeft = "0%";
+        document.getElementById('Content').style.width = "100%";
+        document.getElementById('TextChannelContent').style.width = "100%";
+      }
+      else if(window.innerWidth < 1400){
+        this.sidebarOpened = true;
+        document.getElementById('Sidebar').style.width = "20%";
+        document.getElementById('Sidebar').style.display = "block";
+        document.getElementById('Content').style.marginLeft = "20%";
+        document.getElementById('TextChannelContent').style.width = "80%";
+      }
+      else if(window.innerWidth >= 1400){
+        this.sidebarOpened = true;
+        document.getElementById('Sidebar').style.width = "15%";
+        document.getElementById('Sidebar').style.display = "block";
+        document.getElementById('Content').style.marginLeft = "15%";
+        document.getElementById('TextChannelContent').style.width = "86%";
+      }
+    })
   }
 
   ngAfterViewInit(): void {
+    if(window.innerWidth < 1200){
+      this.sidebarOpened = false;
+
+      document.getElementById('Sidebar').style.display = "none";
+      document.getElementById('Content').style.marginLeft = "0%";
+      document.getElementById('Content').style.width = "100%";
+      document.getElementById('TextChannelContent').style.width = "100%";
+    }
   }
 
   accountNav(): void{
@@ -329,12 +442,13 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   getUserOfficeList(): void{
     var jwt = sessionStorage.getItem("jwt");
     this.officeRoomService.getUserOffices(jwt).subscribe((response) =>{
-      var listOfOffices = response.Offices;
-      for(let i = 0; i < listOfOffices.length; i++) {
+      console.log(response)
+      for(let i = 0; i < response.Offices.length; i++) {
         var newOffice = {
-          id: listOfOffices[i].id, 
-          name: listOfOffices[i].name, 
-          invite: listOfOffices[i].invite
+          id: response.Offices[i].id, 
+          name: response.Offices[i].name, 
+          invite: response.Offices[i].invite, 
+          role: response.Offices[i].role
         }
         this.officeList.push(newOffice);
       }
@@ -356,14 +470,45 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     },
     (error) => {
       console.log(error);
+      this.router.navigate(['login']);
     })
   }
 
   toggleSidebar(): void {
     this.sidebarOpened = !this.sidebarOpened;
+    if(this.sidebarOpened){
+      document.getElementById('Sidebar').style.display = "block";
+
+      if(window.innerWidth < 600){
+        document.getElementById('Sidebar').style.width = "100%";
+      }
+      else if(window.innerWidth < 800){
+        document.getElementById('Sidebar').style.width = "60%";
+      }
+      else if(window.innerWidth < 1200){
+        document.getElementById('Sidebar').style.width = "30%";
+        document.getElementById('TextChannelContent').style.width = "86%";
+      }
+      else if(window.innerWidth < 1400){
+        document.getElementById('Sidebar').style.width = "20%";
+        document.getElementById('Content').style.marginLeft = "20%";
+        document.getElementById('TextChannelContent').style.width = "86%";
+      }
+      else{
+        document.getElementById('Sidebar').style.width = "15%";
+        document.getElementById('Content').style.marginLeft = "15%";
+        document.getElementById('TextChannelContent').style.width = "86%";
+      }
+    }
+    else{
+      document.getElementById('Sidebar').style.display = "none";
+      document.getElementById('Content').style.marginLeft = "0%";
+      document.getElementById('Content').style.width = "100%";
+      document.getElementById('TextChannelContent').style.width = "100%";
+    }
   }
 
-  selectOffice(officeID, office, officeInvite): void{
+  selectOffice(officeID, office, officeInvite, role): void{
     var officeId = sessionStorage.setItem('officeID', officeID);
     if(this.officeSelected){
       if(this.selectedOffice != office){
@@ -373,28 +518,42 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         this.officeRoomService.getOfficeRoomList(jwt, officeID).subscribe((response) => {
           console.log(response);
           if(response.Response == "Success"){
-            var newLayout: KtdGridLayout = [];
-            for(let room of response.Rooms){
-              var newRoom: KtdGridLayoutItem = { 
+            let newFloorPlan: FloorPlan[] = [];
+            let newLayout: KtdGridLayout = [];
+            response.Rooms.forEach((room) => {
+              let newRoomLayout: KtdGridLayoutItem = { 
                 id: room.roomName, 
                 x: room.xCoordinate, 
                 y: room.yCoordinate, 
                 w: room.width, 
                 h: room.height 
               };
-              newLayout.push(newRoom);
-            }
+  
+              let newRoom: FloorPlan = {
+                RoomID: room.id,
+                RoomType: room.roomType,
+                RoomLayout: newRoomLayout
+              }
+  
+              newLayout.push(newRoomLayout);
+              newFloorPlan.push(newRoom);
+            })
+  
             this.layout = newLayout;
+            this.floorPlan = newFloorPlan;
           }
         },
         (error) => {
           console.log(error);
         });
 
+        this.getRoomUsersByOfficeID(jwt, officeID);
+
         //this.audioComponent.join(this.userID, officeID);
         this.selectedOffice = office;
         this.selectedOfficeID = officeID;
         this.selectedOfficeInvite = officeInvite;
+        this.selectedOfficeRole = role;
         this.officeSelected = true;
         var jwt = sessionStorage.getItem('jwt');
         this.textChannelsService.joinRoom(jwt, officeID, office, office, false);
@@ -406,28 +565,42 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.officeRoomService.getOfficeRoomList(jwt, officeID).subscribe((response) => {
         console.log(response);
         if(response.Response == "Success"){
-          var newLayout: KtdGridLayout = [];
-          for(let room of response.Rooms){
-            var newRoom: KtdGridLayoutItem = { 
+          let newFloorPlan: FloorPlan[] = [];
+          let newLayout: KtdGridLayout = [];
+          response.Rooms.forEach((room) => {
+            let newRoomLayout: KtdGridLayoutItem = { 
               id: room.roomName, 
               x: room.xCoordinate, 
               y: room.yCoordinate, 
               w: room.width, 
               h: room.height 
             };
-            newLayout.push(newRoom);
-          }
+
+            let newRoom: FloorPlan = {
+              RoomID: room.id,
+              RoomType: room.roomType,
+              RoomLayout: newRoomLayout
+            }
+
+            newLayout.push(newRoomLayout);
+            newFloorPlan.push(newRoom);
+          })
+
           this.layout = newLayout;
+          this.floorPlan = newFloorPlan;
         }
       },
       (error) => {
         console.log(error);
       });
 
+      this.getRoomUsersByOfficeID(jwt, officeID);
+
       //this.audioComponent.join(this.userID, officeID);
       this.selectedOffice = office;
       this.selectedOfficeID = officeID;
       this.selectedOfficeInvite = officeInvite;
+      this.selectedOfficeRole = role;
       this.officeSelected = true;
       var jwt = sessionStorage.getItem('jwt');
       this.textChannelsService.joinRoom(jwt, officeID, office, office, false);
@@ -435,12 +608,40 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  async getRoomUsersByOfficeID(jwt: string, officeID: number){
+    this.officeRoomService.getRoomUsersByOfficeID(jwt, officeID).subscribe((response) => {
+      // console.log(response)
+      this.roomUsersList = [];
+      response.RoomUserList.forEach((roomUserItem) => {
+        let users: string[] = [];
+        roomUserItem.RoomUsers.forEach((roomUser) => {
+          users.push(roomUser.userName);
+        })
+
+        let roomUserListItem: RoomUsersList = {
+          Room: roomUserItem.Room,
+          IconID: roomUserItem.Room + "-Icon",
+          UserListID: roomUserItem.Room + "-List",
+          RoomUsers: users
+        };
+        this.roomUsersList.push(roomUserListItem);
+      })
+
+      console.log(this.roomUsersList);
+    },
+    (error) => {
+      console.log(error)
+    })
+  }
+
   tabSetOpened(): void {
     this.scrollContainer = this.scrollFrame.nativeElement;  
     this.itemElements.changes.subscribe(_ => this.scrollMessageBoardToBottom());
 
-    this.scrollRoomContainer = this.scrollRoomFrame.nativeElement;
-    this.itemRoomElements.changes.subscribe(_ => this.scrollRoomMessageBoardToBottom());
+    if(this.roomSelected){
+      this.scrollRoomContainer = this.scrollRoomFrame.nativeElement;
+      this.itemRoomElements.changes.subscribe(_ => {this.scrollRoomMessageBoardToBottom()});
+    }
   }
 
   leaveOffice(): void{
@@ -454,11 +655,12 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     this.selectedOfficeInvite = '';
     this.officeSelected = false;
     this.officeTextChannelMessages = [];
+    this.roomUsersList = [];
     this.audioComponent.leave();
   }
 
-  selectRoom(id: string, leaveRoom: boolean): void{
-  
+  selectRoom(id: string, roomType: string, leaveRoom: boolean): void{
+    // console.log("Room Type: " + roomType)
     if(leaveRoom){
       var jwt = sessionStorage.getItem('jwt');
       this.textChannelsService.leaveRoom(jwt, this.selectedOfficeID, this.selectedOffice, id);
@@ -500,7 +702,8 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
   addRoom(): void{
     console.log("add room: " + this.newRoomName)
-    var newRoom: KtdGridLayoutItem = {
+    console.log('new room type: ' + this.newRoomType);
+    var newRoomLayout: KtdGridLayoutItem = {
       id: this.newRoomName,
       x: 0,
       y: 0,
@@ -510,29 +713,36 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
     var newLayout: KtdGridLayout = [];
     this.layout.forEach(room => {
-      var oldRoom: KtdGridLayoutItem = {
+      var oldRoomLayout: KtdGridLayoutItem = {
         id: room.id,
         x: room.x,
         y: room.y,
         w: room.w,
         h: room.h
       };
-      newLayout.push(oldRoom);
+      newLayout.push(oldRoomLayout);
     })
-    newLayout.push(newRoom);
+    newLayout.push(newRoomLayout);
 
     var jwt = sessionStorage.getItem('jwt');
     this.officeRoomService.registerRoom(
       jwt, 
       this.selectedOfficeID, 
-      this.newRoomName, 
+      this.newRoomName,
+      this.newRoomType,
       0, 
       0, 
       1, 
       1).subscribe((response) => {
         console.log(response);
         if(response.Response == "Success"){
+          let newRoom: FloorPlan = {
+            RoomID: response.Room.id,
+            RoomType: response.Room.roomType,
+            RoomLayout: newRoomLayout
+          };
           this.layout = newLayout;
+          this.floorPlan.push(newRoom);
           this.hideDisplayFormModal();
         }
     },
@@ -550,17 +760,29 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     this.officeRoomService.deleteRoom(jwt, this.selectedOfficeID, id).subscribe((response) => {
       console.log(response)
       if(response.Response == "Success"){
-        var newLayout: KtdGridLayout = [];
-        response.Rooms.forEach(room => {
-          var newRoom: KtdGridLayoutItem = { 
+        let newFloorPlan: FloorPlan[] = [];
+        let newLayout: KtdGridLayout = [];
+        response.Rooms.forEach((room) => {
+          let newRoomLayout: KtdGridLayoutItem = { 
             id: room.roomName, 
             x: room.xCoordinate, 
             y: room.yCoordinate, 
             w: room.width, 
-            h: room.height };
-          newLayout.push(newRoom);
+            h: room.height 
+          };
+
+          let newRoom: FloorPlan = {
+            RoomID: room.id,
+            RoomType: room.roomType,
+            RoomLayout: newRoomLayout
+          }
+
+          newLayout.push(newRoomLayout);
+          newFloorPlan.push(newRoom);
         })
+
         this.layout = newLayout;
+        this.floorPlan = newFloorPlan;
       }
     },
     (error) => {
@@ -576,7 +798,8 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.officeRoomService.updateRoom(
         jwt, 
         this.selectedOfficeID, 
-        room.id, 
+        room.id,
+        this.getRoomTypeByRoomID(room.id),
         room.x, 
         room.y, 
         room.w, 
@@ -588,6 +811,16 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log(error)
       })
     })
+  }
+
+  getRoomTypeByRoomID(roomName: string): any{
+    let type: string = 'Normal';
+    this.floorPlan.forEach((room) => {
+      if(room.RoomLayout.id == roomName){
+        type = room.RoomType;
+      }
+    });
+    return type;
   }
 
   toggleOfficeListView(): void{
@@ -629,6 +862,18 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  toggleRoomListView(IconID: string, ListID: string): void{
+    let icon = document.getElementById(IconID);
+    if(icon.classList.contains("icon-minimal-down")){
+      icon.classList.replace("icon-minimal-down", "icon-minimal-right");
+      document.getElementById(ListID).style.display = "none";
+    }
+    else{
+      icon.classList.replace("icon-minimal-right", "icon-minimal-down");
+      document.getElementById(ListID).style.display = "block";
+    }
+  }
+
   scrollMessageBoardToBottom(): void{
     var messageBoard = document.getElementById("messageBoard");
     messageBoard.scrollTop = messageBoard.scrollHeight;
@@ -636,7 +881,9 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
   scrollRoomMessageBoardToBottom(): void{
     var messageBoard = document.getElementById("messageBoardRoom");
-    messageBoard.scrollTop = messageBoard.scrollHeight;
+    if(messageBoard != null){
+      messageBoard.scrollTop = messageBoard.scrollHeight;
+    }
   }
 
   sendMessage(room: string): void{
@@ -708,6 +955,133 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   }
 
+  setTimeTrackerTab(tab: string){
+    this.showTimeTrackerTab = tab;
+  }
+
+  getOfficeTagList(){
+    let jwt = sessionStorage.getItem('jwt');
+    this.timeTrackingService.getAllTimeTrackingTags(jwt, this.selectedOfficeID).subscribe((response) => {
+      let tagList: TimeTrackingTag[] = [];
+      response.Tags.forEach((tag) => {
+        let newTag: TimeTrackingTag = {
+          id: tag.id,
+          officeID: tag.officeID,
+          tag: tag.tag
+        };
+        tagList.push(newTag);
+      })
+      this.timeTrackingTags = tagList;
+    },
+    (error) => {
+      console.log(error);
+    })
+  }
+
+  getOfficeProjectList(){
+    let jwt = sessionStorage.getItem('jwt');
+    this.timeTrackingService.getAllTimeTrackingProjects(jwt, this.selectedOfficeID).subscribe((response) => {
+      let projectList: TimeTrackingProject[] = [];
+      response.Projects.forEach((project) => {
+        let newProject: TimeTrackingProject = {
+          id: project.id,
+          officeID: project.officeID,
+          project: project.project
+        }
+        projectList.push(newProject);
+      })
+      this.timeTrackingProjects = projectList;
+    })
+  }
+
+  startTrackingTimer(){
+    this.startTimerInterval();
+    let today = new Date();
+    let date = {
+      Day: today.getDate(),
+      Month: today.getMonth(),
+      Year: today.getFullYear(),
+      MilliSeconds: today.getMilliseconds(),
+      Seconds: today.getSeconds(),
+      Minutes: today.getMinutes(),
+      Hours: today.getHours()
+    }
+    let sessionStorageID = "startDateTime_" + this.selectedOffice;
+    window.sessionStorage.setItem(sessionStorageID, JSON.stringify(date));
+  }
+
+  startTimerInterval(){
+    this.trackingTimerInterval = setInterval(() => {
+      let seconds = document.getElementById('timerSecond');
+      let minutes = document.getElementById('timerMinute');
+      let hours = document.getElementById('timerHour');
+
+      if(Number(seconds.innerText) == 59){
+        seconds.innerText = "00";
+        if(Number(minutes.innerText) == 59){
+          minutes.innerText = "00";
+          let newHours = String(Number(hours.innerText) + 1);
+          if(newHours.length == 1){
+            hours.innerText = "0" + newHours;
+          }
+          else{
+            hours.innerText = newHours;
+          }
+        }
+        else{
+          let newMinutes = String(Number(minutes.innerText) + 1);
+          if(newMinutes.length == 1){
+            minutes.innerText = "0" + newMinutes;
+          }
+          else{
+            minutes.innerText = newMinutes;
+          } 
+        }
+      }
+      else{
+        let newSeconds = String(Number(seconds.innerText) + 1);
+        if(newSeconds.length == 1){
+          seconds.innerText = "0" + newSeconds;
+        }
+        else{
+          seconds.innerText = newSeconds;
+        }
+      }
+    }, 1000);
+  }
+
+  stopTrackingTimer(){
+    clearInterval(this.trackingTimerInterval);
+    document.getElementById('timerSecond').innerText = "00";
+    document.getElementById('timerMinute').innerText = "00";
+    document.getElementById('timerHour').innerText = "00";
+
+    let sessionStorageID = "startDateTime_" + this.selectedOffice;
+    let storedStartDate = JSON.parse(window.sessionStorage.getItem(sessionStorageID));
+    let startDate = new Date(
+      storedStartDate.Year, 
+      storedStartDate.Month, 
+      storedStartDate.Day, 
+      storedStartDate.Hours, 
+      storedStartDate.Minutes, 
+      storedStartDate.Seconds, 
+      storedStartDate.MilliSeconds
+    );
+    window.sessionStorage.removeItem(sessionStorageID)
+    let endDate = new Date();
+  }
+
+  setTimeTrackerProject(projectID: number, project: string){
+    this.timeTrackerProjectSelected = true;
+    this.selectedProjectID = projectID;
+    this.selectedProject = project;
+  }
+
+  setTimeTrackerTag(tagID: number, tag: string){
+    this.timeTrackerTagSelected = true;
+    
+  }
+
   showSendInviteModal(): void{
     this.displayFormModal = true;
     this.showInviteModal = true;
@@ -772,7 +1146,5 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy() {
     var body = document.getElementsByTagName("body")[0];
     body.classList.remove("user-page");
-
-    this.resizeSubscription.unsubscribe();
   }
 }

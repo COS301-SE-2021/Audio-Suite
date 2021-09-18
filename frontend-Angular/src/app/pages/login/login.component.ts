@@ -88,6 +88,14 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    var jwt = sessionStorage.getItem('jwt');
+    this.userService.getUserDetails(jwt).subscribe((response) => {
+      this.router.navigate(['user']);
+    },
+    (error) => {
+      console.log(error);
+    })
+
     var body = document.getElementsByTagName("body")[0];
     body.classList.add("login-page");
 

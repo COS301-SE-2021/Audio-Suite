@@ -14,6 +14,7 @@ import { RoomService } from 'src/room/room.service';
 import { Room } from 'src/room/room.entity';
 import { RoomUsersService } from 'src/roomusers/roomusers.service';
 import { RoomUsers } from 'src/roomusers/roomusers.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -23,9 +24,16 @@ import { RoomUsers } from 'src/roomusers/roomusers.entity';
     TypeOrmModule.forFeature([OfficeUsers]),
     TypeOrmModule.forFeature([Room]),
     TypeOrmModule.forFeature([RoomUsers]),
-    JwtModule.register({
-      secret: 'secret', // TODO change to env var
-      signOptions: {expiresIn: '1d'}
+    JwtModule.registerAsync({
+      useFactory: (config: ConfigService) => {
+        return {
+          secret: config.get<string>('JWT_SECRET_KEY'),
+          signOptions: {
+            expiresIn: config.get<string | number>('JWT_EXPIRATION_TIME'),
+          },
+        };
+      },
+      inject: [ConfigService],
     })
   ],
   controllers: [KanbanController],
