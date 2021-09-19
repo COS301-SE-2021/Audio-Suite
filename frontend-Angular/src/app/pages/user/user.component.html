@@ -86,6 +86,11 @@
                     Close Sidebar
                 </div>
             </button>
+            <button class="sidebarBtn" (click)="accountNav()">
+                <div class="settingType">
+                    Account Settings
+                </div>
+            </button>
             <button class="sidebarBtn" (click)="logOut()">
                 <div class="settingType">
                     Log Out
@@ -93,8 +98,6 @@
             </button>
         </div>
     </div>
-
-    <button id="sidebar-officeHeader" (click)="accountNav()" > Account Settings </button>
 </div>
 
 <div class="showHiddenSidebar">

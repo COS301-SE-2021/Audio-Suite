@@ -1086,12 +1086,14 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         this.officeList = [];
         this.getUserOfficeList();
         this.officeListLoaded = true;
+        this.joinOfficeCode = "";
       }
     },
     (error) => {
       console.log(error)
-      this.newOfficeAlertMsg = "Error - You could not be added to the office, the invite may be invalid. Please try again.";
-      this.sendNewOfficeAlert = true;
+      this.joinOfficeAlertMsg = "Error - You could not be added to the office, the invite may be invalid. Please try again.";
+      this.sendJoinOfficeAlert = true;
+      this.joinOfficeCode = "";
     })
   }
 
