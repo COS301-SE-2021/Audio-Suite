@@ -26,7 +26,7 @@ export class NotificationService {
     //create the notification
     async createNotification(userID: string, type: string, invite: string, userName: string, emailAddress: string, password: string) : Promise<any>{
 
-        // check for valid user *password needs to be replaced with enviroment variable
+        // check for valid user
         if(password === "test"){
 
             // Check which type of notification to create

@@ -28,11 +28,14 @@ import { RegisterpageComponent } from "./pages/examples/registerpage/registerpag
 import { LandingpageComponent } from "./pages/examples/landingpage/landingpage.component";
 import { AudioComponent } from './audio/audio.component';
 import { UserComponent } from "./pages/user/user.component";
+import { environment } from "src/environments/environment";
 
-const config: SocketIoConfig = { url: 'http://localhost:3001/serversocket', options: {} };
+
+var url = environment.apiUrl + '/serversocket';
+const config: SocketIoConfig = { url: url, options: {} };
 
 const agoraConfig: AgoraConfig = {
-  AppID: '7afb53157f754f6f8023f31fb343404a',
+  AppID: environment.agoraAppId,
 };
 //023766436b244044ab85f65470dcbae2
 //7afb53157f754f6f8023f31fb343404a

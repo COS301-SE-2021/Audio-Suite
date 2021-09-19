@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "blk-design-system-angular": {
+    "Audio_Suite": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/blk-design-system-angular",
+            "outputPath": "dist/Audio_Suite",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -35,11 +35,23 @@
               "src/assets/css/nucleo-icons.css",
               "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "src/assets/scss/blk-design-system.scss",
-              "src/assets/demo/demo.css"
+              "src/assets/demo/demo.css",
+              "./node_modules/round-slider/dist/roundslider.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/jquery/dist/jquery.min.js",
+              "./node_modules/round-slider/dist/roundslider.min.js"
+            ]
           },
           "configurations": {
+            "development": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ]
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -69,18 +81,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "blk-design-system-angular:build"
+            "browserTarget": "Audio_Suite:build"
           },
           "configurations": {
+            "development": {
+              "browserTarget": "Audio_Suite:build:development"
+            },
             "production": {
-              "browserTarget": "blk-design-system-angular:build:production"
+              "browserTarget": "Audio_Suite:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "blk-design-system-angular:build"
+            "browserTarget": "Audio_Suite:build"
           }
         },
         "test": {
@@ -114,7 +129,7 @@
         }
       }
     },
-    "blk-design-system-angular-e2e": {
+    "Audio_Suite-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -123,11 +138,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "blk-design-system-angular:serve"
+            "devServerTarget": "Audio_Suite:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "blk-design-system-angular:serve:production"
+              "devServerTarget": "Audio_Suite:serve:production"
             }
           }
         },
@@ -143,8 +158,9 @@
       }
     }
   },
-  "defaultProject": "blk-design-system-angular",
+  "defaultProject": "Audio_Suite",
   "cli": {
     "analytics": false
   }
+  
 }

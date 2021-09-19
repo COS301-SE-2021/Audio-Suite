@@ -2,6 +2,7 @@ import { Component, Input, Self } from '@angular/core';
 import { AngularAgoraRtcService, Stream } from 'angular-agora-rtc';
 import { OfficeRoomService } from 'src/app/services/office-room.service';
 import { Observable } from 'rxjs';
+import { tokenize } from '@angular/compiler/src/ml_parser/lexer';
 
 interface Room{
   id: number,
@@ -10,7 +11,8 @@ interface Room{
   xCoordinate: number,
   yCoordinate: number,
   width: number,
-  height: number
+  height: number,
+  roomType: string
 };
 
 @Component({
@@ -32,9 +34,11 @@ export class AudioComponent {
   jwt = sessionStorage.getItem('jwt');
   UserID : number;
   rooms: any;
+  token: any;
   currentRoom: string = "NO-ROOM-SELECTED";
   currentRoomDetails: Room;
   currentRoomCenter = [];
+  channelName = "OFFICE";
 
   constructor(
     private agoraService: AngularAgoraRtcService,
@@ -43,16 +47,42 @@ export class AudioComponent {
     this.agoraService.createClient('rtc');
   }
 
-  join(userID:string, officeID:number, room:string): void{
+  join(userID:string, officeID:number, room:string, officeName:string): void{
     this.officeRoomService.getOfficeRoomList(this.jwt, officeID).subscribe((res) => {
       console.log("------ ROOMS ------");
       console.log(res.Rooms);
       this.rooms = res.Rooms;
       console.log("Entered room");
-      this.agoraService.client.join(null, '1000', userID);
-      this.localStream = this.agoraService.createStream(userID, true, null, null, false, false);
-      setTimeout(() => {this.assignRemoteHandlers()},1000);
-      setTimeout(() => {this.publish(room)},3000);
+
+      var temp: Room;
+      this.rooms.forEach(roomName => {
+        if(roomName.roomName == room){
+          temp = roomName;
+        }
+      });
+      if(temp.roomType == "Normal"){
+        this.channelName = officeName;
+      }else{
+        this.channelName = officeName+temp.roomName;
+      }
+
+      this.officeRoomService.fetchToken(Number(userID), this.channelName, 1).subscribe((res) => {
+        this.token = res.token;
+        console.log("-------- JOIN AGORA WITH DETAILS --------");
+        console.log("TOKEN:");
+        console.log(this.token);
+        console.log("CHANNEL:");
+        console.log(this.channelName);
+        console.log("UID:");
+        console.log(userID);
+        this.agoraService.client.join(this.token, this.channelName, userID);
+        this.localStream = this.agoraService.createStream(userID, true, null, null, false, false);
+        setTimeout(() => {this.assignRemoteHandlers(Number(userID))},1000);
+        setTimeout(() => {this.publish(room)},3000);
+      }, 
+      errr => { 
+        console.log(errr); 
+      });
     });
   }
 
@@ -78,7 +108,7 @@ export class AudioComponent {
     // ---------------------------------------------------
     // NEEDS TO BE RUN AFTER PUBLISH IS COMPLETE
     tempRooms.forEach((room) => {
-      if(room.roomName === this.currentRoom){
+      if(room.roomName == this.currentRoom){
         this.currentRoomDetails = room;
       }
     });
@@ -98,11 +128,24 @@ export class AudioComponent {
     });
   }
 
-  assignRemoteHandlers(): void{
+  assignRemoteHandlers(userID: number): void{
     this.agoraService.client.on('error', (err) => {
       console.log("Got error msg:", err.reason);
       if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
-        this.agoraService.client.renewChannelKey("", () => {
+        this.agoraService.client.renewChannelKey(() => {
+          // ---- RENEW CHANNEL KEY FUNCTION ----
+          // 1) Get details
+          var token: string = "";
+
+          // 2) Make request
+          this.officeRoomService.fetchToken(userID, this.channelName, 1).subscribe((res) => {
+            token = res.token;
+          });
+          
+          // 3) Return new token
+          this.token = token;
+          return token;
+        }, () => {
           console.log("Renew channel key successfully");
         }, (err) => {
           console.log("Renew channel key failed: ", err);
@@ -181,7 +224,7 @@ export class AudioComponent {
   // -------------- HANDLE REMOTE STREAMS AND OUTPUT AUDIO --------------
   mixAudio(rooms): void {
     // Remote stream audio settings
-    let volume = 1; 
+    let volume = 0.9; 
     let pannerX = 0;
     let pannerZ = 0;
     console.log("------------------------ MIX AUDIO ------------------------");
@@ -195,7 +238,7 @@ export class AudioComponent {
           // --------------- Get Rooms details ----------------
           var remoteRoomDetails: Room;
           rooms.forEach((room) => {
-            if(room.id === stream[2]){
+            if(room.id == stream[2]){
               remoteRoomDetails = room;
             }
           });
@@ -204,14 +247,12 @@ export class AudioComponent {
           // --------------- Calculate Centers ----------------
           var remoteRoomCenter = [((remoteRoomDetails.width/2)+remoteRoomDetails.xCoordinate), ((remoteRoomDetails.height/2)+remoteRoomDetails.yCoordinate)];
           // --------------------------------------------------
-          // --------------- Calculate Distance ---------------
-          var euclideanDistance = Math.sqrt(Math.pow((remoteRoomCenter[0]-this.currentRoomCenter[0]),2)+Math.pow((remoteRoomCenter[1]-this.currentRoomCenter[1]),2));
-          const distConst = 10;
-          // --------------------------------------------------
-          // -------------- Calculate Direction ---------------
+          // -------------- Calculate Panning ---------------
           // Orientation of listener: Facing toward the top floorplan
           var standardDistx = Number(remoteRoomCenter[0]) - Number(this.currentRoomCenter[0]);
           var standardDistz = Number(remoteRoomCenter[1]) - Number(this.currentRoomCenter[1]);
+
+          const distConst = 8;
 
           pannerX = standardDistx * distConst;
           pannerZ = standardDistz * distConst;
@@ -231,13 +272,11 @@ export class AudioComponent {
         let audioStream = this.audioContext.createMediaStreamSource(audioStreamTrack);
         let volumeControl = this.audioContext.createGain();
         let panner = this.audioContext.createPanner();
-        let compressor = this.audioContext.createDynamicsCompressor();
 
         // Connect AudioNodes in Sequence (RemoteMediaStream -> VolumeController -> Panner -> Compressor -> Destination(Output))
         audioStream.connect(volumeControl);
         volumeControl.connect(panner);
-        panner.connect(compressor);
-        compressor.connect(this.audioContext.destination);
+        panner.connect(this.audioContext.destination);
 
         // Configure AudioNodes
         volumeControl.gain.setValueAtTime( volume, this.audioContext.currentTime );
@@ -250,4 +289,22 @@ export class AudioComponent {
     // ------------------------------------------------------
   }
   // --------------------------------------------------------------------
+  setUserOrientation( direction: number) :void{
+    console.log (direction);
+    
+    if ((direction >= 90 && direction <= 100) || (direction >= 0 && direction <= 11)){
+      this.audioContext.listener.setOrientation(0, 0, -1, 0, 1, 0);
+    }
+    else if (direction >= 12 && direction <= 37){
+      this.audioContext.listener.setOrientation(1, 0, 0, 0, 1, 0);
+    }
+    else if (direction >= 38 && direction <= 63){
+      this.audioContext.listener.setOrientation(0, 0, 1, 0, 1, 0);
+    }
+    else if (direction >= 64 && direction <= 89){
+      this.audioContext.listener.setOrientation(-1, 0, 0, 0, 1, 0);
+    }
+    
+  }
+    
 }
