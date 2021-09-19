@@ -224,7 +224,7 @@ export class AudioComponent {
   // -------------- HANDLE REMOTE STREAMS AND OUTPUT AUDIO --------------
   mixAudio(rooms): void {
     // Remote stream audio settings
-    let volume = 1; 
+    let volume = 0.9; 
     let pannerX = 0;
     let pannerZ = 0;
     console.log("------------------------ MIX AUDIO ------------------------");
@@ -252,7 +252,7 @@ export class AudioComponent {
           var standardDistx = Number(remoteRoomCenter[0]) - Number(this.currentRoomCenter[0]);
           var standardDistz = Number(remoteRoomCenter[1]) - Number(this.currentRoomCenter[1]);
 
-          const distConst = 10;
+          const distConst = 8;
 
           pannerX = standardDistx * distConst;
           pannerZ = standardDistz * distConst;
