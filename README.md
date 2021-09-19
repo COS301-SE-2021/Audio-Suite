@@ -57,11 +57,25 @@ Each room and area will have their own sound properties, is it soundproof, or ca
 ### Built With
 
 The web application is being developed with the following technologies.
-   * [NodeJS](https://nodejs.org/en/)
-   * [React](https://reactjs.org/)
+   * [NestJS](https://nestjs.com/)
+   * [Angular](https://angular.io/)
    * [Google Cloud](https://cloud.google.com/)
 
 Once the web application is finished we will create a desktop application version using [Electron](https://www.electronjs.org/).<br>
+
+## Documentation, Project Management and Demos
+
+[Project Management](https://github.com/COS301-SE-2021/Audio-Suite/projects/1)<br><br>
+[SRS Documentation v1](https://drive.google.com/file/d/1cW_0c0eD5QwpPcy8b3myqKoKeTvbzBNS/view?usp=sharing)<br>
+[SRS Documentation v2](https://drive.google.com/file/d/1n5fbWLnhssFZ4KAjHK9QFbJ9h47xn8Cp/view?usp=sharing)<br>
+[SRS Documentation v3](https://drive.google.com/file/d/1mBSz5y9StW_y_6qSwQddD_s8WK1I74Sv/view?usp=sharing)<br><br>
+[Software Architecture](https://drive.google.com/file/d/1x5j2IDtB9WOvIORbZ8OizA0AyPPvHK-8/view?usp=sharing)<br><br>
+[User Manual](https://docs.google.com/presentation/d/1WyPs-JHFQsm8Ok4hJfgbjqjEimHqWq96/edit?usp=sharing&ouid=104322984998480890641&rtpof=true&sd=true)<br>
+[Coding Standard](https://docs.google.com/document/d/1YQJ80dcvNXtEqiYyIloxZ29m_JIRDgEnGyT02bMPX-4/edit?usp=sharing)<br>
+[Technical Installation Manual](https://drive.google.com/file/d/1eHZHlnPZbgO99RkW2EkMcpuBRthPTxdC/view?usp=sharing)<br><br>
+[Demo 1 Video](https://drive.google.com/file/d/1gB3ZV610oEa4k-CMLr_ZuZNNPa-Cul9E/view?usp=sharing)<br>
+[Demo 2 Video](https://drive.google.com/file/d/1WKohde6r6xpy9Ml95WexVwvjREQtRNCr/view?usp=sharing)<br>
+[Demo 3 Video](https://drive.google.com/file/d/1UdlwEwLDYw1p7xH1Y5BHAlFga6tNurdi/view?usp=sharing)<br>
 
 ## The Team
 
@@ -76,24 +90,54 @@ As a team we have the skills to implement nearly any software solution. Audio Su
   <li>Experience with back-end development.</li>
   <li>Extensive NodeJS development experience.</li>
   <li>Cybersecurity specialist.</li>
+  <li><a href="https://github.com/0xWra1th">GitHub</a></li>
+  <li><a href="https://www.linkedin.com/in/daniel-scragg-619102209/">LinkedIn</a></li>
+  <li>Responsibilities:
+    <ul style="font-size: 100%">
+      <li>Audio Streaming</li>
+      <li>Audio Manipulation</li>
+      <li>Technical Installation</li>
+    </ul>
+  </li>
+  
 </ul>
 
-<img align="left" src="https://media-exp1.licdn.com/dms/image/C4D03AQFxSO0PLw9yEQ/profile-displayphoto-shrink_800_800/0/1622310781937?e=1627516800&v=beta&t=sHMtehsY8iMJ3scFdJ0Azdfualx3nybSv_MFUV5-3AI" alt="Logo" width="60" height="60">
+<img align="left" src="https://media-exp1.licdn.com/dms/image/C4D03AQFxSO0PLw9yEQ/profile-displayphoto-shrink_800_800/0/1622310781937?e=1634774400&v=beta&t=XTMpz9Zmylc0AfX8E_PJGKEWC3S7VTp__Sja3z9_kDw" alt="Logo" width="60" height="60">
 <h2 style="font-size: 115%">Christian Still</h2>
 <br>
 <ul style="font-size: 100%">
   <li>Extensive experience in scripting.</li>
   <li>Experience in backend such as NodeJS and Spring Boot.</li>
   <li>Database management with PostgreSQL.</li>
+  <li><a href="https://github.com/Chris-18">GitHub</a></li>
+  <li><a href="https://www.linkedin.com/in/christian-still-893107210/">LinkedIn</a></li>
+  <li>Responsibilities:
+    <ul style="font-size: 100%">
+      <li>Backend Endpoints</li>
+      <li>Angular UI</li>
+      <li>Floorplan</li>
+      <li>Frontend Testing</li>
+    </ul>
+  </li>
 </ul>
 
-<img align="left" src="https://media-exp1.licdn.com/dms/image/C4D03AQGD5s7GLvr6KQ/profile-displayphoto-shrink_800_800/0/1618669080178?e=1627516800&v=beta&t=UCYiSYsLXZzkoZArjaB8ToVWvjnu46R4Em29cehN7gg" alt="Logo" width="60" height="60">
+<img align="left" src="https://media-exp1.licdn.com/dms/image/C4D03AQGD5s7GLvr6KQ/profile-displayphoto-shrink_800_800/0/1618669080178?e=1634774400&v=beta&t=WKcntMUdnvlakrOp6blVGQBm3nl96teH1A_2cqjTUog" alt="Logo" width="60" height="60">
 <h2 style="font-size: 115%">Johan de Clercq</h2>
 <br>
 <ul style="font-size: 100%">
   <li>Front-end Developer</li>
   <li>UI/UX Designer</li>
   <li>Experience in JavaScript and API integration</li>
+  <li><a href="https://github.com/DreamerJ1">GitHub</a></li>
+  <li><a href="https://www.linkedin.com/in/johannes-de-clercq-515196210/">LinkedIn</a></li>
+  <li>Responsibilities:
+    <ul style="font-size: 100%">
+      <li>Notification Backend Subsystem</li>
+      <li>Architecture Design and Documentation</li>
+      <li>User Manual</li>
+      <li>Secret Wow Factor...</li>
+    </ul>
+  </li>
 </ul>
 
 <img align="left" src="https://i.ibb.co/7tYK8yk/CC56870-A-DFEE-4171-9-E6-A-5-AACAB3-AB31-F.jpg" alt="CC56870-A-DFEE-4171-9-E6-A-5-AACAB3-AB31-F" alt="Logo" width="60" height="60">
@@ -103,15 +147,34 @@ As a team we have the skills to implement nearly any software solution. Audio Su
   <li>User security and confidentiality experience.</li>
   <li>Extensive Database management experience.</li>
   <li>Front-end and Back-end development</li>
+  <li><a href="https://github.com/KeanuSwart">GitHub</a></li>
+  <li><a href="https://www.linkedin.com/in/keanu-swart-930013210/">LinkedIn</a></li>
+  <li>Responsibilities:
+    <ul style="font-size: 100%">
+      <li>Kanban Board</li>
+      <li>Backend Testing</li>
+      <li>Backend Endpoints</li>
+    </ul>
+  </li>
 </ul>
 
-<img align="left" src="https://media-exp1.licdn.com/dms/image/C4D03AQF5szMKDcprfA/profile-displayphoto-shrink_800_800/0/1621957896518?e=1627516800&v=beta&t=6RFsHTx-l4cp-PIj6bO3LRuQwXTQjrYVQCK_Tzww_CY" alt="Logo" width="60" height="60">
+<img align="left" src="https://media-exp1.licdn.com/dms/image/C4D03AQF5szMKDcprfA/profile-displayphoto-shrink_800_800/0/1621957896518?e=1634774400&v=beta&t=IQxcRD7iBINW2g-REIrDKUERRfrmCKGgvpXBz-rSFUs" alt="Logo" width="60" height="60">
 <h2 style="font-size: 115%">Kyra Coetzee</h2>
 <br>
 <ul style="font-size: 100%">
   <li>Web development.</li>
   <li>Database management.</li>
   <li>Implementation of security solutions in applications for reliability and user confidentiality.</li>
+  <li><a href="https://github.com/u19126222">GitHub</a></li>
+  <li><a href="https://www.linkedin.com/in/kyra-coetzee-58a111210/">LinkedIn</a></li>
+  <li>Responsibilities:
+    <ul style="font-size: 100%">
+      <li>Audio Streaming</li>
+      <li>Audio Manipulation</li>
+      <li>SRS Documentation</li>
+      <li>Architecture Design and Documentation</li>
+    </ul>
+  </li>
 </ul>
 
 <!-- LINKS & IMAGES -->
