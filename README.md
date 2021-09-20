@@ -107,6 +107,8 @@ As a team we have the skills to implement nearly any software solution. Audio Su
       <li>Audio Streaming</li>
       <li>Audio Manipulation</li>
       <li>Technical Installation</li>
+      <li>Tokens and Token Server</li>
+      <li>Dev Ops</li>
     </ul>
   </li>
   
@@ -165,6 +167,8 @@ As a team we have the skills to implement nearly any software solution. Audio Su
       <li>Kanban Board</li>
       <li>Backend Testing</li>
       <li>Backend Endpoints</li>
+      <li>Landing page</li>
+      <li>Settings</li>
     </ul>
   </li>
 </ul>
@@ -182,8 +186,10 @@ As a team we have the skills to implement nearly any software solution. Audio Su
     <ul style="font-size: 100%">
       <li>Audio Streaming</li>
       <li>Audio Manipulation</li>
+      <li>Listener orientation manipulation</li>
       <li>SRS Documentation</li>
       <li>Architecture Design and Documentation</li>
+      <li>Testing policy</li>
     </ul>
   </li>
 </ul>
