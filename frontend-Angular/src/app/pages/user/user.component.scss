@@ -1142,3 +1142,70 @@
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
+
+#ProjectDivModal{
+    width: 100%;
+    height: 100%;
+    margin-bottom: 2%;
+
+    #selectedProject{
+        width: 100%;
+        height: 100%;
+
+         #removeProject-btn{
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            padding-left: 0px;
+            padding-right: 0px;
+            text-align: center;
+         }
+    }
+
+    #ProjectDropdown{
+        width: 100%;
+        height: 100%;
+
+        #project-btn{
+            width: 100%;
+            height: 100%;
+            margin-bottom: 0px;
+            padding-left: 10px;
+            padding-right: 10px;
+            text-align: center;
+        }
+    }
+}
+
+#TagDivModal{
+    width: 100%;
+    height: 100%;
+
+    #selectedTag{
+        width: 100%;
+        height: 100%;
+
+         #removeTag-btn{
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            padding-left: 0px;
+            padding-right: 0px;
+            text-align: center;
+         }
+    }
+
+    #TagDropdown{
+        width: 100%;
+        height: 100%;
+
+        #tag-btn{
+            width: 100%;
+            height: 100%;
+            margin-bottom: 0px;
+            padding-left: 10px;
+            padding-right: 10px;
+            text-align: center;
+        }
+    }
+}

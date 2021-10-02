@@ -130,6 +130,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   showInviteModal: boolean = false;
   showAddRoomModal: boolean = false;
   showVRCodeModal: boolean = false;
+  showTimeTrackerModal: boolean = false;
   VR_RoomCode: string = '';
   focus6: boolean = false;
   focus7: boolean = false;
@@ -406,6 +407,10 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.textChannelsService.listen("msgToClient").subscribe(data => {
       this.receivedMessage(data);
+      this.closeAlert();
+      this.showSuccessGlobalAlert = true;
+      this.globalAlertType = "Notification"
+      this.globalAlertMsg = "New message received.";  
     }) 
 
     this.textChannelsService.listen("updateRoomAttendance").subscribe(data => {
@@ -413,6 +418,13 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.getRoomUsersByOfficeID(jwt, this.selectedOfficeID);
     })
 
+    this.textChannelsService.listen("updateKanban").subscribe(data => {
+      this.setListData();
+      this.closeAlert();
+      this.showSuccessGlobalAlert = true;
+      this.globalAlertType = "Notification"
+      this.globalAlertMsg = "Kanban board updated."; 
+    })
 
     window.addEventListener("resize", () => {
       if(window.innerWidth < 800){
@@ -481,7 +493,6 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   closeAlert(){
-    console.log("click working")
     this.showSuccessGlobalAlert = false;
     this.showPrimaryGlobalAlert = false;
   }
@@ -586,6 +597,9 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
         this.textChannelsService.joinRoom(jwt, officeID, office, office, false);
         this.setListData();
         this.getOfficeProjectList();
+        this.startTrackingTimer();
+        this.displayFormModal = true;
+        this.showTimeTrackerModal = true;
       }
     }
     else{
@@ -633,6 +647,9 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.textChannelsService.joinRoom(jwt, officeID, office, office, false);
       this.setListData();
       this.getOfficeProjectList();
+      this.startTrackingTimer();
+      this.displayFormModal = true;
+      this.showTimeTrackerModal = true;
     }
   }
 
@@ -1528,6 +1545,7 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
     this.showAddRoomModal = false;
     this.showVRCodeModal = false;
     this.displayFormModal = false;
+    this.showTimeTrackerModal = false;
     this.formModalAlertMsg = '';
     this.sendFormModalAlert = false;
     this.newRoomName = '';
