@@ -230,6 +230,8 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
   resizeSubscription: Subscription;
   //#endregion
 
+  delay = ms => new Promise(res => setTimeout(res, ms));
+
   constructor(
     private textChannelsService: TextChannelsService,
     private officeRoomService: OfficeRoomService,
@@ -405,12 +407,14 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       console.log("Left room: ", data);
     })
 
-    this.textChannelsService.listen("msgToClient").subscribe(data => {
+    this.textChannelsService.listen("msgToClient").subscribe(async (data) => {
       this.receivedMessage(data);
       this.closeAlert();
       this.showSuccessGlobalAlert = true;
       this.globalAlertType = "Notification"
-      this.globalAlertMsg = "New message received.";  
+      this.globalAlertMsg = "New message received.";
+      await this.delay(3000);
+      this.closeAlert();
     }) 
 
     this.textChannelsService.listen("updateRoomAttendance").subscribe(data => {
@@ -418,12 +422,14 @@ export class UserComponent implements OnInit, OnDestroy, AfterViewInit {
       this.getRoomUsersByOfficeID(jwt, this.selectedOfficeID);
     })
 
-    this.textChannelsService.listen("updateKanban").subscribe(data => {
+    this.textChannelsService.listen("updateKanban").subscribe(async (data) => {
       this.setListData();
       this.closeAlert();
       this.showSuccessGlobalAlert = true;
       this.globalAlertType = "Notification"
       this.globalAlertMsg = "Kanban board updated."; 
+      await this.delay(3000);
+      this.closeAlert();
     })
 
     window.addEventListener("resize", () => {
