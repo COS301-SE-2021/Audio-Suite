@@ -23,4 +23,9 @@ export class TextChannelsService {
   listen(eventName: string){
     return this.socket.fromEvent<any>(eventName);
   }
+
+  updateKanban(jwt: string, office: string){
+    console.log("Yes its making its here")
+    this.socket.emit('kanbanUpdated', {jwt: jwt, office: office});
+  }
 }

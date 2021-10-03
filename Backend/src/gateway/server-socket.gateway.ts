@@ -100,6 +100,7 @@ export class ServerSocketGateway implements OnGatewayInit, OnGatewayDisconnect{
 
   @SubscribeMessage('kanbanUpdated')
   async handleKanbanUpdates(client:  Socket, data: {jwt: string, office: string}){
+    console.log("Yes")
     this.wss.to(data.office).emit('updateKanban', "update the kanban boards");
   }
 

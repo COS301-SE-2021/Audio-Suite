@@ -823,7 +823,7 @@
                 <i class="tim-icons icon-components"> </i> Kanban Boards
             </ng-template>
             <div class="board_component">
-                <app-list *ngFor="let list of lists" [list]="list" [cardStore]="cardStore"></app-list>
+                <app-list *ngFor="let list of lists" [list]="list" [cardStore]="cardStore" [office]="selectedOffice"></app-list>
             </div>
         </tab>
     </tabset>

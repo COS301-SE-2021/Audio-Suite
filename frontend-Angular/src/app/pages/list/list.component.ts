@@ -4,6 +4,7 @@ import { CardStore } from "../cardstore";
 import { UserService } from "src/app/services/user.service";
 import { OfficeRoomService } from "src/app/services/office-room.service";
 import { KanbanService } from "src/app/services/kanban.service";
+import { TextChannelsService } from "src/app/services/text-channels.service";
 @Component({
   selector: "app-list",
   templateUrl: "./list.component.html",
@@ -12,6 +13,7 @@ import { KanbanService } from "src/app/services/kanban.service";
 export class ListComponent implements OnInit {
   @Input() list: ListSchema;
   @Input() cardStore: CardStore;
+  @Input() office: string;
   displayAddCard = false;
 
   userID: string = '';
@@ -23,7 +25,8 @@ export class ListComponent implements OnInit {
   constructor(
     private userService: UserService,
     private officeRoomService: OfficeRoomService,
-    private kanbanService: KanbanService) {}
+    private kanbanService: KanbanService,
+    private textChannelService: TextChannelsService) {}
 
   toggleDisplayAddCard() {
     this.displayAddCard = !this.displayAddCard;
@@ -70,6 +73,8 @@ export class ListComponent implements OnInit {
             newListName).subscribe((response) =>{
               if(response.Response == "Success"){
                 console.log("Card edited successfully");
+                let jwt = sessionStorage.getItem('jwt');
+                this.textChannelService.updateKanban(jwt, this.office);
               }
             },
             (error) => {
@@ -109,6 +114,8 @@ export class ListComponent implements OnInit {
       value).subscribe((response) =>{
         if(response.Response == "Success"){
           console.log("Card added successfully");
+          let jwt = sessionStorage.getItem('jwt');
+          this.textChannelService.updateKanban(jwt, this.office);
         }
       },
       (error) => {
