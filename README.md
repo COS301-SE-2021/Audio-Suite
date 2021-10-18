@@ -100,7 +100,7 @@ As a team we have the skills to implement nearly any software solution. Audio Su
   <li>Experience with back-end development.</li>
   <li>Extensive NodeJS development experience.</li>
   <li>Cybersecurity specialist.</li>
-  <li><a href="https://github.com/Colobodactolus">GitHub</a></li>
+  <li><a href="https://github.com/OfficialScragg">GitHub</a></li>
   <li><a href="https://www.linkedin.com/in/daniel-scragg-619102209/">LinkedIn</a></li>
   <li>Responsibilities:
     <ul style="font-size: 100%">
